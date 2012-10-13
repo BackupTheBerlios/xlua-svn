@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<contexts>
+    <context id="http://www.infineon.com/1.0.2/app/nvic_scu001/0" title="NVIC_SCU001">
+        <description>App provides SCU module specific handling
+ of Interrupt events.This App is included by 
+top level apps to register callback functions
+ to handle SCU Interrupt Events.</description>
+        <topic href="/PLUGINS_ROOT/com.ifx.davex.help/www.infineon.com/1.0.2/app/nvic_scu001/0/doc/html/group___n_v_i_c___s_c_u001_app.html" label="More Info"/>
+    </context>
+    <context id="http://www.infineon.com/1.0.2/app/nvic_scu001/0/scunode_vs" title="SCU0 Interrupt Node">
+        <description>Description is not available</description>
+    </context>
+    <context id="http://www.infineon.com/1.0.2/app/nvic_scu001/0/nvic_scu001_irwinterruptpriority" title="Priority">
+        <description>Description is not available</description>
+    </context>
+    <context id="http://www.infineon.com/1.0.2/app/nvic_scu001/0/nvic_scu001_irwinterruptsubpriority" title="Subpriority">
+        <description>Description is not available</description>
+    </context>
+    <context id="http://www.infineon.com/1.0.2/app/nvic_scu001/0/nvic_scu001_init" title="">
+        <description>Function to configure DMA Interrupt priority and reset&#13;
+				             all interrupt related registers to reset values</description>
+    </context>
+    <context id="http://www.infineon.com/1.0.2/app/nvic_scu001/0/scunode" title="">
+        <description>Description is not available</description>
+    </context>
+    <context id="http://www.infineon.com/1.0.2/app/nvic_scu001/0/dbg001" title="">
+        <description>Description is not available</description>
+    </context>
+    <context id="http://www.infineon.com/1.0.2/app/nvic_scu001/0/scunode/signal_in" title="">
+        <description>Description is not available</description>
+    </context>
+    <context id="http://www.infineon.com/1.0.2/app/nvic_scu001/0/scunode/ipr_pri" title="">
+        <description>Description is not available</description>
+    </context>
+</contexts>

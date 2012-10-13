@@ -1,0 +1,175 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HTML><HEAD></HEAD><BODY>
+<OBJECT type="text/site properties">
+<param name="FrameName" value="right">
+</OBJECT>
+<UL>
+<LI><OBJECT type="text/sitemap"><param name="Name" value=""UART001:USIC_UART_UART001""><param name="Local" value="index.html"><param name="ImageNumber" value="11"></OBJECT>
+<LI><OBJECT type="text/sitemap"><param name="Name" value="Apps"><param name="Local" value="modules.html"><param name="ImageNumber" value="1"></OBJECT>
+  <UL>
+  <LI><OBJECT type="text/sitemap"><param name="Name" value="USIC_UART_UART001App"><param name="Local" value="group___u_s_i_c___u_a_r_t___u_a_r_t001_app.html"><param name="ImageNumber" value="1"></OBJECT>
+    <UL>
+    <LI><OBJECT type="text/sitemap"><param name="Name" value="Copyright and Licensing Information"><param name="Local" value="group___u_a_r_t001___legal.html"><param name="ImageNumber" value="1"></OBJECT>
+      <UL>
+      <LI><OBJECT type="text/sitemap"><param name="Name" value="Copyright and Licensing Information"><param name="Local" value="group___u_a_r_t001___legal.html#UART001_legalpage"><param name="ImageNumber" value="11"></OBJECT>
+      </UL>
+    <LI><OBJECT type="text/sitemap"><param name="Name" value="Introduction"><param name="Local" value="group___u_a_r_t001__intro.html"><param name="ImageNumber" value="1"></OBJECT>
+      <UL>
+      <LI><OBJECT type="text/sitemap"><param name="Name" value="Introduction"><param name="Local" value="group___u_a_r_t001__intro.html#UART001_intropage"><param name="ImageNumber" value="11"></OBJECT>
+      </UL>
+    <LI><OBJECT type="text/sitemap"><param name="Name" value="Overview"><param name="Local" value="group___u_a_r_t001__overview.html"><param name="ImageNumber" value="1"></OBJECT>
+      <UL>
+      <LI><OBJECT type="text/sitemap"><param name="Name" value="Overview"><param name="Local" value="group___u_a_r_t001__overview.html#UART001_overviewpage"><param name="ImageNumber" value="11"></OBJECT>
+      </UL>
+    <LI><OBJECT type="text/sitemap"><param name="Name" value="File Structure"><param name="Local" value="group___u_a_r_t001__filestructure.html"><param name="ImageNumber" value="1"></OBJECT>
+      <UL>
+      <LI><OBJECT type="text/sitemap"><param name="Name" value="File Structure"><param name="Local" value="group___u_a_r_t001__filestructure.html#UART001_filestructurepage"><param name="ImageNumber" value="11"></OBJECT>
+      </UL>
+    <LI><OBJECT type="text/sitemap"><param name="Name" value="App Configuration Documentation"><param name="Local" value="group___u_a_r_t001__appconfigdoc.html"><param name="ImageNumber" value="1"></OBJECT>
+      <UL>
+      <LI><OBJECT type="text/sitemap"><param name="Name" value="App Documentation"><param name="Local" value="group___u_a_r_t001__appconfigdoc.html#UART001_appconfigdocpage"><param name="ImageNumber" value="11"></OBJECT>
+      </UL>
+    <LI><OBJECT type="text/sitemap"><param name="Name" value="App Public Structures"><param name="Local" value="group___u_a_r_t001__publicparam.html"><param name="ImageNumber" value="11"></OBJECT>
+      <UL>
+      </UL>
+    <LI><OBJECT type="text/sitemap"><param name="Name" value="API Documentation"><param name="Local" value="group___u_a_r_t001__apidoc.html"><param name="ImageNumber" value="11"></OBJECT>
+      <UL>
+      </UL>
+    <LI><OBJECT type="text/sitemap"><param name="Name" value="App Published Parameters"><param name="Local" value="group___u_a_r_t001__publishedparams.html"><param name="ImageNumber" value="1"></OBJECT>
+      <UL>
+      <LI><OBJECT type="text/sitemap"><param name="Name" value="NOTE: URIs given in tables below are for App developer use. App developer can make use of these URIs to create top level apps by consuming this app."><param name="Local" value="group___u_a_r_t001__publishedparams.html#Note"><param name="ImageNumber" value="11"></OBJECT>
+      </UL>
+    </UL>
+  </UL>
+<LI><OBJECT type="text/sitemap"><param name="Name" value="Data Structures"><param name="ImageNumber" value="1"></OBJECT>
+  <UL>
+  <LI><OBJECT type="text/sitemap"><param name="Name" value="Data Structures"><param name="Local" value="annotated.html"><param name="ImageNumber" value="1"></OBJECT>
+    <UL>
+    <LI><OBJECT type="text/sitemap"><param name="Name" value="UART001_HandleType"><param name="Local" value="struct_u_a_r_t001___handle_type.html"><param name="ImageNumber" value="1"></OBJECT>
+      <UL>
+      <LI><OBJECT type="text/sitemap"><param name="Name" value="BaudRate"><param name="Local" value="struct_u_a_r_t001___handle_type.html#ac585a5baf6a676cbc0365f0f63066363"><param name="ImageNumber" value="11"></OBJECT>
+      <LI><OBJECT type="text/sitemap"><param name="Name" value="DataBits"><param name="Local" value="struct_u_a_r_t001___handle_type.html#abb333776089ef3698bb907975231a75e"><param name="ImageNumber" value="11"></OBJECT>
+      <LI><OBJECT type="text/sitemap"><param name="Name" value="FormatErrEn"><param name="Local" value="struct_u_a_r_t001___handle_type.html#a54fe3f2a17cb7da435025ab55aabb83b"><param name="ImageNumber" value="11"></OBJECT>
+      <LI><OBJECT type="text/sitemap"><param name="Name" value="FrameFinEn"><param name="Local" value="struct_u_a_r_t001___handle_type.html#a427b72cf94342b79dd7ed4e0433253cf"><param name="ImageNumber" value="11"></OBJECT>
+      <LI><OBJECT type="text/sitemap"><param name="Name" value="Mode"><param name="Local" value="struct_u_a_r_t001___handle_type.html#a648c541fbdcc0cf866a3ee86f71fe997"><param name="ImageNumber" value="11"></OBJECT>
+      <LI><OBJECT type="text/sitemap"><param name="Name" value="Parity"><param name="Local" value="struct_u_a_r_t001___handle_type.html#a82e2292c52c3e8b3dbba54f4feb26488"><param name="ImageNumber" value="11"></OBJECT>
+      <LI><OBJECT type="text/sitemap"><param name="Name" value="RecvNoiseEn"><param name="Local" value="struct_u_a_r_t001___handle_type.html#a2c67b1724416edf2a3c1a6a27106f159"><param name="ImageNumber" value="11"></OBJECT>
+      <LI><OBJECT type="text/sitemap"><param name="Name" value="RxFifoSize"><param name="Local" value="struct_u_a_r_t001___handle_type.html#a54875495b112f3ee1d8c2907696ea094"><param name="ImageNumber" value="11"></OBJECT>
+      <LI><OBJECT type="text/sitemap"><param name="Name" value="RxLimit"><param name="Local" value="struct_u_a_r_t001___handle_type.html#a50971e23469e8644b0d71f5ac88c0072"><param name="ImageNumber" value="11"></OBJECT>
+      <LI><OBJECT type="text/sitemap"><param name="Name" value="StopBit"><param name="Local" value="struct_u_a_r_t001___handle_type.html#ab1a8e3f5073126ec319313a558e9e2d9"><param name="ImageNumber" value="11"></OBJECT>
+      <LI><OBJECT type="text/sitemap"><param name="Name" value="TxFifoSize"><param name="Local" value="struct_u_a_r_t001___handle_type.html#a404b41ac0091aa09eaa3acbd174b899d"><param name="ImageNumber" value="11"></OBJECT>
+      <LI><OBJECT type="text/sitemap"><param name="Name" value="TxLimit"><param name="Local" value="struct_u_a_r_t001___handle_type.html#a57aa7bb66b9939637ce605dd749881c9"><param name="ImageNumber" value="11"></OBJECT>
+      <LI><OBJECT type="text/sitemap"><param name="Name" value="UartRegs"><param name="Local" value="struct_u_a_r_t001___handle_type.html#aeca4649b1720e8191f1892ee39af9e22"><param name="ImageNumber" value="11"></OBJECT>
+      </UL>
+    </UL>
+  <LI><OBJECT type="text/sitemap"><param name="Name" value="Data Structure Index"><param name="Local" value="classes.html"><param name="ImageNumber" value="1"></OBJECT>
+  <LI><OBJECT type="text/sitemap"><param name="Name" value="Data Fields"><param name="Local" value="functions.html"><param name="ImageNumber" value="1"></OBJECT>
+    <UL>
+    <LI><OBJECT type="text/sitemap"><param name="Name" value="All"><param name="Local" value="functions.html"><param name="ImageNumber" value="11"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Name" value="Variables"><param name="Local" value="functions_vars.html"><param name="ImageNumber" value="11"></OBJECT>
+    </UL>
+  </UL>
+<LI><OBJECT type="text/sitemap"><param name="Name" value="Files"><param name="ImageNumber" value="1"></OBJECT>
+  <UL>
+  <LI><OBJECT type="text/sitemap"><param name="Name" value="File List"><param name="Local" value="files.html"><param name="ImageNumber" value="1"></OBJECT>
+    <UL>
+    <LI><OBJECT type="text/sitemap"><param name="Name" value="UART001.c"><param name="Local" value="_u_a_r_t001_8c.html"><param name="ImageNumber" value="1"></OBJECT>
+      <UL>
+      <LI><OBJECT type="text/sitemap"><param name="Name" value="UART001_BRG_DCTQ"><param name="Local" value="_u_a_r_t001_8c.html#a63a73768dc37b845ecdc3b9f54020226"><param name="ImageNumber" value="11"></OBJECT>
+      <LI><OBJECT type="text/sitemap"><param name="Name" value="UART001_BRG_PCTQ"><param name="Local" value="_u_a_r_t001_8c.html#ad85c39c10ffb83d158ae0bdf62aad1b2"><param name="ImageNumber" value="11"></OBJECT>
+      <LI><OBJECT type="text/sitemap"><param name="Name" value="UART001_CLOCK"><param name="Local" value="_u_a_r_t001_8c.html#afea2bfe4ac18ffb98c75084f5fa71900"><param name="ImageNumber" value="11"></OBJECT>
+      <LI><OBJECT type="text/sitemap"><param name="Name" value="UART001_FLAG_OFFSET"><param name="Local" value="_u_a_r_t001_8c.html#a1ae76484f56998c061fcfb2bee11d3cc"><param name="ImageNumber" value="11"></OBJECT>
+      <LI><OBJECT type="text/sitemap"><param name="Name" value="UART001_NORMAL_DIV_STEPVALUE"><param name="Local" value="_u_a_r_t001_8c.html#ae1012c8027bf6da112b51e8860c11ab1"><param name="ImageNumber" value="11"></OBJECT>
+      <LI><OBJECT type="text/sitemap"><param name="Name" value="UART001_PCR_SP"><param name="Local" value="_u_a_r_t001_8c.html#a8d2a8e4893d35d16d69cd166ec06466d"><param name="ImageNumber" value="11"></OBJECT>
+      <LI><OBJECT type="text/sitemap"><param name="Name" value="UART001_REG_RESET"><param name="Local" value="_u_a_r_t001_8c.html#a0db8dae019d2e5d275c2d47241fad8d1"><param name="ImageNumber" value="11"></OBJECT>
+      <LI><OBJECT type="text/sitemap"><param name="Name" value="UART001_ClearFlag"><param name="Local" value="_u_a_r_t001_8c.html#a35321989a23a4463d1343b664a21ae5f"><param name="ImageNumber" value="11"></OBJECT>
+      <LI><OBJECT type="text/sitemap"><param name="Name" value="UART001_Configure"><param name="Local" value="_u_a_r_t001_8c.html#ad82dcdca5a7770f4524e1527de95407b"><param name="ImageNumber" value="11"></OBJECT>
+      <LI><OBJECT type="text/sitemap"><param name="Name" value="UART001_DeInit"><param name="Local" value="_u_a_r_t001_8c.html#a6183750fd097791ba69205ed360e6537"><param name="ImageNumber" value="11"></OBJECT>
+      <LI><OBJECT type="text/sitemap"><param name="Name" value="UART001_GetFlagStatus"><param name="Local" value="_u_a_r_t001_8c.html#a1f522695783cf883fb6139028b844116"><param name="ImageNumber" value="11"></OBJECT>
+      <LI><OBJECT type="text/sitemap"><param name="Name" value="UART001_Init"><param name="Local" value="group___u_a_r_t001__apidoc.html#ga8b7f345b2f36c2ce54e21319196674a8"><param name="ImageNumber" value="11"></OBJECT>
+      <LI><OBJECT type="text/sitemap"><param name="Name" value="UART001_lConfigureBaudRate"><param name="Local" value="_u_a_r_t001_8c.html#ab38fb3a3fb4e1c90d6b606d301273231"><param name="ImageNumber" value="11"></OBJECT>
+      <LI><OBJECT type="text/sitemap"><param name="Name" value="UART001_lInit"><param name="Local" value="_u_a_r_t001_8c.html#a9b0034e6b6d6d69c6fa7b06546d8cb6f"><param name="ImageNumber" value="11"></OBJECT>
+      <LI><OBJECT type="text/sitemap"><param name="Name" value="UART001_ReadDataMultiple"><param name="Local" value="_u_a_r_t001_8c.html#acf8ad779c2b8cdcf5e55dabff2e6ce04"><param name="ImageNumber" value="11"></OBJECT>
+      <LI><OBJECT type="text/sitemap"><param name="Name" value="UART001_WriteDataMultiple"><param name="Local" value="_u_a_r_t001_8c.html#a61fdfc06efab866a051222c2b20d1431"><param name="ImageNumber" value="11"></OBJECT>
+      </UL>
+    <LI><OBJECT type="text/sitemap"><param name="Name" value="UART001.h"><param name="Local" value="_u_a_r_t001_8h.html"><param name="ImageNumber" value="1"></OBJECT>
+      <UL>
+      <LI><OBJECT type="text/sitemap"><param name="Name" value="UART001_ReadData"><param name="Local" value="group___u_a_r_t001__apidoc.html#ga772c0f770e3b9850af3f1edecd529c83"><param name="ImageNumber" value="11"></OBJECT>
+      <LI><OBJECT type="text/sitemap"><param name="Name" value="UART001_WriteData"><param name="Local" value="group___u_a_r_t001__apidoc.html#ga51dae16833604766fade9e5e616342b7"><param name="ImageNumber" value="11"></OBJECT>
+      <LI><OBJECT type="text/sitemap"><param name="Name" value="UART001_FlagStatusType"><param name="Local" value="group___u_a_r_t001__publicparam.html#ga73ba8bc9f6012e22ec90bdad5099ba08"><param name="ImageNumber" value="11"></OBJECT>
+      <LI><OBJECT type="text/sitemap"><param name="Name" value="UART001_HandleType"><param name="Local" value="group___u_a_r_t001__publicparam.html#ga5865cef058be734151d48d1f852737b6"><param name="ImageNumber" value="11"></OBJECT>
+      <LI><OBJECT type="text/sitemap"><param name="Name" value="UART001_StatusType"><param name="Local" value="group___u_a_r_t001__publicparam.html#ga2b0fb24280b47c3cc1b08184d06a205b"><param name="ImageNumber" value="11"></OBJECT>
+      <LI><OBJECT type="text/sitemap"><param name="Name" value="UART001_FlagStatusType"><param name="Local" value="group___u_a_r_t001__publicparam.html#ga028c459f44e4a2d1d2895ecb7b857549"><param name="ImageNumber" value="11"></OBJECT>
+      <LI><OBJECT type="text/sitemap"><param name="Name" value="UART001_StatusType"><param name="Local" value="group___u_a_r_t001__publicparam.html#ga85909755dedf914d02f1449641d3a49f"><param name="ImageNumber" value="11"></OBJECT>
+      <LI><OBJECT type="text/sitemap"><param name="Name" value="UART001_ClearFlag"><param name="Local" value="group___u_a_r_t001__apidoc.html#ga35321989a23a4463d1343b664a21ae5f"><param name="ImageNumber" value="11"></OBJECT>
+      <LI><OBJECT type="text/sitemap"><param name="Name" value="UART001_Configure"><param name="Local" value="group___u_a_r_t001__apidoc.html#gad82dcdca5a7770f4524e1527de95407b"><param name="ImageNumber" value="11"></OBJECT>
+      <LI><OBJECT type="text/sitemap"><param name="Name" value="UART001_DeInit"><param name="Local" value="group___u_a_r_t001__apidoc.html#ga6183750fd097791ba69205ed360e6537"><param name="ImageNumber" value="11"></OBJECT>
+      <LI><OBJECT type="text/sitemap"><param name="Name" value="UART001_GetFlagStatus"><param name="Local" value="group___u_a_r_t001__apidoc.html#ga1f522695783cf883fb6139028b844116"><param name="ImageNumber" value="11"></OBJECT>
+      <LI><OBJECT type="text/sitemap"><param name="Name" value="UART001_Init"><param name="Local" value="group___u_a_r_t001__apidoc.html#ga8b7f345b2f36c2ce54e21319196674a8"><param name="ImageNumber" value="11"></OBJECT>
+      <LI><OBJECT type="text/sitemap"><param name="Name" value="UART001_ReadDataMultiple"><param name="Local" value="group___u_a_r_t001__apidoc.html#gacf8ad779c2b8cdcf5e55dabff2e6ce04"><param name="ImageNumber" value="11"></OBJECT>
+      <LI><OBJECT type="text/sitemap"><param name="Name" value="UART001_WriteDataMultiple"><param name="Local" value="group___u_a_r_t001__apidoc.html#ga61fdfc06efab866a051222c2b20d1431"><param name="ImageNumber" value="11"></OBJECT>
+      </UL>
+    <LI><OBJECT type="text/sitemap"><param name="Name" value="UART001_Conf.c"><param name="Local" value="_u_a_r_t001___conf_8c.html"><param name="ImageNumber" value="1"></OBJECT>
+      <UL>
+      <LI><OBJECT type="text/sitemap"><param name="Name" value="UART001_Handle0"><param name="Local" value="_u_a_r_t001___conf_8c.html#a7de524079979a54deaee44510f56ff85"><param name="ImageNumber" value="11"></OBJECT>
+      </UL>
+    <LI><OBJECT type="text/sitemap"><param name="Name" value="UART001_Conf.h"><param name="Local" value="_u_a_r_t001___conf_8h.html"><param name="ImageNumber" value="1"></OBJECT>
+      <UL>
+      <LI><OBJECT type="text/sitemap"><param name="Name" value="UART001_0_USIC"><param name="Local" value="_u_a_r_t001___conf_8h.html#aa068d141500474d5e8f601a7c0e1f821"><param name="ImageNumber" value="11"></OBJECT>
+      <LI><OBJECT type="text/sitemap"><param name="Name" value="UART001_0_USIC_CH"><param name="Local" value="_u_a_r_t001___conf_8h.html#adfe5a2043a8f518a26c3c18bc6b26c1c"><param name="ImageNumber" value="11"></OBJECT>
+      <LI><OBJECT type="text/sitemap"><param name="Name" value="UART001_Handle0"><param name="Local" value="_u_a_r_t001___conf_8h.html#a7de524079979a54deaee44510f56ff85"><param name="ImageNumber" value="11"></OBJECT>
+      </UL>
+    <LI><OBJECT type="text/sitemap"><param name="Name" value="Usic.h"><param name="Local" value="_usic_8h.html"><param name="ImageNumber" value="1"></OBJECT>
+      <UL>
+      <LI><OBJECT type="text/sitemap"><param name="Name" value="I2C_MODE"><param name="Local" value="_usic_8h.html#a5cd01756030509b764d43a2b8c94fce8"><param name="ImageNumber" value="11"></OBJECT>
+      <LI><OBJECT type="text/sitemap"><param name="Name" value="I2S_MODE"><param name="Local" value="_usic_8h.html#afebcb3d498a2606cae3869271b98c3ca"><param name="ImageNumber" value="11"></OBJECT>
+      <LI><OBJECT type="text/sitemap"><param name="Name" value="UART_MODE"><param name="Local" value="_usic_8h.html#ab2b881cf2de94fa3dc22df0f07300b87"><param name="ImageNumber" value="11"></OBJECT>
+      <LI><OBJECT type="text/sitemap"><param name="Name" value="USIC_CEILING_PRIORITY"><param name="Local" value="_usic_8h.html#a173a2b62b2182dc92f789a8edf9424bb"><param name="ImageNumber" value="11"></OBJECT>
+      <LI><OBJECT type="text/sitemap"><param name="Name" value="USIC_FlushRxFIFO"><param name="Local" value="_usic_8h.html#a8fd55de2873aa495180d8edd4fd2325a"><param name="ImageNumber" value="11"></OBJECT>
+      <LI><OBJECT type="text/sitemap"><param name="Name" value="USIC_FlushTxFIFO"><param name="Local" value="_usic_8h.html#a65503f0aae044fba4920418cce301b29"><param name="ImageNumber" value="11"></OBJECT>
+      <LI><OBJECT type="text/sitemap"><param name="Name" value="USIC_FRACTIONAL_DIV_SEL"><param name="Local" value="_usic_8h.html#a794fb7a8eb5cedf5f04f137a2c76ceeb"><param name="ImageNumber" value="11"></OBJECT>
+      <LI><OBJECT type="text/sitemap"><param name="Name" value="USIC_GetRxFIFOFillingLevel"><param name="Local" value="_usic_8h.html#a380bdbc9fb2e94b38df21af5c7dde168"><param name="ImageNumber" value="11"></OBJECT>
+      <LI><OBJECT type="text/sitemap"><param name="Name" value="USIC_GetTxFIFOFillingLevel"><param name="Local" value="_usic_8h.html#a19688cb772225609344587a95dceba29"><param name="ImageNumber" value="11"></OBJECT>
+      <LI><OBJECT type="text/sitemap"><param name="Name" value="USIC_IsRxFIFObusy"><param name="Local" value="_usic_8h.html#a41fe8869b0dca2e97265b99ad6c1aee6"><param name="ImageNumber" value="11"></OBJECT>
+      <LI><OBJECT type="text/sitemap"><param name="Name" value="USIC_IsRxFIFOfull"><param name="Local" value="_usic_8h.html#a243967f31e0f07a7dd796b0f146afa1f"><param name="ImageNumber" value="11"></OBJECT>
+      <LI><OBJECT type="text/sitemap"><param name="Name" value="USIC_IsTxFIFObusy"><param name="Local" value="_usic_8h.html#addee7d44538750f1d00a5ea6343ee453"><param name="ImageNumber" value="11"></OBJECT>
+      <LI><OBJECT type="text/sitemap"><param name="Name" value="USIC_IsTxFIFOempty"><param name="Local" value="_usic_8h.html#aef090efee65dfa84a1885a5d6e67897e"><param name="ImageNumber" value="11"></OBJECT>
+      <LI><OBJECT type="text/sitemap"><param name="Name" value="USIC_IsTxFIFOfull"><param name="Local" value="_usic_8h.html#a0a4a40f1195c0a4a52daf86fce971ae7"><param name="ImageNumber" value="11"></OBJECT>
+      <LI><OBJECT type="text/sitemap"><param name="Name" value="USIC_NORMAL_DIV_SEL"><param name="Local" value="_usic_8h.html#a02e35cc57fd9dd6573138c6508f85b70"><param name="ImageNumber" value="11"></OBJECT>
+      <LI><OBJECT type="text/sitemap"><param name="Name" value="USIC_RBCTR_CH0DPTR"><param name="Local" value="_usic_8h.html#a7be2a649694758a3bde31d7c3ffee218"><param name="ImageNumber" value="11"></OBJECT>
+      <LI><OBJECT type="text/sitemap"><param name="Name" value="USIC_RBCTR_CH1DPTR"><param name="Local" value="_usic_8h.html#a6e680d1cc06ab17e32b178fcbfc679c1"><param name="ImageNumber" value="11"></OBJECT>
+      <LI><OBJECT type="text/sitemap"><param name="Name" value="USIC_RBCTR_SIZE"><param name="Local" value="_usic_8h.html#a9c4aea9f652c5edfcbefed4ae327b1dc"><param name="ImageNumber" value="11"></OBJECT>
+      <LI><OBJECT type="text/sitemap"><param name="Name" value="USIC_REG_CLEAR"><param name="Local" value="_usic_8h.html#a4da1d569d1fc1c15a0fb4805c4770450"><param name="ImageNumber" value="11"></OBJECT>
+      <LI><OBJECT type="text/sitemap"><param name="Name" value="USIC_REG_RESET"><param name="Local" value="_usic_8h.html#a86a3f3f504a1eea1da32ddc0a0c67276"><param name="ImageNumber" value="11"></OBJECT>
+      <LI><OBJECT type="text/sitemap"><param name="Name" value="USIC_SCTR_FLE"><param name="Local" value="_usic_8h.html#aaa92e48f62f9bc7c4d23ae554d389363"><param name="ImageNumber" value="11"></OBJECT>
+      <LI><OBJECT type="text/sitemap"><param name="Name" value="USIC_SCTR_WLE"><param name="Local" value="_usic_8h.html#ab046532539777aeaeb52e0487a1ac126"><param name="ImageNumber" value="11"></OBJECT>
+      <LI><OBJECT type="text/sitemap"><param name="Name" value="USIC_SPI_MODE"><param name="Local" value="_usic_8h.html#a9f02f155fe7687588dc672699f7b4124"><param name="ImageNumber" value="11"></OBJECT>
+      <LI><OBJECT type="text/sitemap"><param name="Name" value="USIC_TBCTR_CH0DPTR"><param name="Local" value="_usic_8h.html#a5183cb98e82b4a9a7ccaec20fffb58fe"><param name="ImageNumber" value="11"></OBJECT>
+      <LI><OBJECT type="text/sitemap"><param name="Name" value="USIC_TBCTR_CH1DPTR"><param name="Local" value="_usic_8h.html#a6bafe67587600c4e2660a74955b69dc9"><param name="ImageNumber" value="11"></OBJECT>
+      <LI><OBJECT type="text/sitemap"><param name="Name" value="USIC_TBCTR_SIZE"><param name="Local" value="_usic_8h.html#a513ddf1faa308193621a5ee5d4ccb814"><param name="ImageNumber" value="11"></OBJECT>
+      <LI><OBJECT type="text/sitemap"><param name="Name" value="USIC_ubIsRxFIFOempty"><param name="Local" value="_usic_8h.html#ae9f2bb705f8023a76e8ba21162e942ff"><param name="ImageNumber" value="11"></OBJECT>
+      <LI><OBJECT type="text/sitemap"><param name="Name" value="UART_ModeType"><param name="Local" value="_usic_8h.html#af224cd784816ce3802e5e06e3d94b636"><param name="ImageNumber" value="11"></OBJECT>
+      <LI><OBJECT type="text/sitemap"><param name="Name" value="UART_ParityType"><param name="Local" value="_usic_8h.html#affe85cf01b4ea0a07aadfebc8faf1c6b"><param name="ImageNumber" value="11"></OBJECT>
+      <LI><OBJECT type="text/sitemap"><param name="Name" value="UART_StopBitType"><param name="Local" value="_usic_8h.html#af211e65c24d07b49e79dcca2124e513e"><param name="ImageNumber" value="11"></OBJECT>
+      <LI><OBJECT type="text/sitemap"><param name="Name" value="USIC_ChannelType"><param name="Local" value="_usic_8h.html#adc9619d96b6d1db055044d86c94f5f11"><param name="ImageNumber" value="11"></OBJECT>
+      <LI><OBJECT type="text/sitemap"><param name="Name" value="USIC_SRType"><param name="Local" value="_usic_8h.html#a0518da91d40fb9861b5c1a7f9e7e6fef"><param name="ImageNumber" value="11"></OBJECT>
+      <LI><OBJECT type="text/sitemap"><param name="Name" value="UART_ModeType"><param name="Local" value="_usic_8h.html#a704fbdcc9e2ddfa5989b9042938339af"><param name="ImageNumber" value="11"></OBJECT>
+      <LI><OBJECT type="text/sitemap"><param name="Name" value="UART_ParityType"><param name="Local" value="_usic_8h.html#a133d537c1f7e5042967df4115c53dcbe"><param name="ImageNumber" value="11"></OBJECT>
+      <LI><OBJECT type="text/sitemap"><param name="Name" value="UART_StopBitType"><param name="Local" value="_usic_8h.html#a29edaab5c24304a4b92bc53f8fa4ca56"><param name="ImageNumber" value="11"></OBJECT>
+      <LI><OBJECT type="text/sitemap"><param name="Name" value="USIC_ChannelType"><param name="Local" value="_usic_8h.html#aace034603afb99f890b4655a6aec7c70"><param name="ImageNumber" value="11"></OBJECT>
+      <LI><OBJECT type="text/sitemap"><param name="Name" value="USIC_SRType"><param name="Local" value="_usic_8h.html#ad72c8ea5eb875f23e3b2d5bdd993df96"><param name="ImageNumber" value="11"></OBJECT>
+      </UL>
+    </UL>
+  <LI><OBJECT type="text/sitemap"><param name="Name" value="Globals"><param name="Local" value="globals.html"><param name="ImageNumber" value="11"></OBJECT>
+    <UL>
+    <LI><OBJECT type="text/sitemap"><param name="Name" value="All"><param name="Local" value="globals.html"><param name="ImageNumber" value="11"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Name" value="Functions"><param name="Local" value="globals_func.html"><param name="ImageNumber" value="11"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Name" value="Typedefs"><param name="Local" value="globals_type.html"><param name="ImageNumber" value="11"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Name" value="Enumerations"><param name="Local" value="globals_enum.html"><param name="ImageNumber" value="11"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Name" value="Enumerator"><param name="Local" value="globals_eval.html"><param name="ImageNumber" value="11"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Name" value="Defines"><param name="Local" value="globals_defs.html"><param name="ImageNumber" value="11"></OBJECT>
+    </UL>
+  </UL>
+</UL>
+</BODY>
+</HTML>

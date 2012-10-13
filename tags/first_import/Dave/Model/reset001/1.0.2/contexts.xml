@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<contexts>
+    <context id="http://www.infineon.com/1.0.2/app/reset001/0" title="RESET001">
+        <description>App which provides APIs to 
+assert/deassert peripheral
+ modules.</description>
+        <topic href="/PLUGINS_ROOT/com.ifx.davex.help/www.infineon.com/1.0.2/app/reset001/0/doc/html/group___r_e_s_e_t001_app.html" label="More Info"/>
+    </context>
+    <context id="http://www.infineon.com/1.0.2/app/reset001/0/reset001_assertreset" title="">
+        <description>Function to enable reset of peripheral by software.</description>
+    </context>
+    <context id="http://www.infineon.com/1.0.2/app/reset001/0/reset001_deassertreset" title="">
+        <description>function  to clear the  Reset of the desired peripheral.</description>
+    </context>
+    <context id="http://www.infineon.com/1.0.2/app/reset001/0/reset001_getresetinfo" title="">
+        <description>Function to get the  reason of last reset.</description>
+    </context>
+    <context id="http://www.infineon.com/1.0.2/app/reset001/0/reset001_getstatus" title="">
+        <description>Function to get the reset status of the peripheral</description>
+    </context>
+    <context id="http://www.infineon.com/1.0.2/app/reset001/0/rcurst" title="">
+        <description>Description is not available</description>
+    </context>
+    <context id="http://www.infineon.com/1.0.2/app/reset001/0/vadcreset" title="">
+        <description>Description is not available</description>
+    </context>
+    <context id="http://www.infineon.com/1.0.2/app/reset001/0/dsdreset" title="">
+        <description>Description is not available</description>
+    </context>
+    <context id="http://www.infineon.com/1.0.2/app/reset001/0/ccu4reset0" title="">
+        <description>Description is not available</description>
+    </context>
+    <context id="http://www.infineon.com/1.0.2/app/reset001/0/ccu4reset1" title="">
+        <description>Description is not available</description>
+    </context>
+    <context id="http://www.infineon.com/1.0.2/app/reset001/0/ccu4reset2" title="">
+        <description>Description is not available</description>
+    </context>
+    <context id="http://www.infineon.com/1.0.2/app/reset001/0/ccu4reset3" title="">
+        <description>Description is not available</description>
+    </context>
+    <context id="http://www.infineon.com/1.0.2/app/reset001/0/ccu8reset0" title="">
+        <description>Description is not available</description>
+    </context>
+    <context id="http://www.infineon.com/1.0.2/app/reset001/0/ccu8reset1" title="">
+        <description>Description is not available</description>
+    </context>
+    <context id="http://www.infineon.com/1.0.2/app/reset001/0/posifreset0" title="">
+        <description>Description is not available</description>
+    </context>
+    <context id="http://www.infineon.com/1.0.2/app/reset001/0/posifreset1" title="">
+        <description>Description is not available</description>
+    </context>
+    <context id="http://www.infineon.com/1.0.2/app/reset001/0/usicreset0" title="">
+        <description>Description is not available</description>
+    </context>
+    <context id="http://www.infineon.com/1.0.2/app/reset001/0/usicreset1" title="">
+        <description>Description is not available</description>
+    </context>
+    <context id="http://www.infineon.com/1.0.2/app/reset001/0/usicreset2" title="">
+        <description>Description is not available</description>
+    </context>
+    <context id="http://www.infineon.com/1.0.2/app/reset001/0/eru1reset" title="">
+        <description>Description is not available</description>
+    </context>
+    <context id="http://www.infineon.com/1.0.2/app/reset001/0/mmcreset" title="">
+        <description>Description is not available</description>
+    </context>
+    <context id="http://www.infineon.com/1.0.2/app/reset001/0/fcereset" title="">
+        <description>Description is not available</description>
+    </context>
+    <context id="http://www.infineon.com/1.0.2/app/reset001/0/ledtsreset" title="">
+        <description>Description is not available</description>
+    </context>
+    <context id="http://www.infineon.com/1.0.2/app/reset001/0/pportreset" title="">
+        <description>Description is not available</description>
+    </context>
+    <context id="http://www.infineon.com/1.0.2/app/reset001/0/usbreset" title="">
+        <description>Description is not available</description>
+    </context>
+    <context id="http://www.infineon.com/1.0.2/app/reset001/0/mcanreset" title="">
+        <description>Description is not available</description>
+    </context>
+    <context id="http://www.infineon.com/1.0.2/app/reset001/0/wdtreset" title="">
+        <description>Description is not available</description>
+    </context>
+    <context id="http://www.infineon.com/1.0.2/app/reset001/0/dacreset" title="">
+        <description>Description is not available</description>
+    </context>
+    <context id="http://www.infineon.com/1.0.2/app/reset001/0/dmareset0" title="">
+        <description>Description is not available</description>
+    </context>
+    <context id="http://www.infineon.com/1.0.2/app/reset001/0/dmareset1" title="">
+        <description>Description is not available</description>
+    </context>
+    <context id="http://www.infineon.com/1.0.2/app/reset001/0/ebureset" title="">
+        <description>Description is not available</description>
+    </context>
+</contexts>

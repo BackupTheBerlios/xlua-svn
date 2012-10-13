@@ -1,0 +1,1492 @@
+/**
+@ingroup RTOS001_Legal
+@{
+\page RTOS001_legalpage Copyright and Licensing Information
+----------------------------------------------------------------------------<BR>
+      RL-ARM - RTX<BR>
+----------------------------------------------------------------------------<BR>
+       Name:    RTX_CONFIG.C<BR>
+       Purpose: Configuration of CMSIS RTX Kernel for Cortex-M<BR>
+       Rev.:    V4.20<BR>
+----------------------------------------------------------------------------<BR>
+      This code is part of the RealView Run-Time Library.<BR>
+      Copyright (c) 2004-2011 KEIL - An ARM Company. All rights reserved.<BR>
+---------------------------------------------------------------------------<BR>
+
+Copyright (c) 1999-2009 KEIL, 2009-2011 ARM Germany GmbH
+All rights reserved.
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+- Redistributions of source code must retain the above copyright
+  notice, this list of conditions and the following disclaimer.
+- Redistributions in binary form must reproduce the above copyright
+  notice, this list of conditions and the following disclaimer in the
+  documentation and/or other materials provided with the distribution.
+- Neither the name of ARM  nor the names of its contributors may be used
+  to endorse or promote products derived from this software without
+  specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL COPYRIGHT HOLDERS AND CONTRIBUTORS BE
+LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+Copyright (c) 2011, Infineon Technologies AG
+All rights reserved. 
+
+Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met: 
+Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer. 
+Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution. 
+Neither the name of the copyright holders nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+To improve the quality of the software, users are encouraged to share modifications, enhancements or bug fixes with Infineon Technologies AG (dave@infineon.com).
+@}
+
+@ingroup RTOS001_intro
+@{
+\page RTOS001_intropage Introduction
+The CMSIS-RTOS API is a generic RTOS interface for Cortex-M processor-based devices. 
+CMSIS-RTOS provides a standardized API for software components and gives therefore serious benefits to the users and 
+the software industry.<BR>
+Please refer [1] for details.<BR>
+
+CMSIS-RTOS API app provides GUI base configuration for CMSIS-RTOS API Library provided by ARM. 
+The CMSIS-RTOS implementation of this RTOS001 App is based on ARM RTX and is developed by ARM and is published under the popular 
+open-source BSD license and is available for download from http://www.keil.com/demo/eval/rtx.htm.
+The official documentation of the used CMSIS RTX version can be downloaded separately from 
+http://media.infineon.com/DAVE_3/CMSIS_RTX/CMSIS_RTX_Doc.zip
+
+
+\section RTOS001_scopesec Scope
+Scope of this App is to provide an RTOS implementation (source code) using the CMSIS-RTOS APIs and Configuration for CMSIS-RTOS API layer.
+
+\section RTOS001_abbreviation
+<OL>
+<LI>OS : Operating System</LI>
+<LI>RTOS: Real Time Operating System</LI>
+<LI>RTX: Real Time Executive</LI>
+<LI>CMSIS: Cortex Microcontroller Software Interface Standard</LI>
+</OL>
+
+\section RTOS001_reference
+cmsis documentation can be downloaded from :
+<BR>
+[1] http://www.onarm.com/Cmsis/
+<BR>
+[2] To view updated version of the CMSIS RTOS API documentation <a href="..\cmsis\html\index.html"><B>Click here</B></a>
+
+\section RTOS001_limitation
+[1] This port of RTX does not start main as a thread.
+<BR>
+[2] Starting the Kernel shall be triggered from user code by explicitly calling the 'osKernelStart()' API.
+@}
+*/
+
+/**
+@ingroup RTOS001_overview
+@{
+\page RTOS001_overviewpage Overview
+CMSIS-RTOS APIs provides RTOS functionalities like  Task Management, Semaphore Management, Timer functionality etc. 
+<BR>Please refer <a href="..\cmsis\html\index.html"><B>CMSIS API Documentation</B></a> for details.
+@}
+
+@ingroup RTOS001_filestructure File Structure
+@{
+\page RTOS001_filestructurepage 
+<OL>
+<LI>RTX_CM_lib.h : This is the third party file containing RTX Kernel System Configuration</LI>
+<LI>cmsis_cm.h : This is the third party file containing CMSIS Cortex-M definitions</LI>
+<LI>HAL_CM.c : This is the third party file implementing Hardware Abstraction Layer for Cortex-M</LI>
+<LI>rt_CMSIS.c : This is the third party file implementing CMSIS RTOS API</LI>
+<LI>rt_Event.c : This is the third party file implementing waits and wake-ups for event flags</LI>
+<LI>rt_Event.h : This is the third party file implementing waits and wake-ups for event flags</LI>
+<LI>rt_HAL_CM.h : This is the third party file implementing Hardware Abstraction Layer for Cortex-M definitions</LI>
+<LI>rt_List.c : This is the third party file implementing Functions for the management of different lists</LI>
+<LI>rt_List.h : This is the third party file containing Functions for the management of different lists</LI>
+<LI>rt_Mailbox.c : This is the third party file implementing waits and wake-ups for mailbox messages</LI>
+<LI>rt_Mailbox.h : This is the third party file implementing waits and wake-ups for mailbox messages</LI>
+<LI>rt_MemBox.c : This is the third party file containing Interface functions for fixed memory block management system</LI>
+<LI>rt_MemBox.h : This is the third party file containing Interface functions for fixed memory block management system</LI>
+<LI>rt_Memory.c : This is the third party file containing Interface functions for Dynamic Memory Management System</LI>
+<LI>rt_Memory.h : This is the third party file containing Interface functions for Dynamic Memory Management System</LI>
+<LI>rt_Mutex.c : This is the third party file implementing mutex synchronization objects</LI>
+<LI>rt_Mutex.h : This is the third party file implementing mutex synchronization objects</LI>
+<LI>rt_Memory.c : This is the third party file containing Interface functions for Dynamic Memory Management System</LI>
+<LI>rt_Memory.h : This is the third party file containing Interface functions for Dynamic Memory Management System</LI>
+<LI>rt_Robin.c : This is the third party file implementing Round Robin Task switching</LI>
+<LI>rt_Robin.h : This is the third party file implementing Round Robin Task switching</LI>
+<LI>rt_Semaphore.c : This is the third party file implementing binary and counting semaphores</LI>
+<LI>rt_Semaphore.h : This is the third party file implementing binary and counting semaphores</LI>
+<LI>rt_System.c : This is the third party file implementing System Task Manager</LI>
+<LI>rt_System.h : This is the third party file implementing System Task Manager</LI>
+<LI>rt_Task.c : This is the third party file implementing Task functions and system start up.</LI>
+<LI>rt_Task.h : This is the third party file implementing Task functions and system start up.</LI>
+<LI>rt_Time.c : This is the third party file implementing Delay and interval wait functions</LI>
+<LI>rt_Time.h : This is the third party file implementing Delay and interval wait functions</LI>
+<LI>rt_Timer.h : This is the third party file implementing User timer functions</LI>
+<LI>rt_TypeDef.h : This is the third party file containing type Definitions</LI>
+<LI>RTX_Config.h : This is the third party file implementing exported functions of RTX_Config.c</LI>
+<LI>RTX_Conf_CM.c : This is the third party file containing configuration of CMSIS RTX Kernel for Cortex-M</LI>
+</OL>
+@}
+
+@ingroup RTOS001_appconfigdoc App Configuration Documentation
+@{
+\page RTOS001_appconfigdocpage
+The diagram shows the UI for the App.
+<br>
+<img src="..\CMSIS.PNG" title="GUI for RTOS001 App" align="center" border="3" hspace="5" vspace="5" />
+<br>
+
+<table border=0 cellpadding=0 cellspacing=0 width=870 style='border-collapse:
+ collapse;table-layout:fixed;width:653pt'>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl1513868 width=217 style='height:15.0pt;width:163pt;
+  font-size:11.0pt;color:white;font-weight:700;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border-top:none;border-right:
+  .5pt solid white;border-bottom:1.5pt solid white;border-left:none;background:
+  #4F81BD;mso-pattern:#4F81BD none'>Name</td>
+  <td class=xl1513868 width=171 style='width:128pt;font-size:11.0pt;color:white;
+  font-weight:700;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:1.5pt solid white;border-left:none;background:#4F81BD;
+  mso-pattern:#4F81BD none'>URI</td>
+  <td class=xl1513868 width=482 style='width:362pt;font-size:11.0pt;color:white;
+  font-weight:700;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  1.5pt solid white;border-left:none;background:#4F81BD;mso-pattern:#4F81BD none'>Description</td>
+ </tr>
+ <tr height=40 style='height:30.0pt'>
+  <td height=40 class=xl1513868 style='height:30.0pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>RTOS Selection</td>
+  <td class=xl1513868 style='font-size:11.0pt;color:black;font-weight:400;
+  text-decoration:none;text-underline-style:none;text-line-through:none;
+  font-family:Calibri;border-top:none;border-right:.5pt solid white;border-bottom:
+  .5pt solid white;border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>rtos001_erwrtosselection</td>
+  <td class=xl6313868 width=482 style='width:362pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>Selects the specific RTOS to be used.<br>Currently only RTX is supported.</td>
+ </tr>
+ <tr height=51 style='mso-height-source:userset;height:38.25pt'>
+  <td height=51 class=xl1513868 style='height:38.25pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>Memory Pools</td>
+  <td class=xl1513868 style='font-size:11.0pt;color:black;font-weight:400;
+  text-decoration:none;text-underline-style:none;text-line-through:none;
+  font-family:Calibri;border-top:none;border-right:.5pt solid white;border-bottom:
+  .5pt solid white;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>rtos001_erwmempool</td>
+  <td class=xl6313868 width=482 style='width:362pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>Enables support for Memory Pools.<br>CMSIS RTOS supports fixed sized memory pools.<br>When the memory pool is initialized, the RTX kernel handles memory requests by allocating a block of memory from the memory pool.<br></td>
+ </tr>
+ <tr height=48 style='mso-height-source:userset;height:36.0pt'>
+  <td height=48 class=xl1513868 style='height:36.0pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>Mail Queues</td>
+  <td class=xl1513868 style='font-size:11.0pt;color:black;font-weight:400;
+  text-decoration:none;text-underline-style:none;text-line-through:none;
+  font-family:Calibri;border-top:none;border-right:.5pt solid white;border-bottom:
+  .5pt solid white;border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>rtos001_erwmailq</td>
+  <td class=xl6313868 width=482 style='width:362pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>Enables support for Mail Queues.<br>A
+  mail is a memory block that is send to a thread or interrupt service routine.</td>
+ </tr>
+ <tr height=40 style='height:30.0pt'>
+  <td height=40 class=xl1513868 style='height:30.0pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>Message Queues</td>
+  <td class=xl1513868 style='font-size:11.0pt;color:black;font-weight:400;
+  text-decoration:none;text-underline-style:none;text-line-through:none;
+  font-family:Calibri;border-top:none;border-right:.5pt solid white;border-bottom:
+  .5pt solid white;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>rtos001_erwmsgq</td>
+  <td class=xl6313868 width=482 style='width:362pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>Enables support for Message Queues.<BR>A
+  message can be a integer or pointer value that is send to a thread or ISR.<br></td>
+ </tr>
+ <tr height=41 style='mso-height-source:userset;height:30.75pt'>
+  <td height=41 class=xl1513868 style='height:30.75pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>Generic Wait Function</td>
+  <td class=xl1513868 style='font-size:11.0pt;color:black;font-weight:400;
+  text-decoration:none;text-underline-style:none;text-line-through:none;
+  font-family:Calibri;border-top:none;border-right:.5pt solid white;border-bottom:
+  .5pt solid white;border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>rtos001_erwoswait</td>
+  <td class=xl6313868 width=482 style='width:362pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>Enables support for the generic wait function osWait.<BR>RTX RTOS does not support this feature.
+</td></tr>
+ <tr height=80 style='height:60.0pt'>
+  <td height=80 class=xl1513868 style='height:60.0pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>Maximum Signal Flags</td>
+  <td class=xl1513868 style='font-size:11.0pt;color:black;font-weight:400;
+  text-decoration:none;text-underline-style:none;text-line-through:none;
+  font-family:Calibri;border-top:none;border-right:.5pt solid white;border-bottom:
+  .5pt solid white;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>rtos001_irwsignals</td>
+  <td class=xl6313868 width=482 style='width:362pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>Configures the maximum Signal Flags available per thread.<BR>The CMSIS-RTOS API may support a variable number of signal flags.
+  <BR>For RTX RTOS this parameter is not configurable; fixed value of 16 Signal Flags per thread is used.</td>
+ </tr>
+ <tr height=60 style='height:45.0pt'>
+  <td height=60 class=xl1513868 style='height:45.0pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:none;border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>Maximum
+  Semaphore Resources</td>
+  <td class=xl1513868 style='font-size:11.0pt;color:black;font-weight:400;
+  text-decoration:none;text-underline-style:none;text-line-through:none;
+  font-family:Calibri;border-top:none;border-right:.5pt solid white;border-bottom:
+  none;border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>rtos001_irwsemaphores</td>
+  <td class=xl6313868 width=482 style='width:362pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;background:#B8CCE4;mso-pattern:#B8CCE4 none'>Configures the maximum index count for a Semaphore.<BR>
+  It should be within the range of 1 to 65535.</td>
+ </tr>
+</table>
+<br>
+
+<img src="..\RTX.PNG" title="GUI for RTOS001 App" align="center" border="3" hspace="5" vspace="5" />
+<br>
+<table border="1">
+<tr height=21 style='height:15.75pt'>
+  <td height=21 class=xl731119 width=167 style='height:15.75pt;width:125pt font-size:9.0pt;color:black;
+  font-weight:700;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:.5pt solid white;
+  border-bottom:1.5pt solid white;border-left:none;background:#4F81BD;
+  mso-pattern:#4F81BD none'>Name</td>
+  <td class=xl731119 width=293 style='width:220ptfont-size:9.0pt;color:black;
+  font-weight:700;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:.5pt solid white;
+  border-bottom:1.5pt solid white;border-left:none;background:#4F81BD;
+  mso-pattern:#4F81BD none'>URI</td>
+  <td class=xl771119 width=332 style='width:249pt;font-size:9.0pt;color:black;
+  font-weight:700;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:.5pt solid white;
+  border-bottom:1.5pt solid white;border-left:none;background:#4F81BD;
+  mso-pattern:#4F81BD none'>Description</td>
+  <td class=xl151119></td>
+  <td class=xl151119></td>
+  <td class=xl151119></td>
+ </tr>
+ <tr height=33 style='height:24.75pt'>
+  <td height=33 class=xl741119 width=167 style='height:24.75pt;width:125pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>Timer Tick value in us</td>
+  <td class=xl741119 width=293 style='width:220pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>rtos001_irwtick</td>
+  <td class=xl781119 width=332 style='width:249pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>This allows user to enter timer tick value in us(For SysTick Timer Configuration) <BR> Unit : us <BR>Range : 1 to 1000000</td>
+  <td class=xl151119></td>
+  <td class=xl151119></td>
+  <td class=xl151119></td>
+ </tr>
+ <tr height=32 style='height:24.0pt'>
+  <td height=32 class=xl751119 width=167 style='height:24.0pt;width:125pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>Maximum Number of concurrent running threads</td>
+  <td class=xl751119 width=293 style='width:220pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>rtos001_irwtaskcnt</td>
+  <td class=xl791119 width=332 style='width:249pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>This allows user to enter maximum number of threads that will run at the same time <BR> Unit : number of tasks <BR>Range : 0 to 250</td>
+  <td class=xl151119></td>
+  <td class=xl151119></td>
+  <td class=xl151119></td>
+ </tr>
+ <tr height=32 style='height:24.0pt'>
+  <td height=32 class=xl741119 width=167 style='height:24.0pt;width:125pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>Number of threads with default stack size</td>
+  <td class=xl741119 width=293 style='width:220pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>rtos001_irdefaultcnt</td>
+  <td class=xl781119 width=332 style='width:249pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>This is the difference between number of concurrent running threads and number of threads with user provided stack size.This is non-editable. <BR> Unit : number of tasks <BR>Range : 0 to 250</td>
+  <td class=xl151119></td>
+  <td class=xl151119></td>
+  <td class=xl151119></td>
+ </tr>
+ <tr height=32 style='height:24.0pt'>
+  <td height=32 class=xl741119 width=167 style='height:24.0pt;width:125pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>Number of threads with user-provided stack size</td>
+  <td class=xl741119 width=293 style='width:220pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>rtos001_irwpricnt</td>
+  <td class=xl781119 width=332 style='width:249pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>This allows user to enter the number of threads with user-provided stack size <BR> Unit : number of tasks <BR>Range : 0 to 250</td>
+  <td class=xl151119></td>
+  <td class=xl151119></td>
+  <td class=xl151119></td>
+ </tr>
+ <tr height=47 style='height:35.25pt'>
+  <td height=47 class=xl751119 width=167 style='height:35.25pt;width:125pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>Privileged Mode</td>
+  <td class=xl751119 width=293 style='width:220pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>rtos001_erwrunpriv</td>
+  <td class=xl791119 width=332 style='width:249pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>This allows to run all threads in privileged mode.</td>
+  <td class=xl151119></td>
+  <td class=xl151119></td>
+  <td class=xl151119></td>
+ </tr>
+ <tr height=32 style='height:24.0pt'>
+  <td height=32 class=xl741119 width=167 style='height:24.0pt;width:125pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>Default stack size for threads in bytes</td>
+  <td class=xl741119 width=293 style='width:220pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>rtos001_irwstksize</td>
+  <td class=xl781119 width=332 style='width:249pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>This allows user to enter default stack size for threads. <BR> Unit : bytes <BR>Range : 64 to 4096</td>
+  <td class=xl151119></td>
+  <td class=xl151119></td>
+  <td class=xl151119></td>
+ </tr>
+ <tr height=32 style='height:24.0pt'>
+  <td height=32 class=xl741119 width=167 style='height:24.0pt;width:125pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>Total stack size for threads with user-provided stack size in bytes</td>
+  <td class=xl741119 width=293 style='width:220pt font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>rtos001_irwprivstksize</td>
+  <td class=xl781119 width=332 style='width:249pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>This allows user to enter the combined stack size for threads with user-provided stack size.This field will be editable only when user enters non zero value for "Number of threads with user-provided stack size"<BR> Unit : bytes <BR>Range : 0 to 4096</td>
+  <td class=xl151119></td>
+  <td class=xl151119></td>
+  <td class=xl151119></td>
+  
+  <tr height=47 style='height:35.25pt'>
+  <td height=47 class=xl751119 width=167 style='height:35.25pt;width:125pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>Stack checking code</td>
+  <td class=xl751119 width=293 style='width:220pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>rtos001_erwstkcheck</td>
+  <td class=xl791119 width=332 style='width:249pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>This allows to includes the stack checking code for stack overflow</td>
+  <td class=xl151119></td>
+  <td class=xl151119></td>
+  <td class=xl151119></td>
+ </tr>
+  <tr height=32 style='height:24.0pt'>
+  <td height=32 class=xl751119 width=167 style='height:24.0pt;width:125pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>User timer Thread stack size in bytes</td>
+  <td class=xl751119 width=293 style='width:220pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>rtos001_irwtimerstksize</td>
+  <td class=xl791119 width=332 style='width:249pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>This allows user to enter the stack size for timer thread. This field will be editable only when user timer is enabled.<BR> Unit : bytes <BR>Range : 64 to 4096</td>
+  <td class=xl151119></td>
+  <td class=xl151119></td>
+  <td class=xl151119></td>
+ </tr>
+ </tr>
+ <tr height=47 style='height:35.25pt'>
+  <td height=47 class=xl751119 width=167 style='height:35.25pt;width:125pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>Total Stack Requirement</td>
+  <td class=xl751119 width=293 style='width:220pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>rtos001_irtotalstksize</td>
+  <td class=xl791119 width=332 style='width:249pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>This informs total stack requirement.non-editable field</td>
+  <td class=xl151119></td>
+  <td class=xl151119></td>
+  <td class=xl151119></td>
+ </tr>
+ <tr height=33 style='height:24.75pt'>
+  <td height=33 class=xl741119 width=167 style='height:24.75pt;width:125pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>Round Robin Thread Switching</td>
+  <td class=xl741119 width=293 style='width:220pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>rtos001_erwrndrobin</td>
+  <td class=xl781119 width=332 style='width:249pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>This allows user to enable round robin thread switching</td>
+  <td class=xl151119></td>
+  <td class=xl151119></td>
+  <td class=xl151119></td>
+ </tr>
+ <tr height=32 style='height:24.0pt'>
+  <td height=32 class=xl751119 width=167 style='height:24.0pt;width:125pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>Round-Robin Timeout in Ticks</td>
+  <td class=xl751119 width=293 style='width:220pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>rtos001_irwrobintout</td>
+  <td class=xl791119 width=332 style='width:249pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>This allows user to enter how long a thread will execute before a thread switch <BR> Unit : Ticks <BR>Range : 1 to 1000</td>
+  <td class=xl151119></td>
+  <td class=xl151119></td>
+  <td class=xl151119></td>
+ </tr>
+ <tr height=32 style='height:24.0pt'>
+  <td height=32 class=xl741119 width=167 style='height:24.0pt;width:125pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>Maximum Number of entries in ISR FIFO Queue</td>
+  <td class=xl741119 width=293 style='width:220pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>rtos001_irwfifosz</td>
+  <td class=xl781119 width=332 style='width:249pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>This allows user to enter maximum number of ISR requests that can be buffered in FIFO Queue</td>
+  <td class=xl151119></td>
+  <td class=xl151119></td>
+  <td class=xl151119></td>
+ </tr>
+ <tr height=47 style='height:35.25pt'>
+  <td height=47 class=xl751119 width=167 style='height:35.25pt;width:125pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>Maximum Number of system mutexes</td>
+  <td class=xl751119 width=293 style='width:220pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>rtos001_irwmutxes</td>
+  <td class=xl791119 width=332 style='width:249pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>This allows to enter maximum number system mutexes that are used to protect the arm standard runtime library <BR> Unit : number of mutexes <BR>Range : 0 to 128</td>
+  <td class=xl151119></td>
+  <td class=xl151119></td>
+  <td class=xl151119></td>
+ </tr>
+ <tr height=32 style='height:24.0pt'>
+  <td height=32 class=xl741119 width=167 style='height:24.0pt;width:125pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>Enable user timers</td>
+  <td class=xl741119 width=293 style='width:220pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>rtos001_erwtimers</td>
+  <td class=xl781119 width=332 style='width:249pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>This is to enable user timers</td>
+  <td class=xl151119></td>
+  <td class=xl151119></td>
+  <td class=xl151119></td>
+ </tr>
+ 
+ <tr height=32 style='height:24.0pt'>
+  <td height=32 class=xl741119 width=167 style='height:24.0pt;width:125pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>Timer Thread Priority</td>
+  <td class=xl741119 width=293 style='width:220pt font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>rtos001_erwtimerprio</td>
+  <td class=xl781119 width=332 style='width:249pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>This allows user to enter priority for the timer thread.</td>
+  <td class=xl151119></td>
+  <td class=xl151119></td>
+  <td class=xl151119></td>
+ </tr>
+ <tr height=47 style='height:35.25pt'>
+  <td height=47 class=xl751119 width=167 style='height:35.25pt;width:125pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>Maximum Number of concurrent callbacks</td>
+  <td class=xl751119 width=293 style='width:220pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>rtos001_irwtimercbqsize</td>
+  <td class=xl791119 width=332 style='width:249pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>This allows user to enter maximum number of concurrent callbacks that can be queued <BR> Unit : number of concurrent callbacks <BR>Range : 1 to 32</td>
+  <td class=xl151119></td>
+  <td class=xl151119></td>
+  <td class=xl151119></td>
+ </tr>
+  <tr height=47 style='height:35.25pt'>
+  <td height=47 class=xl751119 width=167 style='height:35.25pt;width:125pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>User defined function for Idle demon</td>
+  <td class=xl751119 width=293 style='width:220pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>rtos001_idledemon</td>
+  <td class=xl791119 width=332 style='width:249pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>This allows user to enter the name of the function that is to be executed when no thread runs.</td>
+  <td class=xl151119></td>
+  <td class=xl151119></td>
+  <td class=xl151119></td>
+ </tr>
+ <tr height=47 style='height:35.25pt'>
+  <td height=47 class=xl751119 width=167 style='height:35.25pt;width:125pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>User defined function for os error</td>
+  <td class=xl751119 width=293 style='width:220pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>rtos001_oserror</td>
+  <td class=xl791119 width=332 style='width:249pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>This allows user to enter the name of the function that is to be executed on os error.</td>
+  <td class=xl151119></td>
+  <td class=xl151119></td>
+  <td class=xl151119></td>
+ </tr>
+ </table>
+
+@}
+*/
+
+/**
+@ingroup RTOS001_publishedparams
+@{
+\page Note NOTE: URIs given in tables below are for App developer use. App developer can make use of these URIs to create top level apps by consuming this app. 
+
+\section GEN002_Virtual_Signal Virtual Signals 
+None.
+
+\section RTOS001_Consumed_Parameters Consumed Parameters
+<br>
+<table border=0 cellpadding=0 cellspacing=0 width=1028 style='border-collapse:
+ collapse;table-layout:fixed;width:772pt'>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl1515326 width=64 style='height:15.0pt;width:48pt;
+  font-size:11.0pt;color:white;font-weight:700;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border-top:none;border-right:
+  .5pt solid white;border-bottom:1.5pt solid white;border-left:none;background:
+  #4F81BD;mso-pattern:#4F81BD none'>Name</td>
+  <td class=xl1515326 width=250 style='width:188pt;font-size:11.0pt;color:white;
+  font-weight:700;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:1.5pt solid white;border-left:none;background:#4F81BD;
+  mso-pattern:#4F81BD none'>URI</td>
+  <td class=xl1515326 width=536 style='width:402pt;font-size:11.0pt;color:white;
+  font-weight:700;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:1.5pt solid white;border-left:none;background:#4F81BD;
+  mso-pattern:#4F81BD none'>Description</td>
+  <td class=xl1515326 width=178 style='width:134pt;font-size:11.0pt;color:white;
+  font-weight:700;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  1.5pt solid white;border-left:none;background:#4F81BD;mso-pattern:#4F81BD none'>Conditional
+  consumption</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl1515326 style='height:15.0pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>systick</td>
+  <td class=xl1515326 style='font-size:11.0pt;color:black;font-weight:400;
+  text-decoration:none;text-underline-style:none;text-line-through:none;
+  font-family:Calibri;border-top:none;border-right:.5pt solid white;border-bottom:
+  .5pt solid white;border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>peripheral/cpu/0/systick</td>
+  <td class=xl1515326 style='font-size:11.0pt;color:black;font-weight:400;
+  text-decoration:none;text-underline-style:none;text-line-through:none;
+  font-family:Calibri;border-top:none;border-right:.5pt solid white;border-bottom:
+  .5pt solid white;border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>To
+  configure System Tick Timer</td>
+  <td class=xl1515326 style='font-size:11.0pt;color:black;font-weight:400;
+  text-decoration:none;text-underline-style:none;text-line-through:none;
+  font-family:Calibri;border-top:none;border-right:none;border-bottom:.5pt solid white;
+  border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>Always</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl1515326 style='height:15.0pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>fpu</td>
+  <td class=xl1515326 style='font-size:11.0pt;color:black;font-weight:400;
+  text-decoration:none;text-underline-style:none;text-line-through:none;
+  font-family:Calibri;border-top:none;border-right:.5pt solid white;border-bottom:
+  .5pt solid white;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>peripheral/cpu/0/fpu</td>
+  <td class=xl1515326 style='font-size:11.0pt;color:black;font-weight:400;
+  text-decoration:none;text-underline-style:none;text-line-through:none;
+  font-family:Calibri;border-top:none;border-right:.5pt solid white;border-bottom:
+  .5pt solid white;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>This
+  is required in case if RTOS configures FPU</td>
+  <td class=xl1515326 style='font-size:11.0pt;color:black;font-weight:400;
+  text-decoration:none;text-underline-style:none;text-line-through:none;
+  font-family:Calibri;border-top:none;border-right:none;border-bottom:.5pt solid white;
+  border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>Always</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl1515326 style='height:15.0pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>memory_<span style='display:none'>protection</span></td>
+  <td class=xl1515326 style='font-size:11.0pt;color:black;font-weight:400;
+  text-decoration:none;text-underline-style:none;text-line-through:none;
+  font-family:Calibri;border-top:none;border-right:.5pt solid white;border-bottom:
+  .5pt solid white;border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>peripheral/cpu/0/memory_protection</td>
+  <td class=xl1515326 style='font-size:11.0pt;color:black;font-weight:400;
+  text-decoration:none;text-underline-style:none;text-line-through:none;
+  font-family:Calibri;border-top:none;border-right:.5pt solid white;border-bottom:
+  .5pt solid white;border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>memory
+  protection</td>
+  <td class=xl1515326 style='font-size:11.0pt;color:black;font-weight:400;
+  text-decoration:none;text-underline-style:none;text-line-through:none;
+  font-family:Calibri;border-top:none;border-right:none;border-bottom:.5pt solid white;
+  border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>Always</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl1515326 style='height:15.0pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>exception<span style='display:none'>systick</span></td>
+  <td class=xl1515326 style='font-size:11.0pt;color:black;font-weight:400;
+  text-decoration:none;text-underline-style:none;text-line-through:none;
+  font-family:Calibri;border-top:none;border-right:.5pt solid white;border-bottom:
+  .5pt solid white;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>peripheral/cpu/0/exception/systick</td>
+  <td class=xl1515326 style='font-size:11.0pt;color:black;font-weight:400;
+  text-decoration:none;text-underline-style:none;text-line-through:none;
+  font-family:Calibri;border-top:none;border-right:.5pt solid white;border-bottom:
+  .5pt solid white;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>SysTick
+  exception</td>
+  <td class=xl1515326 style='font-size:11.0pt;color:black;font-weight:400;
+  text-decoration:none;text-underline-style:none;text-line-through:none;
+  font-family:Calibri;border-top:none;border-right:none;border-bottom:.5pt solid white;
+  border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>Always</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl1515326 style='height:15.0pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>pendsv</td>
+  <td class=xl1515326 style='font-size:11.0pt;color:black;font-weight:400;
+  text-decoration:none;text-underline-style:none;text-line-through:none;
+  font-family:Calibri;border-top:none;border-right:.5pt solid white;border-bottom:
+  .5pt solid white;border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>peripheral/cpu/0/exception/pendsv</td>
+  <td class=xl1515326 style='font-size:11.0pt;color:black;font-weight:400;
+  text-decoration:none;text-underline-style:none;text-line-through:none;
+  font-family:Calibri;border-top:none;border-right:.5pt solid white;border-bottom:
+  .5pt solid white;border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>Use
+  PendSV for context switching when no other exception is active.</td>
+  <td class=xl1515326 style='font-size:11.0pt;color:black;font-weight:400;
+  text-decoration:none;text-underline-style:none;text-line-through:none;
+  font-family:Calibri;border-top:none;border-right:none;border-bottom:.5pt solid white;
+  border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>Always</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl1515326 style='height:15.0pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>svcall</td>
+  <td class=xl1515326 style='font-size:11.0pt;color:black;font-weight:400;
+  text-decoration:none;text-underline-style:none;text-line-through:none;
+  font-family:Calibri;border-top:none;border-right:.5pt solid white;border-bottom:
+  .5pt solid white;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>peripheral/cpu/0/exception/svcall</td>
+  <td class=xl1515326 style='font-size:11.0pt;color:black;font-weight:400;
+  text-decoration:none;text-underline-style:none;text-line-through:none;
+  font-family:Calibri;border-top:none;border-right:.5pt solid white;border-bottom:
+  .5pt solid white;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>supervisor
+  call : Use SVC instructions to access OS kernel functions and device drivers.</td>
+  <td class=xl1515326 style='font-size:11.0pt;color:black;font-weight:400;
+  text-decoration:none;text-underline-style:none;text-line-through:none;
+  font-family:Calibri;border-top:none;border-right:none;border-bottom:.5pt solid white;
+  border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>Always</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl1515326 style='height:15.0pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:none;border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>clkApp</td>
+  <td class=xl1515326 style='font-size:11.0pt;color:black;font-weight:400;
+  text-decoration:none;text-underline-style:none;text-line-through:none;
+  font-family:Calibri;border-top:none;border-right:.5pt solid white;border-bottom:
+  none;border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>app/clk001/*</td>
+  <td class=xl1515326 style='font-size:11.0pt;color:black;font-weight:400;
+  text-decoration:none;text-underline-style:none;text-line-through:none;
+  font-family:Calibri;border-top:none;border-right:.5pt solid white;border-bottom:
+  none;border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>Clock App : to configure timer clock value</td>
+  <td class=xl1515326 style='font-size:11.0pt;color:black;font-weight:400;
+  text-decoration:none;text-underline-style:none;text-line-through:none;
+  font-family:Calibri;background:#B8CCE4;mso-pattern:#B8CCE4 none'>Always</td>
+ </tr>
+</table>
+
+\section RTOS001_Provided_Parameters Provided Parameters
+<table border="1">
+<tr height=21 style='height:15.75pt'>
+  <td height=21 class=xl731119 width=167 style='height:15.75pt;width:125pt font-size:9.0pt;color:black;
+  font-weight:700;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:.5pt solid white;
+  border-bottom:1.5pt solid white;border-left:none;background:#4F81BD;
+  mso-pattern:#4F81BD none'>Name</td>
+  <td class=xl731119 width=293 style='width:220ptfont-size:9.0pt;color:black;
+  font-weight:700;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:.5pt solid white;
+  border-bottom:1.5pt solid white;border-left:none;background:#4F81BD;
+  mso-pattern:#4F81BD none'>URI</td>
+  <td class=xl771119 width=332 style='width:249pt;font-size:9.0pt;color:black;
+  font-weight:700;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:.5pt solid white;
+  border-bottom:1.5pt solid white;border-left:none;background:#4F81BD;
+  mso-pattern:#4F81BD none'>Description</td>
+  <td class=xl641119 width=178 style='width:134pt;font-size:9.0pt;color:black;
+  font-weight:700;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:none;border-bottom:
+  1.5pt solid white;border-left:none;background:#4F81BD;mso-pattern:#4F81BD none'>Access
+  Mode</td>
+  <td class=xl151119></td>
+  <td class=xl151119></td>
+  <td class=xl151119></td>
+ </tr>
+  <tr height=40 style='height:30.0pt'>
+  <td height=40 class=xl1513868 style='height:30.0pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>RTOS Selection</td>
+  <td class=xl1513868 style='font-size:11.0pt;color:black;font-weight:400;
+  text-decoration:none;text-underline-style:none;text-line-through:none;
+  font-family:Calibri;border-top:none;border-right:.5pt solid white;border-bottom:
+  .5pt solid white;border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>rtos001_erwrtosselection</td>
+  <td class=xl6313868 width=482 style='width:362pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>Selects the specific RTOS to be used.<br>
+    Currently only RTX is supported.</td><td class=xl651119 width=178 style='width:134pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>R/W</td>
+ </tr>
+ <tr height=51 style='mso-height-source:userset;height:38.25pt'>
+  <td height=51 class=xl1513868 style='height:38.25pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>Memory Pools</td>
+  <td class=xl1513868 style='font-size:11.0pt;color:black;font-weight:400;
+  text-decoration:none;text-underline-style:none;text-line-through:none;
+  font-family:Calibri;border-top:none;border-right:.5pt solid white;border-bottom:
+  .5pt solid white;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>rtos001_erwmempool</td>
+  <td class=xl6313868 width=482 style='width:362pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>Enables support for Memory Pools.<br>CMSIS RTOS supports fixed sized memory pools.<br>When the memory pool is initialized, the RTX kernel handles memory requests by allocating a block of memory from the memory pool.
+  </td><td class=xl651119 width=178 style='width:134pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>R/W</td>
+ </tr>
+ <tr height=48 style='mso-height-source:userset;height:36.0pt'>
+  <td height=48 class=xl1513868 style='height:36.0pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>Mail Queues</td>
+  <td class=xl1513868 style='font-size:11.0pt;color:black;font-weight:400;
+  text-decoration:none;text-underline-style:none;text-line-through:none;
+  font-family:Calibri;border-top:none;border-right:.5pt solid white;border-bottom:
+  .5pt solid white;border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>rtos001_erwmailq</td>
+  <td class=xl6313868 width=482 style='width:362pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>Enables support for Mail Queues.<br>A
+  mail is a memory block that is send to a thread or interrupt service routine.</td>
+  <td class=xl651119 width=178 style='width:134pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>R/W</td>
+ </tr>
+ <tr height=40 style='height:30.0pt'>
+  <td height=40 class=xl1513868 style='height:30.0pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>Message Queues</td>
+  <td class=xl1513868 style='font-size:11.0pt;color:black;font-weight:400;
+  text-decoration:none;text-underline-style:none;text-line-through:none;
+  font-family:Calibri;border-top:none;border-right:.5pt solid white;border-bottom:
+  .5pt solid white;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>rtos001_erwmsgq</td>
+  <td class=xl6313868 width=482 style='width:362pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>Enables support for Message Queues.<BR>A
+  message can be a integer or pointer value that is send to a thread or ISR.</td><td class=xl651119 width=178 style='width:134pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>R/W</td>
+ </tr>
+ <tr height=41 style='mso-height-source:userset;height:30.75pt'>
+  <td height=41 class=xl1513868 style='height:30.75pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>Generic Wait Function</td>
+  <td class=xl1513868 style='font-size:11.0pt;color:black;font-weight:400;
+  text-decoration:none;text-underline-style:none;text-line-through:none;
+  font-family:Calibri;border-top:none;border-right:.5pt solid white;border-bottom:
+  .5pt solid white;border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>rtos001_erwoswait</td>
+  <td class=xl6313868 width=482 style='width:362pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>Enables support for the generic wait function osWait.<BR>RTX RTOS does not support this feature.</td><td class=xl651119 width=178 style='width:134pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>R</td>
+ </tr>
+ <tr height=80 style='height:60.0pt'>
+  <td height=80 class=xl1513868 style='height:60.0pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>Maximum Signal Flags</td>
+  <td class=xl1513868 style='font-size:11.0pt;color:black;font-weight:400;
+  text-decoration:none;text-underline-style:none;text-line-through:none;
+  font-family:Calibri;border-top:none;border-right:.5pt solid white;border-bottom:
+  .5pt solid white;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>rtos001_irwsignals</td>
+  <td class=xl6313868 width=482 style='width:362pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>Configures the maximum Signal Flags available per thread.<BR>The CMSIS-RTOS API may support a variable number of signal flags.
+  <BR>For RTX RTOS this parameter is not configurable; fixed value of 16 Signal Flags per thread is used.</td><td class=xl651119 width=178 style='width:134pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>R</td>
+ </tr>
+ <tr height=60 style='height:45.0pt'>
+  <td height=60 class=xl1513868 style='height:45.0pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:none;border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>Maximum
+  Semaphore Resources</td>
+  <td class=xl1513868 style='font-size:11.0pt;color:black;font-weight:400;
+  text-decoration:none;text-underline-style:none;text-line-through:none;
+  font-family:Calibri;border-top:none;border-right:.5pt solid white;border-bottom:
+  none;border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>rtos001_irwsemaphores</td>
+  <td class=xl6313868 width=482 style='width:362pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;background:#B8CCE4;mso-pattern:#B8CCE4 none'>Configures the maximum index count for a Semaphore.<BR>
+  It should be within the range of 1 to 65535.</td>
+  <td class=xl651119 width=178 style='width:134pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>R</td>
+ </tr>
+ <tr height=33 style='height:24.75pt'>
+  <td height=33 class=xl741119 width=167 style='height:24.75pt;width:125pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>Timer Tick value in us</td>
+  <td class=xl741119 width=293 style='width:220pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>rtos001_irwtick</td>
+  <td class=xl781119 width=332 style='width:249pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>This allows user to enter timer tick value in us.</td>
+  <td class=xl651119 width=178 style='width:134pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>R/W</td>
+  <td class=xl151119></td>
+  <td class=xl151119></td>
+  <td class=xl151119></td>
+ </tr>
+ 
+ <tr height=32 style='height:24.0pt'>
+  <td height=32 class=xl751119 width=167 style='height:24.0pt;width:125pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>Maximum Number of concurrent running threads</td>
+  <td class=xl751119 width=293 style='width:220pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>rtos001_irwtaskcnt</td>
+  <td class=xl791119 width=332 style='width:249pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>This allows user to enter maximum number of threads that will run at the same time</td>
+  <td class=xl651119 width=178 style='width:134pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>R/W</td>
+  <td class=xl151119></td>
+  <td class=xl151119></td>
+  <td class=xl151119></td>
+ </tr>
+ <tr height=32 style='height:24.0pt'>
+  <td height=32 class=xl741119 width=167 style='height:24.0pt;width:125pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>Number of threads with user-provided stack size</td>
+  <td class=xl741119 width=293 style='width:220pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>rtos001_irwpricnt</td>
+  <td class=xl781119 width=332 style='width:249pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>This allows user to enter the number of threads with user-provided stack size</td>
+  <td class=xl651119 width=178 style='width:134pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>R/W</td>
+  <td class=xl151119></td>
+  <td class=xl151119></td>
+  <td class=xl151119></td>
+ </tr>
+ <tr height=32 style='height:24.0pt'>
+  <td height=32 class=xl741119 width=167 style='height:24.0pt;width:125pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>Number of threads with default stack size</td>
+  <td class=xl741119 width=293 style='width:220pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>rtos001_irdefaultcnt</td>
+  <td class=xl781119 width=332 style='width:249pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>This is the difference between number of concurrent running threads and number of threads with user provided stack size.This is non-editable.</td>
+  <td class=xl651119 width=178 style='width:134pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>R</td>
+  <td class=xl151119></td>
+  <td class=xl151119></td>
+  <td class=xl151119></td>
+ </tr>
+ <tr height=47 style='height:35.25pt'>
+  <td height=47 class=xl751119 width=167 style='height:35.25pt;width:125pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>Privileged Mode</td>
+  <td class=xl751119 width=293 style='width:220pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>rtos001_erwrunpriv</td>
+  <td class=xl791119 width=332 style='width:249pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>This allows to run all threads in privileged mode.</td>
+  <td class=xl651119 width=178 style='width:134pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>R/W</td>
+  <td class=xl151119></td>
+  <td class=xl151119></td>
+  <td class=xl151119></td>
+ </tr>
+ <tr height=32 style='height:24.0pt'>
+  <td height=32 class=xl741119 width=167 style='height:24.0pt;width:125pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>Default stack size for threads in bytes</td>
+  <td class=xl741119 width=293 style='width:220pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>rtos001_irwstksize</td>
+  <td class=xl781119 width=332 style='width:249pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>This allows user to enter default stack size for threads.</td>
+  <td class=xl651119 width=178 style='width:134pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>R/W</td>
+  <td class=xl151119></td>
+  <td class=xl151119></td>
+  <td class=xl151119></td>
+ </tr>
+ <tr height=32 style='height:24.0pt'>
+  <td height=32 class=xl741119 width=167 style='height:24.0pt;width:125pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>Total stack size for threads with user-provided stack size in bytes</td>
+  <td class=xl741119 width=293 style='width:220pt font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>rtos001_irwprivstksize</td>
+  <td class=xl781119 width=332 style='width:249pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>This allows user to enter the combined stack size for threads with user-provided stack size.This field will be editable only when user enters non zero value for "Number of threads with user-provided stack size"</td>
+  <td class=xl651119 width=178 style='width:134pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>R/W</td>
+  <td class=xl151119></td>
+  <td class=xl151119></td>
+  <td class=xl151119></td>
+ </tr>
+   <tr height=47 style='height:35.25pt'>
+  <td height=47 class=xl751119 width=167 style='height:35.25pt;width:125pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>Stack checking code</td>
+  <td class=xl751119 width=293 style='width:220pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>rtos001_erwstkcheck</td>
+  <td class=xl791119 width=332 style='width:249pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>This allows to includes the stack checking code for stack overflow</td>
+  <td class=xl651119 width=178 style='width:134pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>R/W</td>
+  <td class=xl151119></td>
+  <td class=xl151119></td>
+  <td class=xl151119></td>
+ </tr>
+ <tr height=32 style='height:24.0pt'>
+  <td height=32 class=xl741119 width=167 style='height:24.0pt;width:125pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>User timer Thread stack size in bytes</td>
+  <td class=xl741119 width=293 style='width:220pt font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>rtos001_irwtimerstksize</td>
+  <td class=xl781119 width=332 style='width:249pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>This allows user to enter stack size for timer thread in bytes [64 - 4096].This field will be editable only when user timer is enabled.</td>
+  <td class=xl651119 width=178 style='width:134pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>R/W</td>
+  <td class=xl151119></td>
+  <td class=xl151119></td>
+  <td class=xl151119></td>
+ </tr>
+ <tr height=47 style='height:35.25pt'>
+  <td height=47 class=xl751119 width=167 style='height:35.25pt;width:125pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>Total Stack Requirement</td>
+  <td class=xl751119 width=293 style='width:220pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>rtos001_irtotalstksize</td>
+  <td class=xl791119 width=332 style='width:249pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>This informs total stack requirement.non-editable field</td>
+  <td class=xl651119 width=178 style='width:134pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>R</td>
+  <td class=xl151119></td>
+  <td class=xl151119></td>
+  <td class=xl151119></td>
+ </tr>
+  <tr height=33 style='height:24.75pt'>
+  <td height=33 class=xl741119 width=167 style='height:24.75pt;width:125pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>Round Robin Thread Switching</td>
+  <td class=xl741119 width=293 style='width:220pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>rtos001_erwrndrobin</td>
+  <td class=xl781119 width=332 style='width:249pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>This allows user to enable round robin thread switching</td>
+  <td class=xl651119 width=178 style='width:134pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>R/W</td>
+  <td class=xl151119></td>
+  <td class=xl151119></td>
+  <td class=xl151119></td>
+ </tr>
+ <tr height=32 style='height:24.0pt'>
+  <td height=32 class=xl751119 width=167 style='height:24.0pt;width:125pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>Round-Robin Timeout in Ticks</td>
+  <td class=xl751119 width=293 style='width:220pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>rtos001_irwrobintout</td>
+  <td class=xl791119 width=332 style='width:249pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>This allows user to enter how long a thread will execute before a thread switch</td>
+  <td class=xl651119 width=178 style='width:134pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>R/W</td>
+  <td class=xl151119></td>
+  <td class=xl151119></td>
+  <td class=xl151119></td>
+ </tr>
+ <tr height=32 style='height:24.0pt'>
+  <td height=32 class=xl741119 width=167 style='height:24.0pt;width:125pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>Maximum Number of entries in ISR FIFO Queue</td>
+  <td class=xl741119 width=293 style='width:220pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>rtos001_irwfifosz</td>
+  <td class=xl781119 width=332 style='width:249pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>This allows user to enter maximum number of ISR requests that can be buffered in FIFO Queue</td>
+ <td class=xl651119 width=178 style='width:134pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>R/W</td>
+  <td class=xl151119></td>
+  <td class=xl151119></td>
+  <td class=xl151119></td>
+ </tr>
+ <tr height=47 style='height:35.25pt'>
+  <td height=47 class=xl751119 width=167 style='height:35.25pt;width:125pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>Maximum Number of system mutexes</td>
+  <td class=xl751119 width=293 style='width:220pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>rtos001_irwmutxes</td>
+  <td class=xl791119 width=332 style='width:249pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>This allows to enter maximum number system mutexes that are used to protect the arm standard runtime library</td>
+  <td class=xl651119 width=178 style='width:134pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>R/W</td>
+  <td class=xl151119></td>
+  <td class=xl151119></td>
+  <td class=xl151119></td>
+ </tr>
+ <tr height=32 style='height:24.0pt'>
+  <td height=32 class=xl741119 width=167 style='height:24.0pt;width:125pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>Enable user timers</td>
+  <td class=xl741119 width=293 style='width:220pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>rtos001_erwtimers</td>
+  <td class=xl781119 width=332 style='width:249pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>TThis is to enable user timers</td>
+  <td class=xl651119 width=178 style='width:134pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>R/W</td>
+  <td class=xl151119></td>
+  <td class=xl151119></td>
+  <td class=xl151119></td>
+ </tr>
+ <tr height=32 style='height:24.0pt'>
+  <td height=32 class=xl741119 width=167 style='height:24.0pt;width:125pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>Timer Thread Priority</td>
+  <td class=xl741119 width=293 style='width:220pt font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>rtos001_erwtimerprio</td>
+  <td class=xl781119 width=332 style='width:249pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>This allows user to enter priority for the timer thread.</td>
+  <td class=xl651119 width=178 style='width:134pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>R/W</td>
+  <td class=xl151119></td>
+  <td class=xl151119></td>
+  <td class=xl151119></td>
+ </tr>
+ <tr height=47 style='height:35.25pt'>
+  <td height=47 class=xl751119 width=167 style='height:35.25pt;width:125pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>Maximum Number of concurrent callbacks</td>
+  <td class=xl751119 width=293 style='width:220pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>rtos001_irwtimercbqsize</td>
+  <td class=xl791119 width=332 style='width:249pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>This allows user to enter maximum number of concurrent callbacks that can be queued</td>
+  <td class=xl651119 width=178 style='width:134pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>R/W</td>
+  <td class=xl151119></td>
+  <td class=xl151119></td>
+  <td class=xl151119></td>
+ </tr>
+ <tr height=47 style='height:35.25pt'>
+  <td height=47 class=xl751119 width=167 style='height:35.25pt;width:125pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>User defined function for Idle demon</td>
+  <td class=xl751119 width=293 style='width:220pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>rtos001_idledemon</td>
+  <td class=xl791119 width=332 style='width:249pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>This allows user to enter the name of the function that is to be executed when no thread runs.</td>
+  <td class=xl651119 width=178 style='width:134pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>R/W</td>
+  <td class=xl151119></td>
+  <td class=xl151119></td>
+  <td class=xl151119></td>
+ </tr>
+ <tr height=47 style='height:35.25pt'>
+  <td height=47 class=xl751119 width=167 style='height:35.25pt;width:125pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>User defined function for os error</td>
+  <td class=xl751119 width=293 style='width:220pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>rtos001_oserror</td>
+  <td class=xl791119 width=332 style='width:249pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>This allows user to enter the name of the function that is to be executed on os error.</td>
+  <td class=xl651119 width=178 style='width:134pt;font-size:9.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Verdana;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>R/W</td>
+  <td class=xl151119></td>
+  <td class=xl151119></td>
+  <td class=xl151119></td>
+ </tr>
+ 
+ </table>
+
+@}
+*/
+
+/**
+@ingroup RTOS001_publicparam
+@{
+\page RTOS001_publicparam 
+This is a third Party code. Refer the source files. 
+@}
+*/
+
+/**
+@ingroup RTOS001_apidoc 
+@{
+\page RTOS001_apidoc 
+This is a third Party code. Refer the source files for other functions. 
+@}
+*/

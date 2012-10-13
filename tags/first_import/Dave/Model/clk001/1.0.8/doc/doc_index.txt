@@ -1,0 +1,7 @@
+/**
+\mainpage  CLK001:SCU_ModuleSystemClocks_CLK001 
+<ol>
+<LI>\ref SCU_ModuleSystemClocks_CLK001App "CLK001 App"</LI>
+</ol>
+*/
+

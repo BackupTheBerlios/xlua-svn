@@ -1,0 +1,34 @@
+/**
+    @defgroup RESET001App SCU_Reset_RESET001 App
+    @{  
+    	@defgroup RESET001_Legal Copyright and Licensing Information
+        @{
+        @}
+        @defgroup RESET001_intro Introduction
+        @{
+        @}
+        @defgroup RESET001_overview Overview
+        @{
+        @}
+        @defgroup RESET001_filestructure File Structure
+        @{
+        @}
+        @defgroup RESET001_appconfigdoc App Configuration Documentation
+        @{
+        @}
+        @defgroup RESET001_publicparam App Public Structures
+        @{
+        @}       
+        @defgroup RESET001_apidoc API Documentation
+        @{
+        @}
+        @defgroup RESET001_publishedparams App Published Parameters
+        @{
+        @} 
+        @defgroup RESET001_releasehistory Release History
+        @{
+          Click <a href="../RESET001_Version.htm"> here </a> for Release History
+        @}
+    @}
+
+*/

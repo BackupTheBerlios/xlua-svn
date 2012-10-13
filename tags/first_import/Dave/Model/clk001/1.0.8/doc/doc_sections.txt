@@ -1,0 +1,31 @@
+/**
+    @defgroup SCU_ModuleSystemClocks_CLK001App SCU_ModuleSystemClocks_CLK001 App
+    @{
+        @defgroup CLK001_Legal Copyright and Licensing Information
+        @{
+        @}
+        @defgroup CLK001_intro Introduction
+        @{
+        @}
+        @defgroup CLK001_overview Overview
+        @{
+        @}
+        @defgroup CLK001_filestructure File Structure
+        @{
+        @}
+        @defgroup CLK001_appconfigdoc App Configuration Documentation
+        @{
+        @}       
+        @defgroup CLK001_apidoc API Documentation
+        @{
+        @}
+        @defgroup CLK001_publishedparams App Published Parameters
+        @{
+        @} 
+        @defgroup CLK001_releasehistory Release History
+        @{
+          Click <a href="../CLK001_Version.htm"> here </a> for Release History
+        @}
+    @}
+
+*/

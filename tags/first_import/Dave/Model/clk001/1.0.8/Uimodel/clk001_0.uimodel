@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<com.ifx.davex.uimodel:UIDataModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:com.ifx.davex.uimodel="com.ifx.davex.uimodel">
+  <controls xsi:type="com.ifx.davex.uimodel:CompoundWidget" propertyId="Page13" displayName="System" className="IfxGroupBox" controlId="1319693108843">
+    <layoutData xsi:type="com.ifx.davex.uimodel:IfxGridData"/>
+    <subControls xsi:type="com.ifx.davex.uimodel:SimpleWidget" propertyId="app/clk001/0/clk001_erwSystemClockSource" displayName="System clock source fsys" className="RadioEnumerationType" paramName="app/clk001/0/clk001_erwSystemClockSource:System clock source fsys" controlId="1323349123687">
+      <layoutData xsi:type="com.ifx.davex.uimodel:IfxGridData"/>
+    </subControls>
+    <subControls xsi:type="com.ifx.davex.uimodel:CompoundWidget" propertyId="Group42" displayName=" " className="IfxGroupBox" controlId="1323856270546">
+      <layoutData xsi:type="com.ifx.davex.uimodel:IfxGridData"/>
+      <subControls xsi:type="com.ifx.davex.uimodel:SimpleWidget" propertyId="app/clk001/0/clk001_irwDesFreqSystemEnum" displayName="Desired System Frequency" className="EnumerationType" constraint="if(CM.getParamValue(&quot;app/clk001/0/clk001_erwSystemClockSource/0&quot;) ==1)&#xD;&#xA;{&#xD;&#xA;CM.setEnable(true); &#xD;&#xA;}else{&#xD;&#xA;CM.setEnable(false);&#xD;&#xA;}" paramName="app/clk001/0/clk001_irwDesFreqSystemEnum:Desired System Frequency" controlId="1331808422890">
+        <layoutData xsi:type="com.ifx.davex.uimodel:IfxGridData"/>
+      </subControls>
+      <subControls xsi:type="com.ifx.davex.uimodel:CompoundWidget" propertyId="Group16" displayName="Actual System Frequency" className="IfxGroupBox" controlId="1331808446593">
+        <layoutData xsi:type="com.ifx.davex.uimodel:IfxGridData"/>
+        <subControls xsi:type="com.ifx.davex.uimodel:SimpleWidget" propertyId="app/clk001/0/clk001_iroActualFreqSystem" displayName="Actual System Frequency" readonly="true" labelRequired="false" className="IntegerType" paramName="app/clk001/0/clk001_iroActualFreqSystem:Actual System Frequency" controlId="1331808475859" defaultType="MHz" customControl="true">
+          <layoutData xsi:type="com.ifx.davex.uimodel:IfxGridData"/>
+          <conversionType>MHz</conversionType>
+        </subControls>
+        <layout xsi:type="com.ifx.davex.uimodel:IfxGridLayout"/>
+      </subControls>
+      <layout xsi:type="com.ifx.davex.uimodel:IfxGridLayout"/>
+    </subControls>
+    <subControls xsi:type="com.ifx.davex.uimodel:CompoundWidget" propertyId="Group62" displayName="PLL" className="IfxGroupBox" constraint="" controlId="1323349148828">
+      <layoutData xsi:type="com.ifx.davex.uimodel:IfxGridData"/>
+      <subControls xsi:type="com.ifx.davex.uimodel:SimpleWidget" propertyId="app/clk001/0/clk001_erwPLLClkSource" displayName="PLL Clock Source Selection" className="RadioEnumerationType" constraint="if(CM.getParamValue(&quot;app/clk001/0/clk001_erwSystemClockSource/0&quot;) ==1)&#xD;&#xA;{&#xD;&#xA;CM.setEnable(true); &#xD;&#xA;}else{&#xD;&#xA;CM.setEnable(false);&#xD;&#xA;}" paramName="app/clk001/0/clk001_erwPLLClkSource:PLL Clock Source Selection" controlId="1323349212500">
+        <layoutData xsi:type="com.ifx.davex.uimodel:IfxGridData"/>
+      </subControls>
+      <subControls xsi:type="com.ifx.davex.uimodel:SimpleWidget" propertyId="app/clk001/0/clk001_irwN" displayName="N Div" readonly="true" className="IntegerType" constraint="" paramName="app/clk001/0/clk001_irwN:N Div" controlId="1323349462296">
+        <layoutData xsi:type="com.ifx.davex.uimodel:IfxGridData" horizontalAlignment="RIGHT"/>
+        <conversionType>dec</conversionType>
+      </subControls>
+      <subControls xsi:type="com.ifx.davex.uimodel:SimpleWidget" propertyId="app/clk001/0/clk001_irwP" displayName="P Div" readonly="true" className="IntegerType" constraint="" paramName="app/clk001/0/clk001_irwP:P Div" controlId="1323349467437">
+        <layoutData xsi:type="com.ifx.davex.uimodel:IfxGridData" horizontalAlignment="RIGHT"/>
+        <conversionType>dec</conversionType>
+      </subControls>
+      <subControls xsi:type="com.ifx.davex.uimodel:SimpleWidget" propertyId="app/clk001/0/clk001_irwK" displayName="K2 Div" readonly="true" className="IntegerType" constraint="" paramName="app/clk001/0/clk001_irwK:K2 Div" controlId="1323855215687">
+        <layoutData xsi:type="com.ifx.davex.uimodel:IfxGridData"/>
+        <conversionType>dec</conversionType>
+      </subControls>
+      <subControls xsi:type="com.ifx.davex.uimodel:SimpleWidget" propertyId="app/clk001/0/clk001_irwK1" displayName="K1 Div" readonly="true" className="IntegerType" constraint="" paramName="app/clk001/0/clk001_irwK1:K1 Div" controlId="1323855223796">
+        <layoutData xsi:type="com.ifx.davex.uimodel:IfxGridData"/>
+        <conversionType>dec</conversionType>
+      </subControls>
+      <layout xsi:type="com.ifx.davex.uimodel:IfxGridLayout"/>
+    </subControls>
+    <subControls xsi:type="com.ifx.davex.uimodel:CompoundWidget" propertyId="Group38" displayName=" " className="IfxGroupBox" controlId="1323856750671">
+      <layoutData xsi:type="com.ifx.davex.uimodel:IfxGridData"/>
+      <subControls xsi:type="com.ifx.davex.uimodel:CompoundWidget" propertyId="Group7" displayName="Internal Oscillator Configuration" className="IfxGroupBox" constraint="if((CM.getParamValue(&quot;app/clk001/0/clk001_erwSystemClockSource/1&quot;) == &quot;1&quot;) ||&#xD;&#xA;((CM.getParamValue(&quot;app/clk001/0/clk001_erwPLLClkSource/0&quot;) == &quot;1&quot;)&amp;&amp;&#xD;&#xA;(CM.getParamValue(&quot;app/clk001/0/clk001_erwSystemClockSource/0&quot;) == &quot;1&quot;)) ){&#xD;&#xA;    CM.setVisible(true); &#xD;&#xA;    CM.setEnable(true); &#xD;&#xA;}else {&#xD;&#xA;    CM.setVisible(true); &#xD;&#xA;    CM.setEnable(false); &#xD;&#xA;}" controlId="1323413909546">
+        <layoutData xsi:type="com.ifx.davex.uimodel:IfxGridData"/>
+        <subControls xsi:type="com.ifx.davex.uimodel:SimpleWidget" propertyId="app/clk001/0/clk001_erwEnableFlyTrim" displayName="Enable fly trimming (32 KHz crystal is required on RTC_XTAL 1,2)" labelRequired="false" className="EnumerationType" constraint="if((CM.getParamValue(&quot;app/clk001/0/clk001_erwSystemClockSource/1&quot;) == &quot;1&quot;) ||&#xD;&#xA;((CM.getParamValue(&quot;app/clk001/0/clk001_erwPLLClkSource/0&quot;) == &quot;1&quot;)&amp;&amp;&#xD;&#xA;(CM.getParamValue(&quot;app/clk001/0/clk001_erwSystemClockSource/0&quot;) == &quot;1&quot;)) ){&#xD;&#xA;    CM.setVisible(true); &#xD;&#xA;    CM.setEnable(true); &#xD;&#xA;}else {&#xD;&#xA;    CM.setVisible(true); &#xD;&#xA;    CM.setEnable(false); &#xD;&#xA;}" paramName="app/clk001/0/clk001_erwEnableFlyTrim:Enable fly trimming (32 KHz crystal is required on RTC_XTAL 1,2)" controlId="1336129993002">
+          <layoutData xsi:type="com.ifx.davex.uimodel:IfxGridData"/>
+        </subControls>
+        <subControls xsi:type="com.ifx.davex.uimodel:SimpleWidget" propertyId="app/clk001/0/clk001_irwInterOscRefFreq" displayName="Internal Oscillator Frequency" readonly="true" className="IntegerType" constraint="if((CM.getParamValue(&quot;app/clk001/0/clk001_erwSystemClockSource/1&quot;) == &quot;1&quot;) ||&#xD;&#xA;((CM.getParamValue(&quot;app/clk001/0/clk001_erwPLLClkSource/0&quot;) == &quot;1&quot;)&amp;&amp;&#xD;&#xA;(CM.getParamValue(&quot;app/clk001/0/clk001_erwSystemClockSource/0&quot;) == &quot;1&quot;)) ){&#xD;&#xA;    CM.setVisible(true); &#xD;&#xA;    CM.setEnable(true); &#xD;&#xA;}else {&#xD;&#xA;    CM.setVisible(true); &#xD;&#xA;    CM.setEnable(false); &#xD;&#xA;}" paramName="app/clk001/0/clk001_irwInterOscRefFreq:Internal Oscillator Frequency" controlId="1323756888921" defaultType="MHz" customControl="true">
+          <layoutData xsi:type="com.ifx.davex.uimodel:IfxGridData"/>
+          <conversionType>MHz</conversionType>
+          <conversionType>KHz</conversionType>
+        </subControls>
+        <layout xsi:type="com.ifx.davex.uimodel:IfxGridLayout"/>
+      </subControls>
+      <subControls xsi:type="com.ifx.davex.uimodel:CompoundWidget" propertyId="Group68" displayName="External Oscillator Configuration" className="IfxGroupBox" constraint="" controlId="1323414359640">
+        <layoutData xsi:type="com.ifx.davex.uimodel:IfxGridData"/>
+        <subControls xsi:type="com.ifx.davex.uimodel:SimpleWidget" propertyId="app/clk001/0/clk001_irwExtOscRefFreq" displayName="External Oscillator Frequency" className="IntegerType" constraint="if((CM.getParamValue(&quot;app/clk001/0/clk001_erwSystemClockSource/2&quot;) == &quot;1&quot;)||&#xD;&#xA;  ( (CM.getParamValue(&quot;app/clk001/0/clk001_erwPLLClkSource/1&quot;) == &quot;1&quot;)&amp;&amp;&#xD;&#xA; (CM.getParamValue(&quot;app/clk001/0/clk001_erwSystemClockSource/0&quot;) == &quot;1&quot; ))){&#xD;&#xA;    CM.setVisible(true); &#xD;&#xA;    CM.setEnable(true); &#xD;&#xA;}else {&#xD;&#xA;    CM.setVisible(true); &#xD;&#xA;    CM.setEnable(false); &#xD;&#xA;}&#xD;&#xA;&#xD;&#xA;&#xD;&#xA; " paramName="app/clk001/0/clk001_irwExtOscRefFreq:Reference Freqency" controlId="1323414414546" defaultType="MHz" customControl="true">
+          <layoutData xsi:type="com.ifx.davex.uimodel:IfxGridData"/>
+          <conversionType>MHz</conversionType>
+          <conversionType>KHz</conversionType>
+        </subControls>
+        <layout xsi:type="com.ifx.davex.uimodel:IfxGridLayout"/>
+      </subControls>
+      <subControls xsi:type="com.ifx.davex.uimodel:CompoundWidget" propertyId="Group86" displayName="Digital Input Clock Configuration" className="IfxGroupBox" constraint="" controlId="1323414430421">
+        <layoutData xsi:type="com.ifx.davex.uimodel:IfxGridData"/>
+        <subControls xsi:type="com.ifx.davex.uimodel:SimpleWidget" propertyId="app/clk001/0/clk001_irwDigInputRefFreq" displayName="External Clock Frequency" className="IntegerType" constraint="if((CM.getParamValue(&quot;app/clk001/0/clk001_erwSystemClockSource/3&quot;) == &quot;1&quot;)||&#xD;&#xA;((CM.getParamValue (&quot;app/clk001/0/clk001_erwPLLClkSource/2&quot;) == &quot;1&quot;)&amp;&amp;&#xD;&#xA; (CM.getParamValue(&quot;app/clk001/0/clk001_erwSystemClockSource/0&quot;) == &quot;1&quot; ))) {&#xD;&#xA;    CM.setVisible(true); &#xD;&#xA;    CM.setEnable(true); &#xD;&#xA;}else {&#xD;&#xA;    CM.setVisible(true); &#xD;&#xA;    CM.setEnable(false); &#xD;&#xA;}" paramName="app/clk001/0/clk001_irwDigInputRefFreq:Reference Freqency" controlId="1323414518234" defaultType="MHz" customControl="true">
+          <layoutData xsi:type="com.ifx.davex.uimodel:IfxGridData" grabExcessHorizontalSpace="true" horizontalAlignment="RIGHT"/>
+          <conversionType>MHz</conversionType>
+          <conversionType>KHz</conversionType>
+        </subControls>
+        <layout xsi:type="com.ifx.davex.uimodel:IfxGridLayout"/>
+      </subControls>
+      <layout xsi:type="com.ifx.davex.uimodel:IfxGridLayout"/>
+    </subControls>
+    <layout xsi:type="com.ifx.davex.uimodel:IfxGridLayout" numColumns="2"/>
+  </controls>
+  <controls xsi:type="com.ifx.davex.uimodel:CompoundWidget" propertyId="Page69" displayName="CPU " className="IfxGroupBox" controlId="1320988889890">
+    <layoutData xsi:type="com.ifx.davex.uimodel:IfxGridData"/>
+    <subControls xsi:type="com.ifx.davex.uimodel:SimpleWidget" propertyId="app/clk001/0/clk001_iroActualFreqSystem" displayName="Actual System Frequency" readonly="true" className="IntegerType" paramName="app/clk001/0/clk001_iroActualFreqSystem:Actual System Frequency" controlId="1320991549062" defaultType="MHz" customControl="true">
+      <layoutData xsi:type="com.ifx.davex.uimodel:IfxGridData"/>
+      <conversionType>MHz</conversionType>
+      <conversionType>KHz</conversionType>
+    </subControls>
+    <subControls xsi:type="com.ifx.davex.uimodel:CompoundWidget" propertyId="Group48" displayName="Peripheral Bus Frequency" className="IfxGroupBox" controlId="1320991901953">
+      <layoutData xsi:type="com.ifx.davex.uimodel:IfxGridData"/>
+      <subControls xsi:type="com.ifx.davex.uimodel:SimpleWidget" propertyId="app/clk001/0/clk001_erwPBClkDivider" displayName="Peripheral Bus Clock Divide(x/2)" labelRequired="false" className="EnumerationType" paramName="app/clk001/0/clk001_erwPBClkDivider:Peripheral Bus Clock Divide(x/2)" controlId="1320991996968">
+        <layoutData xsi:type="com.ifx.davex.uimodel:IfxGridData"/>
+      </subControls>
+      <subControls xsi:type="com.ifx.davex.uimodel:SimpleWidget" propertyId="app/clk001/0/clk001_iroActualFreqPB" displayName="Actual Peripheral Bus Freq" readonly="true" className="IntegerType" paramName="app/clk001/0/clk001_iroActualFreqPB:Actual Peripheral Bus Freq" controlId="1320992006140" defaultType="MHz" customControl="true">
+        <layoutData xsi:type="com.ifx.davex.uimodel:IfxGridData" horizontalAlignment="RIGHT"/>
+        <conversionType>MHz</conversionType>
+        <conversionType>KHz</conversionType>
+      </subControls>
+      <layout xsi:type="com.ifx.davex.uimodel:IfxGridLayout"/>
+    </subControls>
+    <subControls xsi:type="com.ifx.davex.uimodel:CompoundWidget" propertyId="Group53" displayName="CPU Clock Configuration" className="IfxGroupBox" controlId="1320991904468">
+      <layoutData xsi:type="com.ifx.davex.uimodel:IfxGridData"/>
+      <subControls xsi:type="com.ifx.davex.uimodel:SimpleWidget" propertyId="app/clk001/0/clk001_erwCPUClkDivider" displayName="CPU Clock Divide(x/2)" labelRequired="false" className="EnumerationType" paramName="app/clk001/0/clk001_erwCPUClkDivider:CPU Clock Divide(x/2)" controlId="1320992202546">
+        <layoutData xsi:type="com.ifx.davex.uimodel:IfxGridData"/>
+      </subControls>
+      <subControls xsi:type="com.ifx.davex.uimodel:SimpleWidget" propertyId="app/clk001/0/clk001_iroActualFreqCPU" displayName="Actual CPU Frequency" readonly="true" className="IntegerType" paramName="app/clk001/0/clk001_iroActualFreqCPU:Actual CPU Frequency" controlId="1323782439562" defaultType="MHz" customControl="true">
+        <layoutData xsi:type="com.ifx.davex.uimodel:IfxGridData" grabExcessHorizontalSpace="true" horizontalAlignment="RIGHT"/>
+        <conversionType>MHz</conversionType>
+        <conversionType>KHz</conversionType>
+      </subControls>
+      <layout xsi:type="com.ifx.davex.uimodel:IfxGridLayout"/>
+    </subControls>
+    <layout xsi:type="com.ifx.davex.uimodel:IfxGridLayout"/>
+  </controls>
+  <controls xsi:type="com.ifx.davex.uimodel:CompoundWidget" propertyId="Page44" displayName="CCU4/8" className="IfxGroupBox" controlId="1323689532984">
+    <layoutData xsi:type="com.ifx.davex.uimodel:IfxGridData"/>
+    <subControls xsi:type="com.ifx.davex.uimodel:CompoundWidget" propertyId="Group33" displayName="CCU Configuration" className="IfxGroupBox" controlId="1323757891671">
+      <layoutData xsi:type="com.ifx.davex.uimodel:IfxGridData"/>
+      <subControls xsi:type="com.ifx.davex.uimodel:SimpleWidget" propertyId="app/clk001/0/clk001_erwCCUClkEnable" displayName="CCU Clock Enable" className="EnumerationType" paramName="app/clk001/0/clk001_erwCCUClkEnable:CCU Clock Enable" controlId="1323757913078">
+        <layoutData xsi:type="com.ifx.davex.uimodel:IfxGridData"/>
+      </subControls>
+      <subControls xsi:type="com.ifx.davex.uimodel:SimpleWidget" propertyId="app/clk001/0/clk001_erwCCUClkDIV" displayName="CCU Clock Divide(x/2)" className="EnumerationType" constraint="" paramName="app/clk001/0/clk001_erwCCUClkDIV:CCU Clock Divide(x/2)" controlId="1323757920890">
+        <layoutData xsi:type="com.ifx.davex.uimodel:IfxGridData"/>
+      </subControls>
+      <subControls xsi:type="com.ifx.davex.uimodel:SimpleWidget" propertyId="app/clk001/0/clk001_iroActualFreqCCU" displayName="Actual CCU Frequency" readonly="true" className="IntegerType" paramName="app/clk001/0/clk001_iroActualFreqCCU:Actual CCU Frequency" controlId="1323757934250" defaultType="MHz" customControl="true">
+        <layoutData xsi:type="com.ifx.davex.uimodel:IfxGridData"/>
+        <conversionType>MHz</conversionType>
+        <conversionType>KHz</conversionType>
+      </subControls>
+      <layout xsi:type="com.ifx.davex.uimodel:IfxGridLayout"/>
+    </subControls>
+    <layout xsi:type="com.ifx.davex.uimodel:IfxGridLayout"/>
+  </controls>
+  <controls xsi:type="com.ifx.davex.uimodel:CompoundWidget" propertyId="Page71" displayName="USB" className="IfxGroupBox" controlId="1319722530625">
+    <layoutData xsi:type="com.ifx.davex.uimodel:IfxGridData"/>
+    <subControls xsi:type="com.ifx.davex.uimodel:SimpleWidget" propertyId="app/clk001/0/clk001_erwUSBClkEnable" displayName="USB Clock Enable" className="EnumerationType" constraint="if(CM.getParamValue(&quot;app/clk001/0/clk001_erwMMCClkEnable/0&quot;) ==1)&#xD;&#xA;{&#xD;&#xA;CM.setEnable(false); &#xD;&#xA;}else{&#xD;&#xA;CM.setEnable(true);&#xD;&#xA;}" paramName="app/clk001/0/clk001_erwUSBClkEnable:USB Clock Enable" controlId="1320986075171">
+      <layoutData xsi:type="com.ifx.davex.uimodel:IfxGridData"/>
+    </subControls>
+    <subControls xsi:type="com.ifx.davex.uimodel:CompoundWidget" propertyId="Group27" displayName="Clock Configuration" className="IfxGroupBox" constraint="" controlId="1320986082328">
+      <layoutData xsi:type="com.ifx.davex.uimodel:IfxGridData"/>
+      <subControls xsi:type="com.ifx.davex.uimodel:SimpleWidget" propertyId="app/clk001/0/clk001_erwUSBClkSource" displayName="USB Clock Source Selection" className="EnumerationType" constraint="if(CM.getParamValue(&quot;app/clk001/0/clk001_erwUSBClkEnable/0&quot;) ==&quot;1&quot;) &#xD;&#xA;{&#xD;&#xA;   CM.setEnable(true); &#xD;&#xA;}else{&#xD;&#xA;    CM.setEnable(false); &#xD;&#xA;}" paramName="app/clk001/0/clk001_erwUSBClkSource:USB Clock Source Selection" controlId="1320986106812">
+        <layoutData xsi:type="com.ifx.davex.uimodel:IfxGridData"/>
+      </subControls>
+      <subControls xsi:type="com.ifx.davex.uimodel:SimpleWidget" propertyId="app/clk001/0/clk001_erwUSBClkDivider" displayName="USB Clock Divider" className="IntegerType" constraint="if((CM.getParamValue(&quot;app/clk001/0/clk001_erwUSBClkSource/1&quot;) == &quot;1&quot;) &amp;&amp; (CM.getParamValue(&quot;app/clk001/0/clk001_erwUSBClkEnable/0&quot;) ==&quot;1&quot;)) {&#xD;&#xA;    CM.setVisible(true); &#xD;&#xA;    CM.setEnable(true); &#xD;&#xA;}else {&#xD;&#xA;    CM.setVisible(true); &#xD;&#xA;    CM.setEnable(false); &#xD;&#xA;}" paramName="app/clk001/0/clk001_erwUSBClkDivider:USB Clock Divider" controlId="1321765341119">
+        <layoutData xsi:type="com.ifx.davex.uimodel:IfxGridData"/>
+        <conversionType>dec</conversionType>
+      </subControls>
+      <subControls xsi:type="com.ifx.davex.uimodel:SimpleWidget" propertyId="app/clk001/0/clk001_iroActualFreqUSB" displayName="Actual USB Frequency" readonly="true" className="IntegerType" paramName="app/clk001/0/clk001_iroActualFreqUSB:Actual USB Frequency" controlId="1321765359667" defaultType="MHz" customControl="true">
+        <layoutData xsi:type="com.ifx.davex.uimodel:IfxGridData"/>
+        <conversionType>MHz</conversionType>
+        <conversionType>KHz</conversionType>
+      </subControls>
+      <layout xsi:type="com.ifx.davex.uimodel:IfxGridLayout"/>
+    </subControls>
+    <layout xsi:type="com.ifx.davex.uimodel:IfxGridLayout"/>
+  </controls>
+  <controls xsi:type="com.ifx.davex.uimodel:CompoundWidget" propertyId="Page72" displayName="EBU" className="IfxGroupBox" controlId="1319722714953">
+    <layoutData xsi:type="com.ifx.davex.uimodel:IfxGridData"/>
+    <subControls xsi:type="com.ifx.davex.uimodel:CompoundWidget" propertyId="Group76" displayName="EBU Clock Configuration" className="IfxGroupBox" constraint="if(CM.getParamValue(&quot;app/clk001/0/clk001_erwSystemClockSource/0&quot;) == &quot;1&quot;) {&#xD;&#xA;    CM.setVisible(true); &#xD;&#xA;    CM.setEnable(true); &#xD;&#xA;}else {&#xD;&#xA;    CM.setVisible(true); &#xD;&#xA;    CM.setEnable(false); &#xD;&#xA;}&#xD;&#xA;&#xD;&#xA;&#xD;&#xA; " controlId="1319722793875">
+      <layoutData xsi:type="com.ifx.davex.uimodel:IfxGridData"/>
+      <subControls xsi:type="com.ifx.davex.uimodel:SimpleWidget" propertyId="app/clk001/0/clk001_erwEBUClkEnable" displayName="EBU Clock Enable" className="EnumerationType" constraint="if(CM.getParamValue(&quot;app/clk001/0/clk001_erwSystemClockSource/0&quot;) == &quot;1&quot;) {&#xD;&#xA;    CM.setVisible(true); &#xD;&#xA;    CM.setEnable(true); &#xD;&#xA;}else {&#xD;&#xA;    CM.setVisible(true); &#xD;&#xA;    CM.setEnable(false); &#xD;&#xA;}" paramName="app/clk001/0/clk001_erwEBUClkEnable:EBU Clock Enable" controlId="1319722812343">
+        <layoutData xsi:type="com.ifx.davex.uimodel:IfxGridData"/>
+      </subControls>
+      <subControls xsi:type="com.ifx.davex.uimodel:SimpleWidget" propertyId="app/clk001/0/clk001_erwEBUClkDivider" displayName="EBU Clock Divider" className="IntegerType" constraint="if(CM.getParamValue(&quot;app/clk001/0/clk001_erwSystemClockSource/0&quot;) == &quot;1&quot;) {&#xD;&#xA;    CM.setVisible(true); &#xD;&#xA;    CM.setEnable(true); &#xD;&#xA;}else {&#xD;&#xA;    CM.setVisible(true); &#xD;&#xA;    CM.setEnable(false); &#xD;&#xA;}" paramName="app/clk001/0/clk001_erwEBUClkDivider:EBU Clock Divider" controlId="1324551835337">
+        <layoutData xsi:type="com.ifx.davex.uimodel:IfxGridData" horizontalAlignment="RIGHT"/>
+        <conversionType>dec</conversionType>
+      </subControls>
+      <subControls xsi:type="com.ifx.davex.uimodel:SimpleWidget" propertyId="app/clk001/0/clk001_iroActualFreqEBU" displayName="Actual EBU Frequency" readonly="true" className="IntegerType" paramName="app/clk001/0/clk001_iroActualFreqEBU:Actual EBU Frequency" controlId="1324551920326" defaultType="MHz" customControl="true">
+        <layoutData xsi:type="com.ifx.davex.uimodel:IfxGridData"/>
+        <conversionType>MHz</conversionType>
+        <conversionType>KHz</conversionType>
+      </subControls>
+      <layout xsi:type="com.ifx.davex.uimodel:IfxGridLayout"/>
+    </subControls>
+    <layout xsi:type="com.ifx.davex.uimodel:IfxGridLayout"/>
+  </controls>
+  <controls xsi:type="com.ifx.davex.uimodel:CompoundWidget" propertyId="Page12" displayName="MMC" className="IfxGroupBox" controlId="1319722845937">
+    <layoutData xsi:type="com.ifx.davex.uimodel:IfxGridData"/>
+    <subControls xsi:type="com.ifx.davex.uimodel:CompoundWidget" propertyId="Group47" displayName="MMC Clock Configuration" className="IfxGroupBox" controlId="1319722864437">
+      <layoutData xsi:type="com.ifx.davex.uimodel:IfxGridData"/>
+      <subControls xsi:type="com.ifx.davex.uimodel:SimpleWidget" propertyId="app/clk001/0/clk001_erwMMCClkEnable" displayName="SD/MMC Clock Enable" className="EnumerationType" paramName="app/clk001/0/clk001_erwMMCClkEnable:SD/MMC Clock Enable" controlId="1319722876468">
+        <layoutData xsi:type="com.ifx.davex.uimodel:IfxGridData"/>
+      </subControls>
+      <subControls xsi:type="com.ifx.davex.uimodel:SimpleWidget" propertyId="app/clk001/0/clk001_iroActualFreqMMC" displayName="Actual MMC Frequency" readonly="true" className="IntegerType" paramName="app/clk001/0/clk001_iroActualFreqMMC:Actual MMC Frequency" controlId="1320988461875" defaultType="MHz" customControl="true">
+        <layoutData xsi:type="com.ifx.davex.uimodel:IfxGridData"/>
+        <conversionType>MHz</conversionType>
+        <conversionType>KHz</conversionType>
+      </subControls>
+      <layout xsi:type="com.ifx.davex.uimodel:IfxGridLayout"/>
+    </subControls>
+    <layout xsi:type="com.ifx.davex.uimodel:IfxGridLayout"/>
+  </controls>
+  <controls xsi:type="com.ifx.davex.uimodel:CompoundWidget" propertyId="Page34" displayName="WDT" className="IfxGroupBox" controlId="1319724581000">
+    <layoutData xsi:type="com.ifx.davex.uimodel:IfxGridData"/>
+    <subControls xsi:type="com.ifx.davex.uimodel:SimpleWidget" propertyId="app/clk001/0/clk001_erwWDTClkEnable" displayName="WDT Clock Enable" className="EnumerationType" paramName="app/clk001/0/clk001_erwWDTClkEnable:WDT Clock Enable" controlId="1320988701921">
+      <layoutData xsi:type="com.ifx.davex.uimodel:IfxGridData"/>
+    </subControls>
+    <subControls xsi:type="com.ifx.davex.uimodel:CompoundWidget" propertyId="Group49" displayName="Clock Configuration" className="IfxGroupBox" controlId="1320988705109">
+      <layoutData xsi:type="com.ifx.davex.uimodel:IfxGridData"/>
+      <subControls xsi:type="com.ifx.davex.uimodel:SimpleWidget" propertyId="app/clk001/0/clk001_erwWDTClkSource" displayName="WDT Clock Source Selection" className="EnumerationType" paramName="app/clk001/0/clk001_erwWDTClkSource:WDT Clock Source Selection" controlId="1320988709437">
+        <layoutData xsi:type="com.ifx.davex.uimodel:IfxGridData"/>
+      </subControls>
+      <subControls xsi:type="com.ifx.davex.uimodel:SimpleWidget" propertyId="app/clk001/0/clk001_erwWDTClkDIV" displayName="WDT Clock Divide Value" className="IntegerType" paramName="app/clk001/0/clk001_erwWDTClkDIV:WDT Clock Divide Value" controlId="1320988715671">
+        <layoutData xsi:type="com.ifx.davex.uimodel:IfxGridData"/>
+        <conversionType>dec</conversionType>
+      </subControls>
+      <layout xsi:type="com.ifx.davex.uimodel:IfxGridLayout"/>
+    </subControls>
+    <layout xsi:type="com.ifx.davex.uimodel:IfxGridLayout"/>
+  </controls>
+  <controls xsi:type="com.ifx.davex.uimodel:CompoundWidget" propertyId="Page5" displayName="RTC" className="IfxGroupBox" controlId="1336122052683">
+    <layoutData xsi:type="com.ifx.davex.uimodel:IfxGridData"/>
+    <subControls xsi:type="com.ifx.davex.uimodel:CompoundWidget" propertyId="Group9" displayName="RTC Clock Configuration" className="IfxGroupBox" controlId="1336123122583">
+      <layoutData xsi:type="com.ifx.davex.uimodel:IfxGridData"/>
+      <subControls xsi:type="com.ifx.davex.uimodel:SimpleWidget" propertyId="app/clk001/0/clk001_erwEnableHibernate" displayName="Enable Hibernate Domain" labelRequired="false" className="EnumerationType" paramName="app/clk001/0/clk001_erwEnableHibernate:Enable Hibernate Domain" controlId="1336124369764">
+        <layoutData xsi:type="com.ifx.davex.uimodel:IfxGridData"/>
+      </subControls>
+      <subControls xsi:type="com.ifx.davex.uimodel:SimpleWidget" propertyId="app/clk001/0/clk001_erwRTCClkSource" displayName="RTC Clock Source Selection" className="EnumerationType" constraint="if(CM.getParamValue(&quot;app/clk001/0/clk001_erwEnableHibernate/0&quot;) ==1)&#xD;&#xA;{&#xD;&#xA;CM.setEnable(true);&#xD;&#xA;}else{&#xD;&#xA;CM.setEnable(false); &#xD;&#xA;}" paramName="app/clk001/0/clk001_erwRTCClkSource:RTC Clock Source Selection" controlId="1336124374740">
+        <layoutData xsi:type="com.ifx.davex.uimodel:IfxGridData"/>
+      </subControls>
+      <layout xsi:type="com.ifx.davex.uimodel:IfxGridLayout"/>
+    </subControls>
+    <layout xsi:type="com.ifx.davex.uimodel:IfxGridLayout"/>
+  </controls>
+  <controls xsi:type="com.ifx.davex.uimodel:CompoundWidget" propertyId="Page31" displayName="Exernal Clock Output" className="IfxGroupBox" controlId="1336132346487">
+    <layoutData xsi:type="com.ifx.davex.uimodel:IfxGridData"/>
+    <subControls xsi:type="com.ifx.davex.uimodel:SimpleWidget" propertyId="app/clk001/0/clk001_erwEnableExtClk" displayName="Enable Clock External Feature" labelRequired="false" className="EnumerationType" paramName="app/clk001/0/clk001_erwEnableExtClk:Enable Clock External Feature" controlId="1336556463900">
+      <layoutData xsi:type="com.ifx.davex.uimodel:IfxGridData"/>
+    </subControls>
+    <subControls xsi:type="com.ifx.davex.uimodel:CompoundWidget" propertyId="Group4" displayName="External Clock Configuration" className="IfxGroupBox" constraint="" controlId="1336456580579">
+      <layoutData xsi:type="com.ifx.davex.uimodel:IfxGridData"/>
+      <subControls xsi:type="com.ifx.davex.uimodel:SimpleWidget" propertyId="app/clk001/0/clk001_erwExtClkSrc" displayName="Clock Source For External Observation" className="EnumerationType" constraint="if(CM.getParamValue(&quot;app/clk001/0/clk001_erwEnableExtClk/0&quot;) == &quot;1&quot;) {&#xD;&#xA;    CM.setEnable(true); &#xD;&#xA;}else {&#xD;&#xA;    CM.setEnable(false); &#xD;&#xA;}&#xD;&#xA;" paramName="app/clk001/0/clk001_erwExtClkSrc:Clock Source For External Observation" controlId="1336456598176">
+        <layoutData xsi:type="com.ifx.davex.uimodel:IfxGridData"/>
+      </subControls>
+      <subControls xsi:type="com.ifx.davex.uimodel:SimpleWidget" propertyId="app/clk001/0/clk001_erwExtClkPLLDiv" displayName="PLL Clock Divide Value" className="IntegerType" constraint="if(((CM.getParamValue(&quot;app/clk001/0/clk001_erwExtClkSrc/3&quot;) == &quot;1&quot;) ||&#xD;&#xA;(CM.getParamValue(&quot;app/clk001/0/clk001_erwExtClkSrc/2&quot;) == &quot;1&quot;))&#xD;&#xA;&amp;&amp; (CM.getParamValue(&quot;app/clk001/0/clk001_erwEnableExtClk/0&quot;) == &quot;1&quot;))&#xD;&#xA; {&#xD;&#xA;    CM.setEnable(true); &#xD;&#xA;}else {&#xD;&#xA;    CM.setEnable(false); &#xD;&#xA;}&#xD;&#xA;" paramName="app/clk001/0/clk001_erwExtClkPLLDiv:PLL Clock Divide Value" controlId="1336456608113">
+        <layoutData xsi:type="com.ifx.davex.uimodel:IfxGridData"/>
+        <conversionType>dec</conversionType>
+      </subControls>
+      <layout xsi:type="com.ifx.davex.uimodel:IfxGridLayout"/>
+    </subControls>
+    <subControls xsi:type="com.ifx.davex.uimodel:SimpleWidget" propertyId="app/clk001/0/clk001_erwExtClkPadDriverMode" displayName="External Clock Pin Driver Mode" className="EnumerationType" constraint="if(CM.getParamValue(&quot;app/clk001/0/clk001_erwEnableExtClk/0&quot;) == &quot;1&quot;) {&#xD;&#xA;    CM.setEnable(true); &#xD;&#xA;}else {&#xD;&#xA;    CM.setEnable(false); &#xD;&#xA;}&#xD;&#xA;" paramName="app/clk001/0/clk001_erwExtClkPadDriverMode:External Clock Pin Driver Mode" controlId="1336457343475">
+      <layoutData xsi:type="com.ifx.davex.uimodel:IfxGridData"/>
+    </subControls>
+    <layout xsi:type="com.ifx.davex.uimodel:IfxGridLayout"/>
+  </controls>
+</com.ifx.davex.uimodel:UIDataModel>

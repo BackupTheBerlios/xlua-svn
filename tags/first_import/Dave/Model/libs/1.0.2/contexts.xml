@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<contexts>
+    <context id="http://www.infineon.com/1.0.2/app/libs/0" title="LIBS">
+        <description>This is the PWM library for 
+ single phase PWM generation 
+ with dead time. It is 
+ used by PWMSP002 app 
+ and PWMMP001 app. 
+ This app does not consume any HW reqources 
+ so do not use it standalone. </description>
+        <topic href="/PLUGINS_ROOT/com.ifx.davex.help/www.infineon.com/1.0.2/app/libs/0/doc/html/group___c_c_u8_p_w_m_l_i_b.html" label="More Info"/>
+    </context>
+    <context id="http://www.infineon.com/1.0.2/app/libs/0/pwmlib_srdummy" title="Message">
+        <description>Description is not available</description>
+    </context>
+    <context id="http://www.infineon.com/1.0.2/app/libs/0/pwmlib_init" title="">
+        <description>This function is used to initialize the APP</description>
+    </context>
+    <context id="http://www.infineon.com/1.0.2/app/libs/0/pwmlib_deinit" title="">
+        <description>This will reset the CCU8_CCy slice registers to default state.</description>
+    </context>
+    <context id="http://www.infineon.com/1.0.2/app/libs/0/pwmlib_start" title="">
+        <description>This will start the Single Phase PWM with Dead Time APP which will in turn start the CCU8_CCy slice.</description>
+    </context>
+    <context id="http://www.infineon.com/1.0.2/app/libs/0/pwmlib_stop" title="">
+        <description>This will stop the Single Phase PWM with Dead Time APP which will in turn stop the CCU8_CCy slice.</description>
+    </context>
+    <context id="http://www.infineon.com/1.0.2/app/libs/0/pwmlib_setdutycycle" title="">
+        <description>This function will modify the duty cycle of the output waveform which will change the pulse width. Duty cycle is given in %</description>
+    </context>
+    <context id="http://www.infineon.com/1.0.2/app/libs/0/pwmlib_setperiod" title="">
+        <description>This will modify the PWM frequency.Period value is given in terms of the period register</description>
+    </context>
+    <context id="http://www.infineon.com/1.0.2/app/libs/0/pwmlib_setcompare" title="">
+        <description>This function will modify the duty cycle of the output waveform which will change the pulse width.Duty cycle is given in terms of the compare register value</description>
+    </context>
+    <context id="http://www.infineon.com/1.0.2/app/libs/0/pwmlib_setpwmfreq" title="">
+        <description>This will modify the PWM frequency which is given in Hertz</description>
+    </context>
+    <context id="http://www.infineon.com/1.0.2/app/libs/0/pwmlib_settimerval" title="">
+        <description>This will update the timer register value when timer is stopped. This is used to set the starting value of the timer.</description>
+    </context>
+    <context id="http://www.infineon.com/1.0.2/app/libs/0/pwmlib_swrequestshadowtransfer" title="">
+        <description>This will request the update of the period register, compare register values from the respective shadow transfers.</description>
+    </context>
+    <context id="http://www.infineon.com/1.0.2/app/libs/0/pwmlib_getperiodreg" title="">
+        <description>This function will read the period register value.</description>
+    </context>
+    <context id="http://www.infineon.com/1.0.2/app/libs/0/pwmlib_resettrapflag" title="">
+        <description>This function will reset the trap flag by checking whether trap condition is reset.</description>
+    </context>
+    <context id="http://www.infineon.com/1.0.2/app/libs/0/pwmlib_gettimerregsval" title="">
+        <description>This function will read the timer values of compare register and period register.</description>
+    </context>
+    <context id="http://www.infineon.com/1.0.2/app/libs/0/pwmlib_gettimerstatus" title="">
+        <description>This function will read the timer status whether timer is running or idle.</description>
+    </context>
+</contexts>

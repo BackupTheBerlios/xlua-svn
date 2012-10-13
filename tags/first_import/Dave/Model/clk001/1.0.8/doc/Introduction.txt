@@ -1,0 +1,1907 @@
+/**
+@ingroup CLK001_Legal
+@{
+\page CLK001_legalpage Copyright and Licensing Information
+Copyright (c) 2011, Infineon Technologies AG
+All rights reserved. 
+
+Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met: 
+Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer. 
+Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution. 
+Neither the name of the copyright holders nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+To improve the quality of the software, users are encouraged to share modifications, enhancements or bug fixes with Infineon Technologies AG (dave@infineon.com).
+
+@}
+@ingroup CLK001_intro
+@{
+\page CLK001_intropage Introduction 
+
+<img src="..\CCU.PNG" title="Clock Control Unit Block Diagram"  />
+
+CLK001 App provides UI option to configure the System Clock Source and option to enable/gate  the Peripheral module clocks in the core domain.
+The above block diagram is of the Clock Control Unit. The App allows the System frequency(Fsys) to be configured from one of the following sources.
+<UL>
+<LI>
+PLL
+</LI>
+<LI>
+Internal Oscillator (OFI)
+</LI>
+<LI>
+External Oscillator ( Prescalar mode of PLL)
+</LI>
+<LI>
+External Clock Source( Prescalar mode of PLL)
+</LI>
+</UL>
+<UL>
+
+<LI>
+<b>PLL:</b>
+</LI>
+The main PLL converts a low-frequency external clock signal to a high-speed internal clock.It allows the use of input and output frequencies of a wide range by varying the different divider factors(N,P,K2,K1).
+The PLL consists of a Voltage Controlled Oscillator (VCO) with a feedback path. A divider in the feedback path (N-Divider) divides the VCO frequency down. The resulting
+frequency is then compared with the externally provided and divided frequency (PDivider).The output is finally divided by a factor(K2 Divider).
+<img src="..\PLL.PNG" title="PLL Block Diagram"  />
+
+The input clock for the PLL   can be one of the following clock sources:
+<UL>
+<LI>
+ Internal Oscillator
+</LI>
+<LI>
+ External Oscillator
+</LI>
+<LI>
+ External Clock Input
+</LI>
+</UL>
+
+<LI>
+<b>Internal Oscillator (OFI):</b>
+</LI>
+The Internal Oscillator is the default clock after start-up. It is used for bypassing the PLL for startup of the system without external clock. Furthermore it can
+be used as independent clock source for the watchdog module or even as system clock source during normal operation. While in prescaler mode this clock is automatically used
+as emergency clock if the external clock failure is detected.
+<LI>
+<b>External Oscillator ( Prescalar mode of PLL):</b>
+</LI>
+An external Oscillator load circuitry can be connected to pins, XTAL1 and XTAL2. The exact values and related operating range depend on the crystal used.User can configure
+the crystal frequency in the App UI. 
+<LI>
+<b>External Clock Source( Prescalar mode of PLL):</b>
+</LI>
+In this usage an external clock signal is supplied directly not using an external crystal and bypassing the amplifier of the oscillator. The input frequency must be in the range
+from 4 to 40 MHz.When using an external clock signal it must be connected to XTAL1.XTAL2 is left open i.e. unconnected.
+</UL>
+
+ 
+\section CLK001_scopesec Scope
+<UL>
+<LI> DAVE3 App which allows configuration of System & Module clock.</LI>  
+</UL>
+\section Abbreviation
+<OL>
+<LI>API: Application Program Interface</LI>
+<LI>App: DAVE3 Application</LI>
+<LI>GUI: Graphical User Interface</LI>
+<LI>SW: Software</LI>
+</OL>
+
+\section Reference
+Device Reference Manual.
+
+\section Limitation
+<UL>
+<LI> Run-time clock changes must be managed by the user code and is not in the scope of Clock App.</LI>  
+</UL>
+
+@}
+*/
+
+/**
+@ingroup CLK001_overview
+@{
+\page CLK001_overviewpage Overview
+
+CLK001 App provides UI option to configure the System Clock Source and option to enable/gate the Peripheral module clocks in the core domain. Please refer to the App Configuration Documentation section 
+for details. <br>
+
+<b>Limitations</b><br>
+<UL>
+<LI>
+Currently the App allows selection of 12 MHz external crystal.
+</LI>
+<LI>
+ Desired frequency limited to combo box range.
+</LI>
+<LI>
+There are no APIs provided to reinitialize the System Clock at run time.
+</LI>
+</UL>
+
+@}
+
+@ingroup CLK001_filestructure File Structure
+@{
+\page CLK001_filestructurepage File Structure
+Following files are generated : 
+<OL>
+<LI>CLK001.c:     This file implements the Clock Configuration. </LI>
+<LI>CLK001.h:     This file exposes the interfaces to use this App. </LI>
+</OL>
+@}
+
+@ingroup CLK001_appconfigdoc App Configuration Documentation
+@{
+
+\page CLK001_appconfigdocpage App Documentation
+The diagram shows the UI for the App.
+<img src="..\CLOCK_1.PNG" title="GUI for CLK001 App"  />
+
+<BR>The below UI parameters are used for CLK001 table generation.<BR>
+
+<UL>
+<LI>
+<table border=0 cellpadding=0 cellspacing=0 width=883 style='border-collapse:
+ collapse;table-layout:fixed;width:663pt'> 
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl631547 align=left width=194 style='height:15.0pt;
+  width:146pt;font-size:11.0pt;color:white;font-weight:700;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border-top:none;border-right:.5pt solid white;border-bottom:1.5pt solid white;
+  border-left:none;background:#4F81BD;mso-pattern:#4F81BD none;border-color:
+  currentColor white white currentColor'>Name</td>
+  <td class=xl631547 align=left width=234 style='width:176pt;font-size:11.0pt;
+  color:white;font-weight:700;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:1.5pt solid white;border-left:none;background:#4F81BD;
+  mso-pattern:#4F81BD none;border-color:currentColor white white currentColor'>URI</td>
+  <td class=xl631547 align=left width=455 style='width:341pt;font-size:11.0pt;
+  color:white;font-weight:700;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:none;
+  border-bottom:1.5pt solid white;border-left:none;background:#4F81BD;
+  mso-pattern:#4F81BD none;border-color:currentColor currentColor white'>Description</td>
+ </tr>
+ <tr height=120 style='height:90.0pt'>
+  <td height=120 class=xl631547 align=left width=194 style='height:90.0pt;
+  width:146pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border-top:none;border-right:.5pt solid white;border-bottom:.5pt solid white;
+  border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none;border-color:
+  currentColor white white currentColor'>System clock source fsys</td>
+  <td class=xl631547 align=left width=234 style='width:176pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none;border-color:currentColor white white currentColor'>clk001_erwSystemClockSource</td>
+  <td class=xl631547 align=left width=455 style='width:341pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:none;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none;border-color:currentColor currentColor white'>The
+  App allows the System frequency(Fsys) to be configured from one of the
+  following sources.
+    - PLL
+    - Internal Oscillator
+    - External Oscillator
+    - External Clock Source</td>
+ </tr>
+ <tr height=100 style='height:75.0pt'>
+  <td height=100 class=xl631547 align=left width=194 style='height:75.0pt;
+  width:146pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border-top:none;border-right:.5pt solid white;border-bottom:.5pt solid white;
+  border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none;border-color:
+  currentColor white white currentColor'>PLL Clock Source Selection</td>
+  <td class=xl631547 align=left width=234 style='width:176pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none;border-color:currentColor white white currentColor'>clk001_erwPLLClkSource</td>
+  <td class=xl631547 align=left width=455 style='width:341pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:none;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none;border-color:currentColor currentColor white'>The
+  input clock for the PLL can be one of the following  clock sources:
+    - External Oscillator
+    - External Clock Source</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl631547 align=left width=194 style='height:15.0pt;
+  width:146pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border-top:none;border-right:.5pt solid white;border-bottom:.5pt solid white;
+  border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none;border-color:
+  currentColor white white currentColor'>N Div</td>
+  <td class=xl631547 align=left width=234 style='width:176pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none;border-color:currentColor white white currentColor'>clk001_irwN</td>
+  <td class=xl631547 align=left width=455 style='width:341pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:none;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none;border-color:currentColor currentColor white'>VCO
+  Divider</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl631547 align=left width=194 style='height:15.0pt;
+  width:146pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border-top:none;border-right:.5pt solid white;border-bottom:.5pt solid white;
+  border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none;border-color:
+  currentColor white white currentColor'>P Div</td>
+  <td class=xl631547 align=left width=234 style='width:176pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none;border-color:currentColor white white currentColor'>clk001_irwP</td>
+  <td class=xl631547 align=left width=455 style='width:341pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:none;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none;border-color:currentColor currentColor white'>VCO
+  Divider</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl631547 align=left width=194 style='height:15.0pt;
+  width:146pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border-top:none;border-right:.5pt solid white;border-bottom:.5pt solid white;
+  border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none;border-color:
+  currentColor white white currentColor'>K2 Div</td>
+  <td class=xl631547 align=left width=234 style='width:176pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none;border-color:currentColor white white currentColor'>clk001_irwK</td>
+  <td class=xl631547 align=left width=455 style='width:341pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:none;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none;border-color:currentColor currentColor white'>VCO
+  Divider</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl631547 align=left width=194 style='height:15.0pt;
+  width:146pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border-top:none;border-right:.5pt solid white;border-bottom:.5pt solid white;
+  border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none;border-color:
+  currentColor white white currentColor'>K1 Div</td>
+  <td class=xl631547 align=left width=234 style='width:176pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none;border-color:currentColor white white currentColor'>clk001_irwK1</td>
+  <td class=xl631547 align=left width=455 style='width:341pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:none;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none;border-color:currentColor currentColor white'>VCO
+  Divider</td>
+ </tr>
+ <tr height=40 style='height:30.0pt'>
+  <td height=40 class=xl631547 align=left width=194 style='height:30.0pt;
+  width:146pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border-top:none;border-right:.5pt solid white;border-bottom:.5pt solid white;
+  border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none;border-color:
+  currentColor white white currentColor'>Desired System Frequency</td>
+  <td class=xl631547 align=left width=234 style='width:176pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none;border-color:currentColor white white currentColor'>clk001_irwDesFreqSystem</td>
+  <td class=xl631547 align=left width=455 style='width:341pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:none;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none;border-color:currentColor currentColor white'>Text
+  box to enter desired system frequency in MHz (Currently limited by dropdown
+  box values)</td>
+ </tr>
+ <tr height=40 style='height:30.0pt'>
+  <td height=40 class=xl631547 align=left width=194 style='height:30.0pt;
+  width:146pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border-top:none;border-right:.5pt solid white;border-bottom:.5pt solid white;
+  border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none;border-color:
+  currentColor white white currentColor'>Actual System Frequency</td>
+  <td class=xl631547 align=left width=234 style='width:176pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none;border-color:currentColor white white currentColor'>clk001_iroActualFreqSystem</td>
+  <td class=xl631547 align=left width=455 style='width:341pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:none;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none;border-color:currentColor currentColor white'>Actual
+  System Frequency calculated based on configuration ( read only value in MHz)</td>
+ </tr>
+ <tr height=40 style='height:30.0pt'>
+  <td height=40 class=xl631547 align=left width=194 style='height:30.0pt;
+  width:146pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border-top:none;border-right:.5pt solid white;border-bottom:.5pt solid white;
+  border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none;border-color:
+  currentColor white white currentColor'>Internal Oscillator Frequency</td>
+  <td class=xl631547 align=left width=234 style='width:176pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none;border-color:currentColor white white currentColor'>clk001_irwInterOscRefFreq</td>
+  <td class=xl631547 align=left width=455 style='width:341pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:none;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none;border-color:currentColor currentColor white'>Text
+  box to enter internal Oscillator Frequency ( default value is 24 MHz)</td>
+ </tr>
+ <tr height=40 style='height:30.0pt'>
+  <td height=40 class=xl631547 align=left width=194 style='height:30.0pt;
+  width:146pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border-top:none;border-right:.5pt solid white;border-bottom:.5pt solid white;
+  border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none;border-color:
+  currentColor white white currentColor'>External Oscillator Frequency</td>
+  <td class=xl631547 align=left width=234 style='width:176pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none;border-color:currentColor white white currentColor'>clk001_irwExtOscRefFreq</td>
+  <td class=xl631547 align=left width=455 style='width:341pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:none;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none;border-color:currentColor currentColor white'>Text
+  box to enter external  Oscillator Frequency (default value is 12 MHz)</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl631547 align=left width=194 style='height:15.0pt;
+  width:146pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border-top:none;border-right:.5pt solid white;border-bottom:none;border-left:
+  none;background:#B8CCE4;mso-pattern:#B8CCE4 none;border-color:currentColor white white currentColor'>External
+  Clock Frequency</td>
+  <td class=xl631547 align=left width=234 style='width:176pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:none;border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none;
+  border-color:currentColor white white currentColor'>clk001_irwDigInputRefFreq</td>
+  <td class=xl631547 align=left width=455 style='width:341pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;background:#B8CCE4;mso-pattern:
+  #B8CCE4 none;border-color:currentColor currentColor white'>Text box to enter
+  external clock frequency (  default
+  value is 12 MHz)</td>
+ </tr>
+</table><br>
+
+
+<img src="..\CLOCK_3.PNG" title="GUI for CLK001 App"  />
+
+<table border=0 cellpadding=0 cellspacing=0 width=687 style='border-collapse:
+ collapse;table-layout:fixed;width:515pt'>
+  <tr height=31 style='mso-height-source:userset;height:23.25pt'>
+  <td height=31 class=xl6318953 align=left width=219 style='height:23.25pt;
+  width:164pt;font-size:11.0pt;color:white;font-weight:700;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border-top:none;border-right:.5pt solid white;border-bottom:1.5pt solid white;
+  border-left:none;background:#4F81BD;mso-pattern:#4F81BD none;border-color:
+  currentColor white white currentColor'>Name</td>
+  <td class=xl6318953 align=left width=200 style='width:150pt;font-size:11.0pt;
+  color:white;font-weight:700;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:1.5pt solid white;border-left:none;background:#4F81BD;
+  mso-pattern:#4F81BD none;border-color:currentColor white white currentColor'>URI</td>
+  <td class=xl6318953 align=left width=268 style='width:201pt;font-size:11.0pt;
+  color:white;font-weight:700;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:none;
+  border-bottom:1.5pt solid white;border-left:none;background:#4F81BD;
+  mso-pattern:#4F81BD none;border-color:currentColor currentColor white'>Description</td>
+ </tr>
+ <tr height=40 style='height:30.0pt'>
+  <td height=40 class=xl6318953 align=left width=219 style='height:30.0pt;
+  width:164pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border-top:none;border-right:.5pt solid white;border-bottom:.5pt solid white;
+  border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none;border-color:
+  currentColor white white currentColor'>Peripheral Bus Clock Divide(x/2)</td>
+  <td class=xl6318953 align=left width=200 style='width:150pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none;border-color:currentColor white white currentColor'>clk001_erwPBClkDivider</td>
+  <td class=xl6318953 align=left width=268 style='width:201pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:none;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none;border-color:currentColor currentColor white'>Enabling
+  this checkbox divides the CPU clock by 2.</td>
+ </tr>
+ <tr height=40 style='height:30.0pt'>
+  <td height=40 class=xl6318953 align=left width=219 style='height:30.0pt;
+  width:164pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border-top:none;border-right:.5pt solid white;border-bottom:.5pt solid white;
+  border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none;border-color:
+  currentColor white white currentColor'>Actual Peripheral Bus Freq</td>
+  <td class=xl6318953 align=left width=200 style='width:150pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none;border-color:currentColor white white currentColor'>clk001_iroActualFreqPB</td>
+  <td class=xl6318953 align=left width=268 style='width:201pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:none;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none;border-color:currentColor currentColor white'>Actual
+  peripheral bus frequency (fPERIPH) in MHz</td>
+ </tr>
+ <tr height=40 style='height:30.0pt'>
+  <td height=40 class=xl6318953 align=left width=219 style='height:30.0pt;
+  width:164pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border-top:none;border-right:.5pt solid white;border-bottom:.5pt solid white;
+  border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none;border-color:
+  currentColor white white currentColor'>CPU Clock Divide(x/2)</td>
+  <td class=xl6318953 align=left width=200 style='width:150pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none;border-color:currentColor white white currentColor'>clk001_erwCPUClkDivider</td>
+  <td class=xl6318953 align=left width=268 style='width:201pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:none;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none;border-color:currentColor currentColor white'>Enabling
+  this checkbox divides the System clock by 2.</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl6318953 align=left width=219 style='height:15.0pt;
+  width:164pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border-top:none;border-right:.5pt solid white;border-bottom:none;border-left:
+  none;background:#DBE5F1;mso-pattern:#DBE5F1 none;border-color:currentColor white currentColor currentColor'>Actual
+  CPU Freqency</td>
+  <td class=xl6318953 align=left width=200 style='width:150pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:none;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none;
+  border-color:currentColor white currentColor currentColor'>clk001_iroActualFreqCPU</td>
+  <td class=xl6318953 align=left width=268 style='width:201pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;background:#DBE5F1;mso-pattern:
+  #DBE5F1 none'>Actual CPU frequency ( fCPU)in MHz</td>
+ </tr>
+</table><br>
+
+</LI>
+
+<img src="..\CLOCK_4.PNG" title="GUI for CLK001 App"  />
+<LI>
+<table border=0 cellpadding=0 cellspacing=0 width=667 style='border-collapse:
+ collapse;table-layout:fixed;width:500pt'>
+  <tr height=31 style='mso-height-source:userset;height:23.25pt'>
+  <td height=31 class=xl6318953 align=left width=199 style='height:23.25pt;
+  width:149pt;font-size:11.0pt;color:white;font-weight:700;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border-top:none;border-right:.5pt solid white;border-bottom:1.5pt solid white;
+  border-left:none;background:#4F81BD;mso-pattern:#4F81BD none;border-color:
+  currentColor white white currentColor'>Name</td>
+  <td class=xl6318953 align=left width=200 style='width:150pt;font-size:11.0pt;
+  color:white;font-weight:700;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:1.5pt solid white;border-left:none;background:#4F81BD;
+  mso-pattern:#4F81BD none;border-color:currentColor white white currentColor'>URI</td>
+  <td class=xl6318953 align=left width=268 style='width:201pt;font-size:11.0pt;
+  color:white;font-weight:700;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:none;
+  border-bottom:1.5pt solid white;border-left:none;background:#4F81BD;
+  mso-pattern:#4F81BD none;border-color:currentColor currentColor white'>Description</td>
+ </tr>
+ <tr height=40 style='height:30.0pt'>
+  <td height=40 class=xl6318953 align=left width=199 style='height:30.0pt;
+  width:149pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border-top:none;border-right:.5pt solid white;border-bottom:.5pt solid white;
+  border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none;border-color:
+  currentColor white white currentColor'>CCU Clock Enable</td>
+  <td class=xl6318953 align=left width=200 style='width:150pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none;border-color:currentColor white white currentColor'>clk001_erwCCUClkEnable</td>
+  <td class=xl6318953 align=left width=268 style='width:201pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:none;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none;border-color:currentColor currentColor white'>Enabling
+  this checkbox will enable the CCU Clock</td>
+ </tr>
+ <tr height=40 style='height:30.0pt'>
+  <td height=40 class=xl6318953 align=left width=199 style='height:30.0pt;
+  width:149pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border-top:none;border-right:.5pt solid white;border-bottom:.5pt solid white;
+  border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none;border-color:
+  currentColor white white currentColor'>CCU Clock Divide(x/2)</td>
+  <td class=xl6318953 align=left width=200 style='width:150pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none;border-color:currentColor white white currentColor'>clk001_erwCCUClkDIV</td>
+  <td class=xl6318953 align=left width=268 style='width:201pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:none;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none;border-color:currentColor currentColor white'>Enabling
+  this checkbox divides the System clock by 2.</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl6318953 align=left width=199 style='height:15.0pt;
+  width:149pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border-top:none;border-right:.5pt solid white;border-bottom:none;border-left:
+  none;background:#B8CCE4;mso-pattern:#B8CCE4 none;border-color:currentColor white white currentColor'>Actual
+  CCU Frequency</td>
+  <td class=xl6318953 align=left width=200 style='width:150pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:none;border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none;
+  border-color:currentColor white white currentColor'>clk001_iroActualFreqCCU</td>
+  <td class=xl6318953 align=left width=268 style='width:201pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;background:#B8CCE4;mso-pattern:
+  #B8CCE4 none;border-color:currentColor currentColor white'>Actual CPU
+  frequency ( fCCU)in MHz</td>
+ </tr>
+</table><br>
+</LI>
+<img src="..\CLOCK_5.PNG" title="GUI for CLK001 App"  />
+<LI>
+<table border=0 cellpadding=0 cellspacing=0 width=667 style='border-collapse:
+ collapse;table-layout:fixed;width:500pt'>
+  <tr height=31 style='mso-height-source:userset;height:23.25pt'>
+  <td height=31 class=xl1530533 align=left width=199 style='height:23.25pt;
+  width:149pt;font-size:11.0pt;color:white;font-weight:700;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border-top:none;border-right:.5pt solid white;border-bottom:1.5pt solid white;
+  border-left:none;background:#4F81BD;mso-pattern:#4F81BD none;border-color:
+  currentColor white white currentColor'>Name</td>
+  <td class=xl1530533 align=left width=200 style='width:150pt;font-size:11.0pt;
+  color:white;font-weight:700;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:1.5pt solid white;border-left:none;background:#4F81BD;
+  mso-pattern:#4F81BD none;border-color:currentColor white white currentColor'>URI</td>
+  <td class=xl1530533 align=left width=268 style='width:201pt;font-size:11.0pt;
+  color:white;font-weight:700;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:none;
+  border-bottom:1.5pt solid white;border-left:none;background:#4F81BD;
+  mso-pattern:#4F81BD none;border-color:currentColor currentColor white'>Description</td>
+ </tr>
+ <tr height=40 style='height:30.0pt'>
+  <td height=40 class=xl6330533 align=left width=199 style='height:30.0pt;
+  width:149pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border-top:none;border-right:.5pt solid white;border-bottom:.5pt solid white;
+  border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none;border-color:
+  currentColor white white currentColor'>USB Clock Enable</td>
+  <td class=xl6330533 align=left width=200 style='width:150pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none;border-color:currentColor white white currentColor'>clk001_erwUSBClkEnable</td>
+  <td class=xl6330533 align=left width=268 style='width:201pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:none;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none;border-color:currentColor currentColor white'>Enabling
+  this checkbox will enable the USB Clock</td>
+ </tr>
+ <tr height=60 style='height:45.0pt'>
+  <td height=60 class=xl6330533 align=left width=199 style='height:45.0pt;
+  width:149pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border-top:none;border-right:.5pt solid white;border-bottom:.5pt solid white;
+  border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none;border-color:
+  currentColor white white currentColor'>USB Clock Source Selection</td>
+  <td class=xl6330533 align=left width=200 style='width:150pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none;border-color:currentColor white white currentColor'>clk001_erwUSBClkSource</td>
+  <td class=xl6330533 align=left width=268 style='width:201pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:none;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none;border-color:currentColor currentColor white'>The
+  user can select an accurate 48MHz lock ( USB PLL) or the System PLL as the clock source.</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl6330533 align=left width=199 style='height:15.0pt;
+  width:149pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border-top:none;border-right:.5pt solid white;border-bottom:.5pt solid white;
+  border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none;border-color:
+  currentColor white white currentColor'>USB Clock Divider</td>
+  <td class=xl6330533 align=left width=200 style='width:150pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none;border-color:currentColor white white currentColor'>clk001_erwUSBClkDivider</td>
+  <td class=xl6330533 align=left width=268 style='width:201pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:none;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none;border-color:currentColor currentColor white'>PLL
+  clock is divided by this value</td>
+ </tr>
+ <tr height=66 style='height:49.5pt'>
+  <td height=66 class=xl6330533 align=left width=199 style='height:49.5pt;
+  width:149pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border-top:none;border-right:.5pt solid white;border-bottom:none;border-left:
+  none;background:#DBE5F1;mso-pattern:#DBE5F1 none;border-color:currentColor white white currentColor'>Actual
+  USB Frequency</td>
+  <td class=xl6330533 align=left width=200 style='width:150pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:none;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none;
+  border-color:currentColor white white currentColor'>clk001_iroActualFreqUSB</td>
+  <td class=xl6330533 align=left width=268 style='width:201pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;background:#DBE5F1;mso-pattern:
+  #DBE5F1 none;border-color:currentColor currentColor white'>Actual USB
+  frequency ( fUSB)in MHz .
+   Note: The   clock for the USB module and the clock for the MMC/SD module are both derived
+  from the clock fUSB</td>
+ </tr>
+</table><br>
+
+</LI>
+<img src="..\CLOCK_6.PNG" title="GUI for CLK001 App"  />
+<LI>
+<table border=0 cellpadding=0 cellspacing=0 width=667 style='border-collapse:
+ collapse;table-layout:fixed;width:500pt'>
+  <tr height=31 style='mso-height-source:userset;height:23.25pt'>
+  <td height=31 class=xl6330533 align=left width=199 style='height:23.25pt;
+  width:149pt;font-size:11.0pt;color:white;font-weight:700;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border-top:none;border-right:.5pt solid white;border-bottom:1.5pt solid white;
+  border-left:none;background:#4F81BD;mso-pattern:#4F81BD none;border-color:
+  currentColor white white currentColor'>Name</td>
+  <td class=xl6330533 align=left width=200 style='width:150pt;font-size:11.0pt;
+  color:white;font-weight:700;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:1.5pt solid white;border-left:none;background:#4F81BD;
+  mso-pattern:#4F81BD none;border-color:currentColor white white currentColor'>URI</td>
+  <td class=xl6330533 align=left width=268 style='width:201pt;font-size:11.0pt;
+  color:white;font-weight:700;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:none;
+  border-bottom:1.5pt solid white;border-left:none;background:#4F81BD;
+  mso-pattern:#4F81BD none;border-color:currentColor currentColor white'>Description</td>
+ </tr>
+ <tr height=40 style='height:30.0pt'>
+  <td height=40 class=xl6330533 align=left width=199 style='height:30.0pt;
+  width:149pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border-top:none;border-right:.5pt solid white;border-bottom:.5pt solid white;
+  border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none;border-color:
+  currentColor white white currentColor'>EBU Clock Enable</td>
+  <td class=xl6330533 align=left width=200 style='width:150pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none;border-color:currentColor white white currentColor'>clk001_erwEBUClkEnable</td>
+  <td class=xl6330533 align=left width=268 style='width:201pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:none;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none;border-color:currentColor currentColor white'>Enabling
+  this checkbox will enable the EBU Clock</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl6330533 align=left width=199 style='height:15.0pt;
+  width:149pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border-top:none;border-right:.5pt solid white;border-bottom:.5pt solid white;
+  border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none;border-color:
+  currentColor white white currentColor'>EBU Clock Divider</td>
+  <td class=xl6330533 align=left width=200 style='width:150pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none;border-color:currentColor white white currentColor'>clk001_erwEBUClkDIV</td>
+  <td class=xl6330533 align=left width=268 style='width:201pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:none;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none;border-color:currentColor currentColor white'>PLL
+  clock is divided by this value</td>
+ </tr>
+ <tr height=40 style='height:30.0pt'>
+  <td height=40 class=xl6330533 align=left width=199 style='height:30.0pt;
+  width:149pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border-top:none;border-right:.5pt solid white;border-bottom:none;border-left:
+  none;background:#B8CCE4;mso-pattern:#B8CCE4 none;border-color:currentColor white white currentColor'>Actual
+  EBU Frequency</td>
+  <td class=xl6330533 align=left width=200 style='width:150pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:none;border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none;
+  border-color:currentColor white white currentColor'>clk001_iroActualFreqEBU</td>
+  <td class=xl6330533 align=left width=268 style='width:201pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;background:#B8CCE4;mso-pattern:
+  #B8CCE4 none;border-color:currentColor currentColor white'>Actual EBU frequency ( fEBU)in MHz .
+    </td>
+ </tr>
+</table><br>
+</LI>
+<img src="..\CLOCK_7.PNG" title="GUI for CLK001 App"  />
+<LI>
+<table border=0 cellpadding=0 cellspacing=0 width=667 style='border-collapse:
+ collapse;table-layout:fixed;width:500pt'>
+  <tr height=31 style='mso-height-source:userset;height:23.25pt'>
+  <td height=31 class=xl6330533 align=left width=199 style='height:23.25pt;
+  width:149pt;font-size:11.0pt;color:white;font-weight:700;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border-top:none;border-right:.5pt solid white;border-bottom:1.5pt solid white;
+  border-left:none;background:#4F81BD;mso-pattern:#4F81BD none;border-color:
+  currentColor white white currentColor'>Name</td>
+  <td class=xl6330533 align=left width=200 style='width:150pt;font-size:11.0pt;
+  color:white;font-weight:700;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:1.5pt solid white;border-left:none;background:#4F81BD;
+  mso-pattern:#4F81BD none;border-color:currentColor white white currentColor'>URI</td>
+  <td class=xl6330533 align=left width=268 style='width:201pt;font-size:11.0pt;
+  color:white;font-weight:700;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:none;
+  border-bottom:1.5pt solid white;border-left:none;background:#4F81BD;
+  mso-pattern:#4F81BD none;border-color:currentColor currentColor white'>Description</td>
+ </tr>
+ <tr height=40 style='height:30.0pt'>
+  <td height=40 class=xl6330533 align=left width=199 style='height:30.0pt;
+  width:149pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border-top:none;border-right:.5pt solid white;border-bottom:.5pt solid white;
+  border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none;border-color:
+  currentColor white white currentColor'>SD/MMC Clock Enable</td>
+  <td class=xl6330533 align=left width=200 style='width:150pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none;border-color:currentColor white white currentColor'>clk001_erwMMCClkEnable</td>
+  <td class=xl6330533 align=left width=268 style='width:201pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:none;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none;border-color:currentColor currentColor white'>Enabling
+  this checkbox will enable the SDMMC Clock</td>
+ </tr>
+ <tr height=40 style='height:30.0pt'>
+  <td height=40 class=xl6330533 align=left width=199 style='height:30.0pt;
+  width:149pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border-top:none;border-right:.5pt solid white;border-bottom:none;border-left:
+  none;background:#DBE5F1;mso-pattern:#DBE5F1 none;border-color:currentColor white white currentColor'>Actual
+  EBU Frequency</td>
+  <td class=xl6330533 align=left width=200 style='width:150pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:none;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none;
+  border-color:currentColor white white currentColor'>clk001_iroActualFreqEBU</td>
+  <td class=xl6330533 align=left width=268 style='width:201pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;background:#DBE5F1;mso-pattern:
+  #DBE5F1 none;border-color:currentColor currentColor white'>Actual EBU frequency (fMMC)in MHz .
+    </td>
+ </tr>
+</table><br>
+</LI>
+<img src="..\CLOCK_8.PNG" title="GUI for CLK001 App"  />
+<LI>
+<table border=0 cellpadding=0 cellspacing=0 width=667 style='border-collapse:
+ collapse;table-layout:fixed;width:500pt'>
+  <tr height=31 style='mso-height-source:userset;height:23.25pt'>
+  <td height=31 class=xl6317732 align=left width=199 style='height:23.25pt;
+  width:149pt;font-size:11.0pt;color:white;font-weight:700;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border-top:none;border-right:.5pt solid white;border-bottom:1.5pt solid white;
+  border-left:none;background:#4F81BD;mso-pattern:#4F81BD none;border-color:
+  currentColor white white currentColor'>Name</td>
+  <td class=xl6317732 align=left width=200 style='width:150pt;font-size:11.0pt;
+  color:white;font-weight:700;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:1.5pt solid white;border-left:none;background:#4F81BD;
+  mso-pattern:#4F81BD none;border-color:currentColor white white currentColor'>URI</td>
+  <td class=xl6317732 align=left width=268 style='width:201pt;font-size:11.0pt;
+  color:white;font-weight:700;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:none;
+  border-bottom:1.5pt solid white;border-left:none;background:#4F81BD;
+  mso-pattern:#4F81BD none;border-color:currentColor currentColor white'>Description</td>
+ </tr>
+ <tr height=40 style='height:30.0pt'>
+  <td height=40 class=xl6317732 align=left width=199 style='height:30.0pt;
+  width:149pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border-top:none;border-right:.5pt solid white;border-bottom:.5pt solid white;
+  border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none;border-color:
+  currentColor white white currentColor'>WDT Clock Enable</td>
+  <td class=xl6317732 align=left width=200 style='width:150pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none;border-color:currentColor white white currentColor'>clk001_erwWDTClkEnable</td>
+  <td class=xl6317732 align=left width=268 style='width:201pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:none;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none;border-color:currentColor currentColor white'>Enabling
+  this checkbox will enable the WDT Clock</td>
+ </tr>
+ <tr height=100 style='height:75.0pt'>
+  <td height=100 class=xl6317732 align=left width=199 style='height:75.0pt;
+  width:149pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border-top:none;border-right:.5pt solid white;border-bottom:.5pt solid white;
+  border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none;border-color:
+  currentColor white white currentColor'>WDT Clock Source Selection</td>
+  <td class=xl6317732 align=left width=200 style='width:150pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none;border-color:currentColor white white currentColor'>clk001_erwWDTClkSource</td>
+  <td class=xl6317732 align=left width=268 style='width:201pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:none;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none;border-color:currentColor currentColor white'>The
+  user can select the following clock sources for WDT Clock.
+    - Internal Oscillator
+    - Standby clock
+    - PLL</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl6317732 align=left width=199 style='height:15.0pt;
+  width:149pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border-top:none;border-right:.5pt solid white;border-bottom:none;border-left:
+  none;background:#B8CCE4;mso-pattern:#B8CCE4 none;border-color:currentColor white white currentColor'>WDT
+  Clock Divide Value</td>
+  <td class=xl6317732 align=left width=200 style='width:150pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:none;border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none;
+  border-color:currentColor white white currentColor'>clk001_erwWDTClkDIV</td>
+  <td class=xl6317732 align=left width=268 style='width:201pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;background:#B8CCE4;mso-pattern:
+  #B8CCE4 none;border-color:currentColor currentColor white'>Divides the clock
+  source by n.</td>
+ </tr>
+</table>
+</LI>
+<img src="..\CLOCK_9.PNG" title="GUI for CLK001 App"  />
+<LI>
+<table border=0 cellpadding=0 cellspacing=0 width=667 style='border-collapse:
+ collapse;table-layout:fixed;width:500pt'>
+  <tr height=31 style='mso-height-source:userset;height:23.25pt'>
+  <td height=31 class=xl6317732 align=left width=199 style='height:23.25pt;
+  width:149pt;font-size:11.0pt;color:white;font-weight:700;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border-top:none;border-right:.5pt solid white;border-bottom:1.5pt solid white;
+  border-left:none;background:#4F81BD;mso-pattern:#4F81BD none;border-color:
+  currentColor white white currentColor'>Name</td>
+  <td class=xl6317732 align=left width=200 style='width:150pt;font-size:11.0pt;
+  color:white;font-weight:700;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:1.5pt solid white;border-left:none;background:#4F81BD;
+  mso-pattern:#4F81BD none;border-color:currentColor white white currentColor'>URI</td>
+  <td class=xl6317732 align=left width=268 style='width:201pt;font-size:11.0pt;
+  color:white;font-weight:700;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:none;
+  border-bottom:1.5pt solid white;border-left:none;background:#4F81BD;
+  mso-pattern:#4F81BD none;border-color:currentColor currentColor white'>Description</td>
+ </tr>
+ <tr height=40 style='height:30.0pt'>
+  <td height=40 class=xl6317732 align=left width=199 style='height:30.0pt;
+  width:149pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border-top:none;border-right:.5pt solid white;border-bottom:.5pt solid white;
+  border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none;border-color:
+  currentColor white white currentColor'>Enable External Clock Feature</td>
+  <td class=xl6317732 align=left width=200 style='width:150pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none;border-color:currentColor white white currentColor'>clk001_erwEnableExtClk</td>
+  <td class=xl6317732 align=left width=268 style='width:201pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:none;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none;border-color:currentColor currentColor white'>Enabling
+  this checkbox will reserve a Pin resouce to watch clock externally</td>
+ </tr>
+ <tr height=100 style='height:75.0pt'>
+  <td height=100 class=xl6317732 align=left width=199 style='height:75.0pt;
+  width:149pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border-top:none;border-right:.5pt solid white;border-bottom:.5pt solid white;
+  border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none;border-color:
+  currentColor white white currentColor'>Clock Source for external observation</td>
+  <td class=xl6317732 align=left width=200 style='width:150pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none;border-color:currentColor white white currentColor'>clk001_erwExtClkSrc</td>
+  <td class=xl6317732 align=left width=268 style='width:201pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:none;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none;border-color:currentColor currentColor white'>The
+  user can select the following clock sources.
+    - System Clock
+    - Flash Clock
+    - USB Clock
+    - PLL Clock</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl6317732 align=left width=199 style='height:15.0pt;
+  width:149pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border-top:none;border-right:.5pt solid white;border-bottom:none;border-left:
+  none;background:#B8CCE4;mso-pattern:#B8CCE4 none;border-color:currentColor white white currentColor'>
+  Clock Divide Value</td>
+  <td class=xl6317732 align=left width=200 style='width:150pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:none;border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none;
+  border-color:currentColor white white currentColor'>clk001_erwExtClkPLLDiv</td>
+  <td class=xl6317732 align=left width=268 style='width:201pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;background:#B8CCE4;mso-pattern:
+  #B8CCE4 none;border-color:currentColor currentColor white'>Divides the PLL/USB clock
+  source by n.</td>
+ </tr>
+  <tr height=100 style='height:75.0pt'>
+  <td height=100 class=xl6317732 align=left width=199 style='height:75.0pt;
+  width:149pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border-top:none;border-right:.5pt solid white;border-bottom:.5pt solid white;
+  border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none;border-color:
+  currentColor white white currentColor'>Pad Driver Strength</td>
+  <td class=xl6317732 align=left width=200 style='width:150pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none;border-color:currentColor white white currentColor'>clk001_erwExtClkPadDriverMode</td>
+  <td class=xl6317732 align=left width=268 style='width:201pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:none;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none;border-color:currentColor currentColor white'>The
+  user can configure the pad driver strength</td>
+ </tr>
+</table>
+</LI>
+</UL>
+
+@}
+*/
+
+/**
+@ingroup CLK001_publishedparams
+@{
+\page CLK001_Virtual_Signals Virtual Signls
+<br>
+<table border=0 cellpadding=0 cellspacing=0 width=971>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl1528532 width=144 style='height:15.0pt;width:108pt;
+  font-size:11.0pt;color:white;font-weight:700;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border-top:none;border-right:
+  .5pt solid white;border-bottom:1.5pt solid white;border-left:none;background:
+  #4F81BD;mso-pattern:#4F81BD none'>Name</td>
+  <td class=xl1528532 width=191 style='width:143pt;font-size:11.0pt;color:white;
+  font-weight:700;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:1.5pt solid white;border-left:none;background:#4F81BD;
+  mso-pattern:#4F81BD none'>URI</td>
+  <td class=xl1528532 width=169 style='width:127pt;font-size:11.0pt;color:white;
+  font-weight:700;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:1.5pt solid white;border-left:none;background:#4F81BD;
+  mso-pattern:#4F81BD none'>Hardware Signal</td>
+  <td class=xl1528532 width=187 style='width:140pt;font-size:11.0pt;color:white;
+  font-weight:700;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:1.5pt solid white;border-left:none;background:#4F81BD;
+  mso-pattern:#4F81BD none'>Description</td>
+  <td class=xl1528532 width=123 style='width:92pt;font-size:11.0pt;color:white;
+  font-weight:700;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:1.5pt solid white;border-left:none;background:#4F81BD;
+  mso-pattern:#4F81BD none'>UI Dependency</td>
+  <td class=xl1528532 width=157 style='width:118pt;font-size:11.0pt;color:white;
+  font-weight:700;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  1.5pt solid white;border-left:none;background:#4F81BD;mso-pattern:#4F81BD none'>Connections</td>
+ </tr>
+ <tr height=40 style='height:30.0pt'>
+  <td height=40 class=xl6328532 width=144 style='height:30.0pt;width:108pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:none;background:
+  #B8CCE4;mso-pattern:#B8CCE4 none'>CCU Clock</td>
+  <td class=xl6328532 width=191 style='width:143pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>clk001_ccu_fccu_vs</td>
+  <td class=xl6328532 width=169 style='width:127pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>CCU/FCCU</td>
+  <td class=xl6328532 width=187 style='width:140pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>Clock for CCU4, CCU8 and POSIF modules</td>
+  <td class=xl6328532 width=123 style='width:92pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>None</td>
+  <td class=xl6328532 width=157 style='width:118pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>Connected
+  to CCU4, CCU8 and POSIF<span style='mso-spacerun:yes'> </span></td>
+ </tr>
+ <tr class=xl6328532 height=20 style='height:15.0pt'>
+  <td height=20 class=xl6328532 width=144 style='height:15.0pt;width:108pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:none;background:
+  #DBE5F1;mso-pattern:#DBE5F1 none'>External Clock</td>
+  <td class=xl6328532 width=191 style='width:143pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>clk001_extclk_vs</td>
+  <td class=xl6328532 width=169 style='width:127pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>extclk</td>
+  <td class=xl6328532 width=187 style='width:140pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>External clock output</td>
+  <td class=xl6328532 width=123 style='width:92pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>None</td>
+  <td class=xl6328532 width=157 style='width:118pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>Connected
+  to Port pad .</td>
+ </tr>
+ <tr class=xl6328532 height=40 style='height:30.0pt'>
+  <td height=40 class=xl6328532 width=144 style='height:30.0pt;width:108pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border-top:none;border-right:
+  .5pt solid white;border-bottom:none;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>External Clock Pin</td>
+  <td class=xl6328532 width=191 style='width:143pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:none;border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>clk001_extclkpin_vs</td>
+  <td class=xl6328532 width=169 style='width:127pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:none;border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>port/p/*/pad/*</td>
+  <td class=xl6328532 width=187 style='width:140pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:none;border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>Port
+  Signal pad</td>
+  <td class=xl6328532 width=123 style='width:92pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:none;border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>None</td>
+  <td class=xl6328532 width=157 style='width:118pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;background:#B8CCE4;mso-pattern:#B8CCE4 none'>Connected
+  to external clock signal</td>
+ </tr>
+</table>
+\section CLK001_Provided_Parameters Provided Parameters
+<br>
+<table border=0 cellpadding=0 cellspacing=0 width=775 >
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl6317436 width=194 style='height:15.0pt;width:146pt;
+  font-size:11.0pt;color:white;font-weight:700;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border-top:none;border-right:
+  .5pt solid white;border-bottom:1.5pt solid white;border-left:none;background:
+  #4F81BD;mso-pattern:#4F81BD none'>Name</td>
+  <td class=xl6317436 width=252 style='width:189pt;font-size:11.0pt;color:white;
+  font-weight:700;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:1.5pt solid white;border-left:none;background:#4F81BD;
+  mso-pattern:#4F81BD none'>URI</td>
+  <td class=xl6317436 width=227 style='width:170pt;font-size:11.0pt;color:white;
+  font-weight:700;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:1.5pt solid white;border-left:none;background:#4F81BD;
+  mso-pattern:#4F81BD none'>Description</td>
+  <td class=xl6317436 width=102 style='width:77pt;font-size:11.0pt;color:white;
+  font-weight:700;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  1.5pt solid white;border-left:none;background:#4F81BD;mso-pattern:#4F81BD none'>Access
+  Mode</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl6317436 width=194 style='height:15.0pt;width:146pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:none;background:
+  #B8CCE4;mso-pattern:#B8CCE4 none'>System clock source fsys</td>
+  <td class=xl6317436 width=252 style='width:189pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>clk001_erwSystemClockSource</td>
+  <td class=xl6317436 width=227 style='width:170pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>System clock source selection</td>
+  <td class=xl6317436 width=102 style='width:77pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>R/W</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl6317436 width=194 style='height:15.0pt;width:146pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:none;background:
+  #DBE5F1;mso-pattern:#DBE5F1 none'>PLL Clock Source Selection</td>
+  <td class=xl6317436 width=252 style='width:189pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>clk001_erwPLLClkSource</td>
+  <td class=xl6317436 width=227 style='width:170pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>PLL Clock Source Selection</td>
+  <td class=xl6317436 width=102 style='width:77pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>R/W</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl6317436 width=194 style='height:15.0pt;width:146pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:none;background:
+  #B8CCE4;mso-pattern:#B8CCE4 none'>Enable advanced setting</td>
+  <td class=xl6317436 width=252 style='width:189pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>CLK001_AdvancedSetting</td>
+  <td class=xl6317436 width=227 style='width:170pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>Enable advanced setting</td>
+  <td class=xl6317436 width=102 style='width:77pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>R/W</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl6317436 width=194 style='height:15.0pt;width:146pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:none;background:
+  #DBE5F1;mso-pattern:#DBE5F1 none'>N Div</td>
+  <td class=xl6317436 width=252 style='width:189pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>clk001_irwN</td>
+  <td class=xl6317436 width=227 style='width:170pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>PLL NDIV Value</td>
+  <td class=xl6317436 width=102 style='width:77pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>R/W</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl6317436 width=194 style='height:15.0pt;width:146pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:none;background:
+  #B8CCE4;mso-pattern:#B8CCE4 none'>P Div</td>
+  <td class=xl6317436 width=252 style='width:189pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>clk001_irwP</td>
+  <td class=xl6317436 width=227 style='width:170pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>PLL PDIV Value</td>
+  <td class=xl6317436 width=102 style='width:77pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>R/W</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl6317436 width=194 style='height:15.0pt;width:146pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:none;background:
+  #DBE5F1;mso-pattern:#DBE5F1 none'>K2 Div</td>
+  <td class=xl6317436 width=252 style='width:189pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>clk001_irwK</td>
+  <td class=xl6317436 width=227 style='width:170pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>PLL K2DIV Value</td>
+  <td class=xl6317436 width=102 style='width:77pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>R/W</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl6317436 width=194 style='height:15.0pt;width:146pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:none;background:
+  #B8CCE4;mso-pattern:#B8CCE4 none'>K1 Div</td>
+  <td class=xl6317436 width=252 style='width:189pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>clk001_irwK1</td>
+  <td class=xl6317436 width=227 style='width:170pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>PLL K1DIV Value</td>
+  <td class=xl6317436 width=102 style='width:77pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>R/W</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl6317436 width=194 style='height:15.0pt;width:146pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:none;background:
+  #DBE5F1;mso-pattern:#DBE5F1 none'>Desired System Frequency</td>
+  <td class=xl6317436 width=252 style='width:189pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>clk001_irwDesFreqSystem</td>
+  <td class=xl6317436 width=227 style='width:170pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>Desired System Frequency in MHz</td>
+  <td class=xl6317436 width=102 style='width:77pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>R/W</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl6317436 width=194 style='height:15.0pt;width:146pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:none;background:
+  #B8CCE4;mso-pattern:#B8CCE4 none'>Actual System Frequency</td>
+  <td class=xl6317436 width=252 style='width:189pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>clk001_iroActualFreqSystem</td>
+  <td class=xl6317436 width=227 style='width:170pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>Actual System Frequency in MHz</td>
+  <td class=xl6317436 width=102 style='width:77pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>R</td>
+ </tr>
+ <tr height=60 style='height:45.0pt'>
+  <td height=60 class=xl6317436 width=194 style='height:45.0pt;width:146pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:none;background:
+  #DBE5F1;mso-pattern:#DBE5F1 none'>Enable fly trimming (32 KHz crystal is
+  required on RTC_XTAL 1,2)</td>
+  <td class=xl6317436 width=252 style='width:189pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>clk001_erwEnableFlyTrim</td>
+  <td class=xl6317436 width=227 style='width:170pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>Enable fly trimming</td>
+  <td class=xl6317436 width=102 style='width:77pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>R/W</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl6317436 width=194 style='height:15.0pt;width:146pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:none;background:
+  #B8CCE4;mso-pattern:#B8CCE4 none'>Internal Oscillator Frequency</td>
+  <td class=xl6317436 width=252 style='width:189pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>clk001_irwInterOscRefFreq</td>
+  <td class=xl6317436 width=227 style='width:170pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>Internal Oscillator Frequency</td>
+  <td class=xl6317436 width=102 style='width:77pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>R/W</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl6317436 width=194 style='height:15.0pt;width:146pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:none;background:
+  #DBE5F1;mso-pattern:#DBE5F1 none'>External Oscillator Frequency</td>
+  <td class=xl6317436 width=252 style='width:189pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>clk001_irwExtOscRefFreq</td>
+  <td class=xl6317436 width=227 style='width:170pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>External Oscillator Frequency</td>
+  <td class=xl6317436 width=102 style='width:77pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>R/W</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl6317436 width=194 style='height:15.0pt;width:146pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:none;background:
+  #B8CCE4;mso-pattern:#B8CCE4 none'>External Clock Frequency</td>
+  <td class=xl6317436 width=252 style='width:189pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>clk001_irwDigInputRefFreq</td>
+  <td class=xl6317436 width=227 style='width:170pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>External Clock Frequency</td>
+  <td class=xl6317436 width=102 style='width:77pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>R/W</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl6317436 width=194 style='height:15.0pt;width:146pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:none;background:
+  #DBE5F1;mso-pattern:#DBE5F1 none'>USB Clock Enable</td>
+  <td class=xl6317436 width=252 style='width:189pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>clk001_erwUSBClkEnable</td>
+  <td class=xl6317436 width=227 style='width:170pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>USB Clock Enable</td>
+  <td class=xl6317436 width=102 style='width:77pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>R/W</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl6317436 width=194 style='height:15.0pt;width:146pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:none;background:
+  #B8CCE4;mso-pattern:#B8CCE4 none'>USB Clock Source Selection</td>
+  <td class=xl6317436 width=252 style='width:189pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>clk001_erwUSBClkSource</td>
+  <td class=xl6317436 width=227 style='width:170pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>USB Clock Source Selection</td>
+  <td class=xl6317436 width=102 style='width:77pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>R/W</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl6317436 width=194 style='height:15.0pt;width:146pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:none;background:
+  #DBE5F1;mso-pattern:#DBE5F1 none'>USB Clock Divider</td>
+  <td class=xl6317436 width=252 style='width:189pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>clk001_erwUSBClkDivider</td>
+  <td class=xl6317436 width=227 style='width:170pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>USB Clock Divider</td>
+  <td class=xl6317436 width=102 style='width:77pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>R/W</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl6317436 width=194 style='height:15.0pt;width:146pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:none;background:
+  #B8CCE4;mso-pattern:#B8CCE4 none'>Actual USB Frequency</td>
+  <td class=xl6317436 width=252 style='width:189pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>clk001_iroActualFreqUSB</td>
+  <td class=xl6317436 width=227 style='width:170pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>Actual USB Frequency</td>
+  <td class=xl6317436 width=102 style='width:77pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>R</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl6317436 width=194 style='height:15.0pt;width:146pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:none;background:
+  #DBE5F1;mso-pattern:#DBE5F1 none'>SD/MMC Clock Enable</td>
+  <td class=xl6317436 width=252 style='width:189pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>clk001_erwMMCClkEnable</td>
+  <td class=xl6317436 width=227 style='width:170pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>SD/MMC Clock Enable</td>
+  <td class=xl6317436 width=102 style='width:77pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>R/W</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl6317436 width=194 style='height:15.0pt;width:146pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:none;background:
+  #B8CCE4;mso-pattern:#B8CCE4 none'>Actual MMC Frequency</td>
+  <td class=xl6317436 width=252 style='width:189pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>clk001_iroActualFreqMMC</td>
+  <td class=xl6317436 width=227 style='width:170pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>Actual MMC Frequency</td>
+  <td class=xl6317436 width=102 style='width:77pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>R</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl6317436 width=194 style='height:15.0pt;width:146pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:none;background:
+  #DBE5F1;mso-pattern:#DBE5F1 none'>EBU Clock Enable</td>
+  <td class=xl6317436 width=252 style='width:189pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>clk001_erwEBUClkEnable</td>
+  <td class=xl6317436 width=227 style='width:170pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>EBU Clock Enable</td>
+  <td class=xl6317436 width=102 style='width:77pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>R/W</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl6317436 width=194 style='height:15.0pt;width:146pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:none;background:
+  #B8CCE4;mso-pattern:#B8CCE4 none'>EBU Clock Divider</td>
+  <td class=xl6317436 width=252 style='width:189pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>clk001_erwEBUClkDIV</td>
+  <td class=xl6317436 width=227 style='width:170pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>EBU Clock Divider</td>
+  <td class=xl6317436 width=102 style='width:77pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>R/W</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl6317436 width=194 style='height:15.0pt;width:146pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:none;background:
+  #DBE5F1;mso-pattern:#DBE5F1 none'>Actual EBU Frequency</td>
+  <td class=xl6317436 width=252 style='width:189pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>clk001_iroActualFreqEBU</td>
+  <td class=xl6317436 width=227 style='width:170pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>Actual EBU Frequency</td>
+  <td class=xl6317436 width=102 style='width:77pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>R</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl6317436 width=194 style='height:15.0pt;width:146pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:none;background:
+  #B8CCE4;mso-pattern:#B8CCE4 none'>CCU Clock Enable</td>
+  <td class=xl6317436 width=252 style='width:189pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>clk001_erwCCUClkEnable</td>
+  <td class=xl6317436 width=227 style='width:170pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>CCU Clock Enable</td>
+  <td class=xl6317436 width=102 style='width:77pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>R/W</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl6317436 width=194 style='height:15.0pt;width:146pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:none;background:
+  #DBE5F1;mso-pattern:#DBE5F1 none'>CCU Clock Divide(x/2)</td>
+  <td class=xl6317436 width=252 style='width:189pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>clk001_erwCCUClkDIV</td>
+  <td class=xl6317436 width=227 style='width:170pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>CCU Clock Divide(x/2)</td>
+  <td class=xl6317436 width=102 style='width:77pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>R/W</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl6317436 width=194 style='height:15.0pt;width:146pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:none;background:
+  #B8CCE4;mso-pattern:#B8CCE4 none'>Actual CCU Frequency</td>
+  <td class=xl6317436 width=252 style='width:189pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>clk001_iroActualFreqCCU</td>
+  <td class=xl6317436 width=227 style='width:170pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>Actual CCU Frequency</td>
+  <td class=xl6317436 width=102 style='width:77pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>R</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl6317436 width=194 style='height:15.0pt;width:146pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:none;background:
+  #DBE5F1;mso-pattern:#DBE5F1 none'>WDT Clock Enable</td>
+  <td class=xl6317436 width=252 style='width:189pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>clk001_erwWDTClkEnable</td>
+  <td class=xl6317436 width=227 style='width:170pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>WDT Clock Enable</td>
+  <td class=xl6317436 width=102 style='width:77pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>R/W</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl6317436 width=194 style='height:15.0pt;width:146pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:none;background:
+  #B8CCE4;mso-pattern:#B8CCE4 none'>WDT Clock Source Selection</td>
+  <td class=xl6317436 width=252 style='width:189pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>clk001_erwWDTClkSource</td>
+  <td class=xl6317436 width=227 style='width:170pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>WDT Clock Source Selection</td>
+  <td class=xl6317436 width=102 style='width:77pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>R/W</td>
+ </tr>
+ <tr height=43 style='mso-height-source:userset;height:32.25pt'>
+  <td height=43 class=xl6317436 width=194 style='height:32.25pt;width:146pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:none;background:
+  #DBE5F1;mso-pattern:#DBE5F1 none'>WDT Clock Divide Value</td>
+  <td class=xl6317436 width=252 style='width:189pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>clk001_erwWDTClkDIV</td>
+  <td class=xl6317436 width=227 style='width:170pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>WDT Clock Divide Value</td>
+  <td class=xl6317436 width=102 style='width:77pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>R/W</td>
+ </tr>
+ <tr height=40 style='height:30.0pt'>
+  <td height=40 class=xl6317436 width=194 style='height:30.0pt;width:146pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:none;background:
+  #B8CCE4;mso-pattern:#B8CCE4 none'>Peripheral Bus Clock Divide(x/2)</td>
+  <td class=xl6317436 width=252 style='width:189pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>clk001_erwPBClkDivider</td>
+  <td class=xl6317436 width=227 style='width:170pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>Peripheral Bus Clock Divider</td>
+  <td class=xl6317436 width=102 style='width:77pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>R/W</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl6317436 width=194 style='height:15.0pt;width:146pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:none;background:
+  #DBE5F1;mso-pattern:#DBE5F1 none'>Actual Peripheral Bus Freq</td>
+  <td class=xl6317436 width=252 style='width:189pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>clk001_iroActualFreqPB</td>
+  <td class=xl6317436 width=227 style='width:170pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>Actual Peripheral Bus Freq</td>
+  <td class=xl6317436 width=102 style='width:77pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>R</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl6317436 width=194 style='height:15.0pt;width:146pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:none;background:
+  #B8CCE4;mso-pattern:#B8CCE4 none'>CPU Clock Divide(x/2)</td>
+  <td class=xl6317436 width=252 style='width:189pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>clk001_erwCPUClkDivider</td>
+  <td class=xl6317436 width=227 style='width:170pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>CPU Clock Divider</td>
+  <td class=xl6317436 width=102 style='width:77pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>R/W</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl6317436 width=194 style='height:15.0pt;width:146pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border-top:none;border-right:
+  .5pt solid white;border-bottom:none;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>Actual CPU Freqency</td>
+  <td class=xl6317436 width=252 style='width:189pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:none;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>clk001_iroActualFreqCPU</td>
+  <td class=xl6317436 width=227 style='width:170pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:none;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>CPU
+  Clock</td>
+  <td class=xl6317436 width=102 style='width:77pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;background:#DBE5F1;mso-pattern:#DBE5F1 none'>R</td>
+ </tr>
+</table>
+
+
+
+
+
+\section CLK001_Consumed_Parameters Consumed Parameters
+<br>
+<table border=0 cellpadding=0 cellspacing=0 width=714 style='border-collapse:
+ collapse;table-layout:fixed;width:536pt'>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl1513932 width=64 style='height:15.0pt;width:48pt;
+  font-size:11.0pt;color:white;font-weight:700;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border-top:none;border-right:
+  .5pt solid white;border-bottom:1.5pt solid white;border-left:none;background:
+  #4F81BD;mso-pattern:#4F81BD none;border-color:currentColor white white currentColor'>Name</td>
+  <td class=xl1513932 width=217 style='width:163pt;font-size:11.0pt;color:white;
+  font-weight:700;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:1.5pt solid white;border-left:none;background:#4F81BD;
+  mso-pattern:#4F81BD none;border-color:currentColor white white currentColor'>URI</td>
+  <td class=xl1513932 width=96 style='width:72pt;font-size:11.0pt;color:white;
+  font-weight:700;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:1.5pt solid white;border-left:none;background:#4F81BD;
+  mso-pattern:#4F81BD none;border-color:currentColor white white currentColor'>Description</td>
+  <td class=xl1513932 width=337 style='width:253pt;font-size:11.0pt;color:white;
+  font-weight:700;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  1.5pt solid white;border-left:none;background:#4F81BD;mso-pattern:#4F81BD none;
+  border-color:currentColor currentColor white'>Conditional Consumption</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl1513932 style='height:15.0pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none;border-color:currentColor white white currentColor'>clkctrl</td>
+  <td class=xl1513932 style='font-size:11.0pt;color:black;font-weight:400;
+  text-decoration:none;text-underline-style:none;text-line-through:none;
+  font-family:Calibri;border-top:none;border-right:.5pt solid white;border-bottom:
+  .5pt solid white;border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none;
+  border-color:currentColor white white currentColor'>peripheral/scu/0/clkctrl/0/*</td>
+  <td class=xl1513932 style='font-size:11.0pt;color:black;font-weight:400;
+  text-decoration:none;text-underline-style:none;text-line-through:none;
+  font-family:Calibri;border-top:none;border-right:.5pt solid white;border-bottom:
+  .5pt solid white;border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none;
+  border-color:currentColor white white currentColor'>Clock resouce</td>
+  <td class=xl1513932 style='font-size:11.0pt;color:black;font-weight:400;
+  text-decoration:none;text-underline-style:none;text-line-through:none;
+  font-family:Calibri;border-top:none;border-right:none;border-bottom:.5pt solid white;
+  border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none;border-color:
+  currentColor currentColor white'>Always</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl1513932 style='height:15.0pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:none;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>clk_extpin</td>
+  <td class=xl1513932 style='font-size:11.0pt;color:black;font-weight:400;
+  text-decoration:none;text-underline-style:none;text-line-through:none;
+  font-family:Calibri;border-top:none;border-right:.5pt solid white;border-bottom:
+  none;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>port/p/*/pad/*</td>
+  <td class=xl1513932 style='font-size:11.0pt;color:black;font-weight:400;
+  text-decoration:none;text-underline-style:none;text-line-through:none;
+  font-family:Calibri;border-top:none;border-right:.5pt solid white;border-bottom:
+  none;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>Pin
+  resouce</td>
+  <td class=xl1513932 style='font-size:11.0pt;color:black;font-weight:400;
+  text-decoration:none;text-underline-style:none;text-line-through:none;
+  font-family:Calibri;background:#DBE5F1;mso-pattern:#DBE5F1 none'>If System
+  Clock selected for external observation</td>
+ </tr>
+</table>
+
+
+
+@}
+*/	
