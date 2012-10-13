@@ -1,0 +1,34 @@
+/**
+    @defgroup RTOS001App RTOS_CMSISOS_RTOS001 App
+    @{
+        @defgroup RTOS001_Legal Copyright and Licensing Information
+        @{
+        @}
+        @defgroup RTOS001_intro Introduction
+        @{
+        @}
+        @defgroup RTOS001_overview Overview
+        @{
+        @}
+        @defgroup RTOS001_filestructure File Structure
+        @{
+        @}
+        @defgroup RTOS001_appconfigdoc App Configuration Documentation
+        @{
+        @}
+        @defgroup RTOS001_publicparam App Public Data Structures
+        @{
+        @}       
+        @defgroup RTOS001_apidoc API Documentation
+        @{
+        @}
+        @defgroup RTOS001_publishedparams App Published Parameters
+        @{
+        @}
+        @defgroup RTOS001_revisionhistory Release History
+        @{
+          Click <a href="../RTOS001.htm"> here </a> for Release History
+        @}
+    @}
+
+*/

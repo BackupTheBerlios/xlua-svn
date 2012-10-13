@@ -1,0 +1,1375 @@
+/**
+@ingroup SDMMC004_Legal
+@{
+\page SDMMC004_legalpage Copyright and Licensing Information
+Copyright (c) 2011, Infineon Technologies AG
+All rights reserved. 
+
+Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met: 
+Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer. 
+Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution. 
+Neither the name of the copyright holders nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+To improve the quality of the software, users are encouraged to share modifications, enhancements or bug fixes with Infineon Technologies AG (dave@infineon.com).
+
+@}
+
+@ingroup SDMMC004_intro SDMMC004
+@{
+\page SDMMC004_intropage Introduction
+SDMMC stands for Secure Digital and Multimedia Card. SD/MMC Memory Card is specifically designed to meet the security, capacity,performance, and environment requirements inherent in 
+newly emerging audio and video consumer electronic devices. SDMMC004 App is the low-level driver for SDMMC cards. SD/MMC cards can be used as a data storage for error logging purposes. 
+This App is designed to drive SDMMC card with functionalities like writing or reading single/multiple blocks of data from the card 
+and with all the security features. It provides interface-functions to access the hardware. Depending on the used controller a SD-Card can be accessed in SD-Mode or SPI-Mode. This driver supports only SD mode. Faster data transmission is also 
+supported depending on the card's support for 1-bit or 4-bit data lines. User has the liberty to configure for faster transmission through GUI. High Speed transmission is supported for up
+to 50MHz SD clock.The driver implements for both the card detection and non-card detection circuit. In case of non-card detection circuit, if the user removes the card while some transaction 
+is in process, then card must be inserted in next power cycle. In case of card detection circuit, the upper layer needs to register a call back function to driver which will be called from the low-level driver if any card insertion or removal event occurs.
+The driver uses the RTOS001 App for detecting timeouts. Function's re-entrancy is maintained using mutex and semaphores. The driver implements the <b>SD Host Controller Simplified Specification</b> (Reference 1) .  
+
+\section SDMMC004_scopesec Scope
+SDMMC_LowLevel_RTOS_SDMMC004 App performs all the SD and MMC card related functionalities in RTOS environment. It is an interface to access/drive the hardware as shown in
+the figure below:
+<img src="..\SDMMCLLD.PNG" title="Overview of LLD App" alt="The diagram shows the Overview of SDMMC LLD App." align="center" border="3" hspace="0" vspace="0" />
+
+
+\section SDMMC004_abbreviation
+<OL>
+<LI> SDMMC : Secure Digital/ Multimedia Card </LI>
+<LI>   API : Application Program Interface</LI>
+<LI>   GUI : Graphical User Interface</LI>
+<LI> IOCTL : Input/Output Control</LI>
+<LI>   DMA : Direct Memory Access </LI>
+<LI>  RTOS : Real Time Operating System </LI>
+<LI>   LLD : Low Level Driver </LI>
+<LI>   CSD : Card Specific Data </LI>
+<LI>   CID : Card identification number</LI>
+<LI>   OCR : Operation conditions register </LI>
+<LI>   SCR : SD Configuration Register </LI>
+<LI>   CSR : Card Status Register </LI>
+<LI>   RCA : Relative card address</LI>
+<LI>   AU:  Allocation Unit</LI>
+</OL>
+
+\section SDMMC004_reference
+<OL>
+<LI>https://www.sdcard.org/downloads/pls/simplified_specs/Part_A2_SD_Host_Controller_Simplified_Specification_Ver3.00_Final_110225.pdf</LI>
+<LI>https://www.sdcard.org/downloads/pls/simplified_specs/Part_1_Physical_Layer_Simplified_Specification_Ver_3.01_Final_100518.pdf"</LI>
+</OL>
+\section SDMMC004_limitation
+None
+
+@}
+*/
+
+/**
+@ingroup SDMMC004_overview
+@{
+\page SDMMC004_overviewpage Overview
+This app will be used in RTOS environment. For Non-RTOS environment, use SDMMC003 app.
+SDMMC supports the following features:<BR>
+<OL>
+<LI>Only SD mode is supported. </LI>
+<LI><b>Memory capacity:</b> <BR>
+Standard Capacity SD Memory Card:  Up to and including 2 GB <BR>
+High Capacity SD Memory Card: More than 2GB (This version of specification limits capacity up to and including 32GB)
+</LI>
+<LI> <b>Operating voltage range:</b> 2.7-3.6 V </LI>
+<LI>Designed for read-only and read/write cards.</LI>
+<LI>Password Protection of cards. This app provides support for all the locking/unlocking features.</LI>
+<LI>Designed based on simplified specifications version 3.0 but is compatible with lower versions as well.</LI>
+<LI>Host Controller acts as an intermediary between host system and SD card. </LI>
+<LI>Host Controller supports only one SD card inserted at a time.</LI>
+</OL>
+
+<BR>
+<b> Use of Semaphores & Mutexes: </b>
+<p> This module uses 3 Semaphores & 2 mutexes in RTOS environment. </p><BR><BR>
+<b>Use of Mutexes:</b> 
+<OL>
+<LI>SDMMC low level driver uses 2 mutexes for function reentrancy.</LI>
+<LI> One mutex is use protect the Command line and another mutex is used to protect the data line.</LI>
+<LI> SDMMC has some commands which can be issued even when the DAT lines are busy during data transfer. </LI>
+<LI> Command line mutex is used when the command doesn't has any data transfer. Data line mutex is used when the command has data transfer.</LI>
+</OL>
+
+<b>Use of Semaphores: </b> 
+<OL>
+<LI> SDMMC Low level uses 3 binary semaphores for synchronization between the ISR and thread or between the threads.</LI>
+<LI> Semaphores at the time of creation are in locked state. If a thread performs some operation, it 
+waits for the particular Semaphore which will be then released in ISR. The blocking thread comes out of the block state and again puts that semaphore in the lock state.
+ </LI>
+ <LI> 1st Semaphore signals all the command related interrupts which includes normal & error interrupts.</LI>
+ <LI> 2nd Semaphore signals all the data lines related interrupts which includes normal & error interrupts.</LI>
+ <LI> 3rd Semaphore signals the transfer complete interrupt which can be triggered along with the data line interrupt for one corner case in data transfer process.<BR>
+  a. Data Timeout & Transfer Complete Interrupt can be generated simultaneously. In such scenario,
+     Transfer Complete has higher priority than Data Timeout Error. 
+ </LI>
+</OL>
+
+
+@}
+
+@ingroup SDMMC004_filestructure File Structure
+@{
+\page SDMMC004_filestructurepage File Structure  
+Following files are generated : 
+<OL>
+<LI>SDMMC004.c:  This file contains definitions of all private type definitions 
+and functions of SDMMC004 App. </LI>
+<LI>SDMMC004.h: This file contains all public data structures,enums and function
+prototypes for SDMMC004 App. </LI>
+<LI>SDMMC004_Private.c: This file contains  all private type definitions and
+functions of SDMMC004 App. </LI>
+<LI>SDMMC004_Private.h: This file contains all the private functions prototypes and type declarations</LI>
+<LI>SDMMC004_Conf.h: This file has the App instance configurations</LI>
+<LI>SDMMC004_Conf.c: This file is empty</LI>
+</OL>
+@}
+
+@ingroup SDMMC004_appconfigdoc App Configuration Documentation
+@{
+\page SDMMC004_appconfigdocpage App Configuration
+<table>
+<tr  height=33 width=50>
+<td>
+<img src="..\SDMMC004_GUI.PNG" title="GUI for SDMMC004 App" alt="The diagram shows the UI for the App." align="left" border="3" hspace="0" vspace="0" />
+</td>
+</tr>
+
+<tr height=33 width=50>
+<td>
+<table border=0 cellpadding=0 cellspacing=0 width=657 style='border-collapse:
+ collapse;table-layout:fixed;width:494pt'>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl638081 width=166 style='height:15.0pt;width:125pt;
+  font-size:11.0pt;color:white;font-weight:700;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border-top:none;border-right:
+  .5pt solid white;border-bottom:1.5pt solid white;border-left:none;background:
+  #4F81BD;mso-pattern:#4F81BD none'>GUI Configuration</td>
+  <td class=xl638081 width=209 style='width:157pt;font-size:11.0pt;color:white;
+  font-weight:700;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:1.5pt solid white;border-left:none;background:#4F81BD;
+  mso-pattern:#4F81BD none'>URI</td>
+  <td class=xl638081 width=282 style='width:212pt;font-size:11.0pt;color:white;
+  font-weight:700;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  1.5pt solid white;border-left:none;background:#4F81BD;mso-pattern:#4F81BD none'>Description</td>
+ </tr>
+ <tr height=76 style='height:57.0pt'>
+  <td height=76 class=xl648081 width=166 style='height:57.0pt;width:125pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Arial;border-top:none;border-right:
+  .5pt solid white;border-bottom:none;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>Data Lines Configuration</td>
+  <td class=xl648081 width=209 style='width:157pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:none;border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>sdmmc004_use_4_data_lines</td>
+  <td class=xl648081 width=282 style='width:212pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;background:#B8CCE4;mso-pattern:#B8CCE4 none'>This
+  allows a user to select the 4-data lines or 1-data line for data
+  transfer.<br>
+    Unit : NA<br>
+    Range: NA</td>
+ </tr>
+</table>
+
+
+
+</td>
+</tr>
+<BR><BR><BR>
+<tr>
+<td>
+<img src="..\SDMMC004_Interrupt_GUI.PNG" title="Interrupt config GUI for SDMMC00 App" alt="The diagram shows the UI for the App." align="left" border="3" hspace="0" vspace="0" />
+</td>
+</tr>
+<tr height=33 width=50>
+<td>
+<table border=0 cellpadding=0 cellspacing=0 width=745 class=xl6332124
+ style='border-collapse:collapse;table-layout:fixed;width:560pt'>
+  <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl6332124 align=left width=157 style='height:15.0pt;
+  width:118pt;font-size:11.0pt;color:white;font-weight:700;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border-top:none;border-right:.5pt solid white;border-bottom:1.5pt solid white;
+  border-left:none;background:#4F81BD;mso-pattern:#4F81BD none'>GUI
+  Configuration</td>
+  <td class=xl6332124 align=left width=234 style='width:176pt;font-size:11.0pt;
+  color:white;font-weight:700;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:1.5pt solid white;border-left:none;background:#4F81BD;
+  mso-pattern:#4F81BD none'>URI</td>
+  <td class=xl6332124 align=left width=354 style='width:266pt;font-size:11.0pt;
+  color:white;font-weight:700;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:none;
+  border-bottom:1.5pt solid white;border-left:none;background:#4F81BD;
+  mso-pattern:#4F81BD none'>Description</td>
+ </tr>
+ <tr height=76 style='height:57.0pt'>
+  <td height=76 class=xl6432124 align=left width=157 style='height:57.0pt;
+  width:118pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Arial;
+  border-top:none;border-right:.5pt solid white;border-bottom:.5pt solid white;
+  border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>Preemption
+  Priority</td>
+  <td class=xl6432124 align=left width=234 style='width:176pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>sdmmc004_irwinterruptpriority</td>
+  <td class=xl6432124 align=left width=354 style='width:266pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Arial;border-top:none;border-right:none;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>This allows a user to set preemption priority for
+  the App<br>
+    Unit : NA<br>
+    Range: 0 to 63</td>
+ </tr>
+ <tr height=76 style='height:57.0pt'>
+  <td height=76 class=xl6432124 align=left width=157 style='height:57.0pt;
+  width:118pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Arial;
+  border-top:none;border-right:.5pt solid white;border-bottom:none;border-left:
+  none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>Sub Priority</td>
+  <td class=xl6432124 align=left width=234 style='width:176pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:none;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'><br>
+    sdmmc004_irwinterruptsubpriority<br>
+    </td>
+  <td class=xl6432124 align=left width=354 style='width:266pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Arial;background:#DBE5F1;mso-pattern:#DBE5F1 none'>This
+  allows a user to set sub priority for the App.<br>
+    Unit : NA<br>
+    Range: 0 to 3</td>
+ </tr>
+</table>
+
+</td>
+</tr>
+<BR><BR><BR>
+<tr>
+<td>
+<img src="..\Sdmmc004_Signals.PNG" title="Functional Signals config GUI for SDMMC00 App" alt="The diagram shows the UI for the App." align="left" border="3" hspace="0" vspace="0" />
+</td>
+</tr>
+<tr>
+<td>
+<table border=0 cellpadding=0 cellspacing=0 width=778 style='border-collapse:
+ collapse;table-layout:fixed;width:583pt'>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl634569 align=left width=199 style='height:15.0pt;
+  width:149pt;font-size:11.0pt;color:white;font-weight:700;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border-top:none;border-right:.5pt solid white;border-bottom:1.5pt solid white;
+  border-left:none;background:#4F81BD;mso-pattern:#4F81BD none'>GUI
+  Configuration</td>
+  <td class=xl634569 align=left width=199 style='width:149pt;font-size:11.0pt;
+  color:white;font-weight:700;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:1.5pt solid white;border-left:none;background:#4F81BD;
+  mso-pattern:#4F81BD none'>URI</td>
+  <td class=xl634569 align=left width=380 style='width:285pt;font-size:11.0pt;
+  color:white;font-weight:700;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:none;
+  border-bottom:1.5pt solid white;border-left:none;background:#4F81BD;
+  mso-pattern:#4F81BD none'>Description</td>
+ </tr>
+ <tr height=95 style='height:71.25pt'>
+  <td height=95 class=xl644569 align=left width=199 style='height:71.25pt;
+  width:149pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Arial;
+  border-top:none;border-right:.5pt solid white;border-bottom:.5pt solid white;
+  border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>SDWC</td>
+  <td class=xl644569 align=left width=199 style='width:149pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>sdmmc004_write_protect</td>
+  <td class=xl644569 align=left width=380 style='width:285pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Arial;border-top:none;border-right:none;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>This allows a user to choose the optional Write
+  Protect signal. It should be selected only if kit has the support for this
+  signal.<br>
+    Unit : NA<br>
+    Range: NA</td>
+ </tr>
+ <tr height=95 style='height:71.25pt'>
+  <td height=95 class=xl644569 align=left width=199 style='height:71.25pt;
+  width:149pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Arial;
+  border-top:none;border-right:.5pt solid white;border-bottom:.5pt solid white;
+  border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>SDCD</td>
+  <td class=xl644569 align=left width=199 style='width:149pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>sdmmc004_card_detection</td>
+  <td class=xl644569 align=left width=380 style='width:285pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Arial;border-top:none;border-right:none;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>This allows a user to choose the optional Card
+  Detection signal. It should be selected only if kit has the support for this
+  signal.<br>
+    Unit : NA<br>
+    Range: NA</td>
+ </tr>
+ <tr height=95 style='height:71.25pt'>
+  <td height=95 class=xl644569 align=left width=199 style='height:71.25pt;
+  width:149pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Arial;
+  border-top:none;border-right:.5pt solid white;border-bottom:.5pt solid white;
+  border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>LED</td>
+  <td class=xl644569 align=left width=199 style='width:149pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>sdmmc004_led</td>
+  <td class=xl644569 align=left width=380 style='width:285pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Arial;border-top:none;border-right:none;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>This allows a user to choose the optional LED
+  signal. It should be selected only if kit has the support for this
+  signal.<br>
+    Unit : NA<br>
+    Range: NA</td>
+ </tr>
+ <tr height=76 style='height:57.0pt'>
+  <td height=76 class=xl654569 align=left width=199 style='height:57.0pt;
+  width:149pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Arial;
+  border-top:none;border-right:.5pt solid white;border-bottom:.5pt solid white;
+  border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>Enable SDMMC
+  Bus Power</td>
+  <td class=xl644569 align=left width=199 style='width:149pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>sdmmc004_bus_power</td>
+  <td class=xl654569 align=left width=380 style='width:285pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Arial;border-top:none;border-right:none;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>This allows user to choose the Bus Power Signal for
+  SDMMC.<br>
+    Unit : NA<br>
+    Range: NA</td>
+ </tr>
+ <tr height=76 style='height:57.0pt'>
+  <td height=76 class=xl654569 align=left width=199 style='height:57.0pt;
+  width:149pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Arial;
+  border-top:none;border-right:.5pt solid white;border-bottom:none;border-left:
+  none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>Enable SDMMC Reset</td>
+  <td class=xl644569 align=left width=199 style='width:149pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:none;border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>sdmmc004_reset</td>
+  <td class=xl654569 align=left width=380 style='width:285pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Arial;border:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>This allows user to enable the optional Reset
+  signal for SDMMC.<br>
+    Unit : NA<br>
+    Range: NA</td>
+ </tr>
+</table>
+
+
+
+
+
+</td>
+</tr>
+</table>
+@}
+*/
+
+/**
+@ingroup SDMMC004_publishedparams 
+@{
+\page Note NOTE: URIs given in tables below are for App developer use. App developer can make use of these URIs to create top level apps by consuming this app. 
+
+\section SDMMC004_Virtual_Signal Virtual Signals 
+
+<table border=0 cellpadding=0 cellspacing=0 width=1139 class=xl635611
+ style='border-collapse:collapse;table-layout:fixed;width:855pt'>
+  <tr height=19 style='height:14.25pt'>
+  <td height=19 class=xl645611 width=206 style='height:14.25pt;width:155pt;
+  font-size:10.0pt;color:white;font-weight:700;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Arial;border-top:none;border-right:
+  .5pt solid white;border-bottom:1.5pt solid white;border-left:none;background:
+  #4F81BD;mso-pattern:#4F81BD none'>Name</td>
+  <td class=xl645611 width=271 style='width:203pt;font-size:10.0pt;color:white;
+  font-weight:700;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:1.5pt solid white;border-left:none;background:#4F81BD;
+  mso-pattern:#4F81BD none'>URI</td>
+  <td class=xl645611 width=133 style='width:100pt;font-size:10.0pt;color:white;
+  font-weight:700;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:1.5pt solid white;border-left:none;background:#4F81BD;
+  mso-pattern:#4F81BD none'>Hardware Signal</td>
+  <td class=xl645611 width=180 style='width:135pt;font-size:10.0pt;color:white;
+  font-weight:700;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:1.5pt solid white;border-left:none;background:#4F81BD;
+  mso-pattern:#4F81BD none'>Description</td>
+  <td class=xl645611 width=236 style='width:177pt;font-size:10.0pt;color:white;
+  font-weight:700;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:1.5pt solid white;border-left:none;background:#4F81BD;
+  mso-pattern:#4F81BD none'>UI Dependency</td>
+  <td class=xl645611 width=113 style='width:85pt;font-size:10.0pt;color:white;
+  font-weight:700;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:none;border-bottom:1.5pt solid white;
+  border-left:none;background:#4F81BD;mso-pattern:#4F81BD none'>Connections</td>
+ </tr>
+ <tr height=34 style='height:25.5pt'>
+  <td height=34 class=xl655611 width=206 style='height:25.5pt;width:155pt;
+  font-size:10.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Arial;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:none;background:
+  #B8CCE4;mso-pattern:#B8CCE4 none'>MMC Clock Out Signal</td>
+  <td class=xl655611 width=271 style='width:203pt;font-size:10.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>peripheral/sdmmc/0/host/mmc_clk_out</td>
+  <td class=xl655611 width=133 style='width:100pt;font-size:10.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>MMC_CLK_OUT</td>
+  <td class=xl655611 width=180 style='width:135pt;font-size:10.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>Clock Out signal for SDMMC module</td>
+  <td class=xl655611 width=236 style='width:177pt;font-size:10.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>None</td>
+  <td class=xl655611 width=113 style='width:85pt;font-size:10.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:none;border-bottom:.5pt solid white;
+  border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>Port Pin</td>
+ </tr>
+ <tr height=34 style='height:25.5pt'>
+  <td height=34 class=xl655611 width=206 style='height:25.5pt;width:155pt;
+  font-size:10.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Arial;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:none;background:
+  #DBE5F1;mso-pattern:#DBE5F1 none'>MMC Clock In Signal</td>
+  <td class=xl655611 width=271 style='width:203pt;font-size:10.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>peripheral/sdmmc/0/host/mmc_clk_in</td>
+  <td class=xl655611 width=133 style='width:100pt;font-size:10.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>MMC_CLK_IN</td>
+  <td class=xl655611 width=180 style='width:135pt;font-size:10.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>Clock In signal for SDMMC module</td>
+  <td class=xl655611 width=236 style='width:177pt;font-size:10.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>None</td>
+  <td class=xl655611 width=113 style='width:85pt;font-size:10.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:none;border-bottom:.5pt solid white;
+  border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>Port Pin</td>
+ </tr>
+ <tr height=51 style='height:38.25pt'>
+  <td height=51 class=xl655611 width=206 style='height:38.25pt;width:155pt;
+  font-size:10.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Arial;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:none;background:
+  #B8CCE4;mso-pattern:#B8CCE4 none'>Command Line Out virtual Signal</td>
+  <td class=xl655611 width=271 style='width:203pt;font-size:10.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>peripheral/sdmmc/0/host/mmc_cmd_out</td>
+  <td class=xl655611 width=133 style='width:100pt;font-size:10.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>MMC_CMD_OUT</td>
+  <td class=xl655611 width=180 style='width:135pt;font-size:10.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>Command Line signal used to send commands over the
+  commands line</td>
+  <td class=xl655611 width=236 style='width:177pt;font-size:10.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>None</td>
+  <td class=xl655611 width=113 style='width:85pt;font-size:10.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:none;border-bottom:.5pt solid white;
+  border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>Port Pin</td>
+ </tr>
+ <tr height=51 style='height:38.25pt'>
+  <td height=51 class=xl655611 width=206 style='height:38.25pt;width:155pt;
+  font-size:10.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Arial;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:none;background:
+  #DBE5F1;mso-pattern:#DBE5F1 none'>Command Line In virtual Signal</td>
+  <td class=xl655611 width=271 style='width:203pt;font-size:10.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>peripheral/sdmmc/0/host/mmc_cmd_in</td>
+  <td class=xl655611 width=133 style='width:100pt;font-size:10.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>MMC_CMD_IN</td>
+  <td class=xl655611 width=180 style='width:135pt;font-size:10.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>Command Line signal used to send commands over the
+  commands line</td>
+  <td class=xl655611 width=236 style='width:177pt;font-size:10.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>None</td>
+  <td class=xl655611 width=113 style='width:85pt;font-size:10.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:none;border-bottom:.5pt solid white;
+  border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>Port Pin</td>
+ </tr>
+ <tr height=34 style='height:25.5pt'>
+  <td height=34 class=xl655611 width=206 style='height:25.5pt;width:155pt;
+  font-size:10.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Arial;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:none;background:
+  #B8CCE4;mso-pattern:#B8CCE4 none'>Data Line0 Out virtual signal</td>
+  <td class=xl655611 width=271 style='width:203pt;font-size:10.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>peripheral/sdmmc/0/host/mmc_data_out0</td>
+  <td class=xl655611 width=133 style='width:100pt;font-size:10.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>MMC_DATA_OUT0</td>
+  <td class=xl655611 width=180 style='width:135pt;font-size:10.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>Data Line0 signal for data transfer.</td>
+  <td class=xl655611 width=236 style='width:177pt;font-size:10.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>None</td>
+  <td class=xl655611 width=113 style='width:85pt;font-size:10.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:none;border-bottom:.5pt solid white;
+  border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>Port Pin</td>
+ </tr>
+ <tr height=34 style='height:25.5pt'>
+  <td height=34 class=xl655611 width=206 style='height:25.5pt;width:155pt;
+  font-size:10.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Arial;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:none;background:
+  #DBE5F1;mso-pattern:#DBE5F1 none'>Data Line1 Out virtual signal</td>
+  <td class=xl655611 width=271 style='width:203pt;font-size:10.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>peripheral/sdmmc/0/host/mmc_data_out1</td>
+  <td class=xl655611 width=133 style='width:100pt;font-size:10.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>MMC_DATA_OUT1</td>
+  <td class=xl655611 width=180 style='width:135pt;font-size:10.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>Data Line1 signal for data transfer.</td>
+  <td class=xl655611 width=236 style='width:177pt;font-size:10.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>Depends on &quot;Use 4-lines&quot; UI param</td>
+  <td class=xl655611 width=113 style='width:85pt;font-size:10.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:none;border-bottom:.5pt solid white;
+  border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>Port Pin</td>
+ </tr>
+ <tr height=34 style='height:25.5pt'>
+  <td height=34 class=xl655611 width=206 style='height:25.5pt;width:155pt;
+  font-size:10.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Arial;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:none;background:
+  #B8CCE4;mso-pattern:#B8CCE4 none'>Data Line2 Out virtual signal</td>
+  <td class=xl655611 width=271 style='width:203pt;font-size:10.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>peripheral/sdmmc/0/host/mmc_data_out2</td>
+  <td class=xl655611 width=133 style='width:100pt;font-size:10.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>MMC_DATA_OUT2</td>
+  <td class=xl655611 width=180 style='width:135pt;font-size:10.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>Data Line2 signal for data transfer.</td>
+  <td class=xl655611 width=236 style='width:177pt;font-size:10.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>Depends on &quot;Use 4-lines&quot; UI param</td>
+  <td class=xl655611 width=113 style='width:85pt;font-size:10.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:none;border-bottom:.5pt solid white;
+  border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>Port Pin</td>
+ </tr>
+ <tr height=34 style='height:25.5pt'>
+  <td height=34 class=xl655611 width=206 style='height:25.5pt;width:155pt;
+  font-size:10.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Arial;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:none;background:
+  #DBE5F1;mso-pattern:#DBE5F1 none'>Data Line3 Out virtual signal</td>
+  <td class=xl655611 width=271 style='width:203pt;font-size:10.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>peripheral/sdmmc/0/host/mmc_data_out3</td>
+  <td class=xl655611 width=133 style='width:100pt;font-size:10.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>MMC_DATA_OUT3</td>
+  <td class=xl655611 width=180 style='width:135pt;font-size:10.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>Data Line3 signal for data transfer.</td>
+  <td class=xl655611 width=236 style='width:177pt;font-size:10.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>Depends on &quot;Use 4-lines&quot; UI param</td>
+  <td class=xl655611 width=113 style='width:85pt;font-size:10.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:none;border-bottom:.5pt solid white;
+  border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>Port Pin</td>
+ </tr>
+ <tr height=34 style='height:25.5pt'>
+  <td height=34 class=xl655611 width=206 style='height:25.5pt;width:155pt;
+  font-size:10.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Arial;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:none;background:
+  #B8CCE4;mso-pattern:#B8CCE4 none'>Data Line0 In virtual signal</td>
+  <td class=xl655611 width=271 style='width:203pt;font-size:10.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>peripheral/sdmmc/0/host/mmc_data_in0</td>
+  <td class=xl655611 width=133 style='width:100pt;font-size:10.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>MMC_DATA_IN0</td>
+  <td class=xl655611 width=180 style='width:135pt;font-size:10.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>Data Line0 signal for data transfer.</td>
+  <td class=xl655611 width=236 style='width:177pt;font-size:10.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>None</td>
+  <td class=xl655611 width=113 style='width:85pt;font-size:10.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:none;border-bottom:.5pt solid white;
+  border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>Port Pin</td>
+ </tr>
+ <tr height=34 style='height:25.5pt'>
+  <td height=34 class=xl655611 width=206 style='height:25.5pt;width:155pt;
+  font-size:10.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Arial;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:none;background:
+  #DBE5F1;mso-pattern:#DBE5F1 none'>Data Line1 In virtual signal</td>
+  <td class=xl655611 width=271 style='width:203pt;font-size:10.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>peripheral/sdmmc/0/host/mmc_data_in1</td>
+  <td class=xl655611 width=133 style='width:100pt;font-size:10.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>MMC_DATA_IN1</td>
+  <td class=xl655611 width=180 style='width:135pt;font-size:10.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>Data Line1 signal for data transfer.</td>
+  <td class=xl655611 width=236 style='width:177pt;font-size:10.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>Depends on &quot;Use 4-lines&quot; UI param</td>
+  <td class=xl655611 width=113 style='width:85pt;font-size:10.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:none;border-bottom:.5pt solid white;
+  border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>Port Pin</td>
+ </tr>
+ <tr height=34 style='height:25.5pt'>
+  <td height=34 class=xl655611 width=206 style='height:25.5pt;width:155pt;
+  font-size:10.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Arial;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:none;background:
+  #B8CCE4;mso-pattern:#B8CCE4 none'>Data Line2 In virtual signal</td>
+  <td class=xl655611 width=271 style='width:203pt;font-size:10.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>peripheral/sdmmc/0/host/mmc_data_in2</td>
+  <td class=xl655611 width=133 style='width:100pt;font-size:10.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>MMC_DATA_IN2</td>
+  <td class=xl655611 width=180 style='width:135pt;font-size:10.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>Data Line2 signal for data transfer.</td>
+  <td class=xl655611 width=236 style='width:177pt;font-size:10.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>Depends on &quot;Use 4-lines&quot; UI param</td>
+  <td class=xl655611 width=113 style='width:85pt;font-size:10.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:none;border-bottom:.5pt solid white;
+  border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>Port Pin</td>
+ </tr>
+ <tr height=34 style='height:25.5pt'>
+  <td height=34 class=xl655611 width=206 style='height:25.5pt;width:155pt;
+  font-size:10.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Arial;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:none;background:
+  #DBE5F1;mso-pattern:#DBE5F1 none'>Data Line3 In virtual signal</td>
+  <td class=xl655611 width=271 style='width:203pt;font-size:10.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>peripheral/sdmmc/0/host/mmc_data_in3</td>
+  <td class=xl655611 width=133 style='width:100pt;font-size:10.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>MMC_DATA_IN3</td>
+  <td class=xl655611 width=180 style='width:135pt;font-size:10.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>Data Line3 signal for data transfer.</td>
+  <td class=xl655611 width=236 style='width:177pt;font-size:10.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>Depends on &quot;Use 4-lines&quot; UI param</td>
+  <td class=xl655611 width=113 style='width:85pt;font-size:10.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:none;border-bottom:.5pt solid white;
+  border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>Port Pin</td>
+ </tr>
+ <tr height=19 style='height:14.25pt'>
+  <td height=19 class=xl655611 width=206 style='height:14.25pt;width:155pt;
+  font-size:10.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Arial;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:none;background:
+  #B8CCE4;mso-pattern:#B8CCE4 none'>MMC Led virtual signal</td>
+  <td class=xl655611 width=271 style='width:203pt;font-size:10.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>peripheral/sdmmc/0/host/mmc_led</td>
+  <td class=xl655611 width=133 style='width:100pt;font-size:10.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>MMC_LED</td>
+  <td class=xl655611 width=180 style='width:135pt;font-size:10.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>Led Signal</td>
+  <td class=xl655611 width=236 style='width:177pt;font-size:10.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>Depends on LED Signal UI param</td>
+  <td class=xl655611 width=113 style='width:85pt;font-size:10.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:none;border-bottom:.5pt solid white;
+  border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>Port Pin</td>
+ </tr>
+ <tr height=51 style='height:38.25pt'>
+  <td height=51 class=xl655611 width=206 style='height:38.25pt;width:155pt;
+  font-size:10.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Arial;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:none;background:
+  #DBE5F1;mso-pattern:#DBE5F1 none'>Bus Power signal</td>
+  <td class=xl655611 width=271 style='width:203pt;font-size:10.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>peripheral/sdmmc/0/host/mmc_bus_power</td>
+  <td class=xl655611 width=133 style='width:100pt;font-size:10.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>MMC_BUS_POWER</td>
+  <td class=xl655611 width=180 style='width:135pt;font-size:10.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>Bus Power signal needed for bus connection between
+  Host Controller and the Card.</td>
+  <td class=xl655611 width=236 style='width:177pt;font-size:10.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>Depends on &quot;Use MMC Bus Power&quot; UI param</td>
+  <td class=xl655611 width=113 style='width:85pt;font-size:10.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:none;border-bottom:.5pt solid white;
+  border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>Port Pin</td>
+ </tr>
+ <tr height=34 style='height:25.5pt'>
+  <td height=34 class=xl655611 width=206 style='height:25.5pt;width:155pt;
+  font-size:10.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Arial;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:none;background:
+  #B8CCE4;mso-pattern:#B8CCE4 none'>Card Detection signal</td>
+  <td class=xl655611 width=271 style='width:203pt;font-size:10.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>peripheral/sdmmc/0/host/mmc_sdcd</td>
+  <td class=xl655611 width=133 style='width:100pt;font-size:10.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>MMC_SDCD</td>
+  <td class=xl655611 width=180 style='width:135pt;font-size:10.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>Card Detection Signal. It is optional on kits</td>
+  <td class=xl655611 width=236 style='width:177pt;font-size:10.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>Depends on SDCD Signal UI param</td>
+  <td class=xl655611 width=113 style='width:85pt;font-size:10.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:none;border-bottom:.5pt solid white;
+  border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>Port Pin</td>
+ </tr>
+ <tr height=34 style='height:25.5pt'>
+  <td height=34 class=xl655611 width=206 style='height:25.5pt;width:155pt;
+  font-size:10.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Arial;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:none;background:
+  #DBE5F1;mso-pattern:#DBE5F1 none'>Write Protect Signal</td>
+  <td class=xl655611 width=271 style='width:203pt;font-size:10.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>peripheral/sdmmc/0/host/mmc_sdwc</td>
+  <td class=xl655611 width=133 style='width:100pt;font-size:10.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>MMC_SDWC</td>
+  <td class=xl655611 width=180 style='width:135pt;font-size:10.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>Write Protect Signal. It is optional on kits</td>
+  <td class=xl655611 width=236 style='width:177pt;font-size:10.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>Depends on SDWC Signal UI param</td>
+  <td class=xl655611 width=113 style='width:85pt;font-size:10.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:none;border-bottom:.5pt solid white;
+  border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>Port Pin</td>
+ </tr>
+ <tr height=34 style='height:25.5pt'>
+  <td height=34 class=xl655611 width=206 style='height:25.5pt;width:155pt;
+  font-size:10.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Arial;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:none;background:
+  #B8CCE4;mso-pattern:#B8CCE4 none'>Reset Signal</td>
+  <td class=xl655611 width=271 style='width:203pt;font-size:10.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>peripheral/sdmmc/0/host/mmc_reset</td>
+  <td class=xl655611 width=133 style='width:100pt;font-size:10.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>MMC_RST</td>
+  <td class=xl655611 width=180 style='width:135pt;font-size:10.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>Reset signal needed to reset the SDMMC module.</td>
+  <td class=xl655611 width=236 style='width:177pt;font-size:10.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>Depends on Reset Signal UI param</td>
+  <td class=xl655611 width=113 style='width:85pt;font-size:10.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:none;border-bottom:.5pt solid white;
+  border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>Port Pin</td>
+ </tr>
+ <tr height=19 style='height:14.25pt'>
+  <td height=19 class=xl655611 width=206 style='height:14.25pt;width:155pt;
+  font-size:10.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Arial;border-top:none;border-right:
+  .5pt solid white;border-bottom:none;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>Interrupt Signal</td>
+  <td class=xl655611 width=271 style='width:203pt;font-size:10.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:none;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>peripheral/sdmmc/0/host/interrupt</td>
+  <td class=xl655611 width=133 style='width:100pt;font-size:10.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:none;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>INTERRUPT</td>
+  <td class=xl655611 width=180 style='width:135pt;font-size:10.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:none;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>Interrupt
+  Signal</td>
+  <td class=xl655611 width=236 style='width:177pt;font-size:10.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:none;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>None</td>
+  <td class=xl655611 width=113 style='width:85pt;font-size:10.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>NVIC
+  node</td>
+ </tr>
+</table>
+
+
+
+
+\section SDMMC004_Consumed_Parameters Consumed Parameters
+<table border=0 cellpadding=0 cellspacing=0 width=912 class=xl6313562
+ style='border-collapse:collapse;table-layout:fixed;width:685pt'>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl6413562 width=133 style='height:15.0pt;width:100pt;
+  font-size:11.0pt;color:white;font-weight:700;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Arial;border-top:none;border-right:
+  .5pt solid white;border-bottom:1.5pt solid white;border-left:none;background:
+  #4F81BD;mso-pattern:#4F81BD none'>Name</td>
+  <td class=xl6413562 width=209 style='width:157pt;font-size:11.0pt;color:white;
+  font-weight:700;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:1.5pt solid white;border-left:none;background:#4F81BD;
+  mso-pattern:#4F81BD none'>URI</td>
+  <td class=xl6413562 width=390 style='width:293pt;font-size:11.0pt;color:white;
+  font-weight:700;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:1.5pt solid white;border-left:none;background:#4F81BD;
+  mso-pattern:#4F81BD none'>Descirption</td>
+  <td class=xl6413562 width=180 style='width:135pt;font-size:11.0pt;color:white;
+  font-weight:700;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:none;border-bottom:1.5pt solid white;
+  border-left:none;background:#4F81BD;mso-pattern:#4F81BD none'>Conditional
+  Consumption</td>
+ </tr>
+ <tr height=38 style='height:28.5pt'>
+  <td height=38 class=xl6413562 width=133 style='height:28.5pt;width:100pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Arial;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:none;background:
+  #B8CCE4;mso-pattern:#B8CCE4 none'>SDMMC<span
+  style='mso-spacerun:yes'> </span></td>
+  <td class=xl6413562 width=209 style='width:157pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>peripheral/sdmmc/*</td>
+  <td class=xl6413562 width=390 style='width:293pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>This is to consume the Host Controller Registers to
+  drive an SD/MMC card</td>
+  <td class=xl6413562 width=180 style='width:135pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:none;border-bottom:.5pt solid white;
+  border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>Always.</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl6413562 width=133 style='height:15.0pt;width:100pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Arial;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:none;background:
+  #DBE5F1;mso-pattern:#DBE5F1 none'>Clkapp</td>
+  <td class=xl6413562 width=209 style='width:157pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>app/clk001/*</td>
+  <td class=xl6413562 width=390 style='width:293pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>Clock App is used to set the MMC clock.</td>
+  <td class=xl6413562 width=180 style='width:135pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:none;border-bottom:.5pt solid white;
+  border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>Always .</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl6413562 width=133 style='height:15.0pt;width:100pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Arial;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:none;background:
+  #B8CCE4;mso-pattern:#B8CCE4 none'>Port Pin</td>
+  <td class=xl6413562 width=209 style='width:157pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>port/p/*/pad/*</td>
+  <td class=xl6413562 width=390 style='width:293pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>Port Pin registers</td>
+  <td class=xl6413562 width=180 style='width:135pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:none;border-bottom:.5pt solid white;
+  border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>Always</td>
+ </tr>
+ <tr height=38 style='height:28.5pt'>
+  <td height=38 class=xl6413562 width=133 style='height:28.5pt;width:100pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Arial;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:none;background:
+  #DBE5F1;mso-pattern:#DBE5F1 none'>Nvic node</td>
+  <td class=xl6413562 width=209 style='width:157pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>peripheral/cpu/0/nvic/interrupt/*</td>
+  <td class=xl6413562 width=390 style='width:293pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>Nvic node is used for SDMMC Interrupts.</td>
+  <td class=xl6413562 width=180 style='width:135pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:none;border-bottom:.5pt solid white;
+  border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>Always.</td>
+ </tr>
+ <tr height=57 style='height:42.75pt'>
+  <td height=57 class=xl6413562 width=133 style='height:42.75pt;width:100pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Arial;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:none;background:
+  #B8CCE4;mso-pattern:#B8CCE4 none'>Reset app</td>
+  <td class=xl6413562 width=209 style='width:157pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>app/reset001/*</td>
+  <td class=xl6413562 width=390 style='width:293pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>Reset the SDMMC peripheral. This app is used to
+  bring the SDMMC peripherals out of reset or clear the sdmmc reset registers.</td>
+  <td class=xl6413562 width=180 style='width:135pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:none;border-bottom:.5pt solid white;
+  border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>Always</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl6513562 width=133 style='height:15.0pt;width:100pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Arial;border-top:none;border-right:
+  .5pt solid white;border-bottom:none;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>RTOS app</td>
+  <td class=xl6513562 width=209 style='width:157pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:none;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>app/rtos001/*</td>
+  <td class=xl6513562 width=390 style='width:293pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:none;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>RTOS
+  App</td>
+  <td class=xl6413562 width=180 style='width:135pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>Always</td>
+ </tr>
+</table>
+
+
+
+
+\section SDMMC004_Provided_Parameters Provided Parameters
+<table border=0 cellpadding=0 cellspacing=0 width=895 style='border-collapse:
+ collapse;table-layout:fixed;width:671pt'>
+  <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl1524072 align=left width=177 style='height:15.0pt;
+  width:133pt;font-size:11.0pt;color:white;font-weight:700;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border-top:none;border-right:.5pt solid white;border-bottom:1.5pt solid white;
+  border-left:none;background:#4F81BD;mso-pattern:#4F81BD none'>Name</td>
+  <td class=xl1524072 align=left width=255 style='width:191pt;font-size:11.0pt;
+  color:white;font-weight:700;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:1.5pt solid white;border-left:none;background:#4F81BD;
+  mso-pattern:#4F81BD none'>URI</td>
+  <td class=xl1524072 align=left width=359 style='width:269pt;font-size:11.0pt;
+  color:white;font-weight:700;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:1.5pt solid white;border-left:none;background:#4F81BD;
+  mso-pattern:#4F81BD none'>Descirption</td>
+  <td class=xl1524072 align=left width=104 style='width:78pt;font-size:11.0pt;
+  color:white;font-weight:700;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:none;
+  border-bottom:1.5pt solid white;border-left:none;background:#4F81BD;
+  mso-pattern:#4F81BD none'>Access Mode</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl6324072 align=left width=177 style='height:15.0pt;
+  width:133pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Arial;
+  border-top:none;border-right:.5pt solid white;border-bottom:.5pt solid white;
+  border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>Premption
+  Priority</td>
+  <td class=xl6324072 align=left width=255 style='width:191pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>sdmmc004_irwinterruptpriority</td>
+  <td class=xl6324072 align=left width=359 style='width:269pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>This sets the Preemption Priority for this module</td>
+  <td class=xl6324072 align=left width=104 style='width:78pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Arial;border-top:none;border-right:none;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>R/W</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl6324072 align=left width=177 style='height:15.0pt;
+  width:133pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Arial;
+  border-top:none;border-right:.5pt solid white;border-bottom:.5pt solid white;
+  border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>Sub Priority</td>
+  <td class=xl6324072 align=left width=255 style='width:191pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>sdmmc004_irwinterruptsubpriority</td>
+  <td class=xl6324072 align=left width=359 style='width:269pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>This sets the Sub Priority for this module.</td>
+  <td class=xl6324072 align=left width=104 style='width:78pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Arial;border-top:none;border-right:none;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>R/W</td>
+ </tr>
+ <tr height=57 style='height:42.75pt'>
+  <td height=57 class=xl6324072 align=left width=177 style='height:42.75pt;
+  width:133pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Arial;
+  border-top:none;border-right:.5pt solid white;border-bottom:.5pt solid white;
+  border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>SDWC</td>
+  <td class=xl6324072 align=left width=255 style='width:191pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>sdmmc004_write_protect</td>
+  <td class=xl6324072 align=left width=359 style='width:269pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>This allows a user to choose the optional Write
+  Protect signal. It should be selected only if kit has the support for this
+  signal.</td>
+  <td class=xl6324072 align=left width=104 style='width:78pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Arial;border-top:none;border-right:none;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>R/W</td>
+ </tr>
+ <tr height=57 style='height:42.75pt'>
+  <td height=57 class=xl6324072 align=left width=177 style='height:42.75pt;
+  width:133pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Arial;
+  border-top:none;border-right:.5pt solid white;border-bottom:.5pt solid white;
+  border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>SDCD</td>
+  <td class=xl6324072 align=left width=255 style='width:191pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>sdmmc004_card_detection</td>
+  <td class=xl6324072 align=left width=359 style='width:269pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>This allows a user to choose the optional Card
+  Detection signal. It should be selected only if kit has the support for this
+  signal.</td>
+  <td class=xl6324072 align=left width=104 style='width:78pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Arial;border-top:none;border-right:none;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>R/W</td>
+ </tr>
+ <tr height=57 style='height:42.75pt'>
+  <td height=57 class=xl6324072 align=left width=177 style='height:42.75pt;
+  width:133pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Arial;
+  border-top:none;border-right:.5pt solid white;border-bottom:.5pt solid white;
+  border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>LED</td>
+  <td class=xl6324072 align=left width=255 style='width:191pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>sdmmc004_led</td>
+  <td class=xl6324072 align=left width=359 style='width:269pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>This allows a user to choose the optional LED
+  signal. It should be selected only if kit has the support for this signal.</td>
+  <td class=xl6324072 align=left width=104 style='width:78pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Arial;border-top:none;border-right:none;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>R/W</td>
+ </tr>
+ <tr height=57 style='height:42.75pt'>
+  <td height=57 class=xl6324072 align=left width=177 style='height:42.75pt;
+  width:133pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Arial;
+  border-top:none;border-right:.5pt solid white;border-bottom:.5pt solid white;
+  border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>Data Lines
+  Configuration</td>
+  <td class=xl6324072 align=left width=255 style='width:191pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>sdmmc004_use_4_data_lines</td>
+  <td class=xl6324072 align=left width=359 style='width:269pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>This allows a user to select the number of Data
+  Lines to use. 1 or 4 data lines can be selected.</td>
+  <td class=xl6324072 align=left width=104 style='width:78pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Arial;border-top:none;border-right:none;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>R/W</td>
+ </tr>
+ <tr height=76 style='height:57.0pt'>
+  <td height=76 class=xl6324072 align=left width=177 style='height:57.0pt;
+  width:133pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Arial;
+  border-top:none;border-right:.5pt solid white;border-bottom:.5pt solid white;
+  border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>Reset
+  Configuration</td>
+  <td class=xl6324072 align=left width=255 style='width:191pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>sdmmc004_reset</td>
+  <td class=xl6324072 align=left width=359 style='width:269pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>This allows user to set the SDMCMC Reset Signal
+  when required in the board. By default Hw board supports SDMMC Reset Signal.</td>
+  <td class=xl6324072 align=left width=104 style='width:78pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Arial;border-top:none;border-right:none;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>R/W</td>
+ </tr>
+ <tr height=57 style='height:42.75pt'>
+  <td height=57 class=xl6424072 align=left width=177 style='height:42.75pt;
+  width:133pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Arial;
+  border-top:none;border-right:.5pt solid white;border-bottom:none;border-left:
+  none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>Bus Power Configuration</td>
+  <td class=xl6324072 align=left width=255 style='width:191pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:none;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>sdmmc004_bus_power</td>
+  <td class=xl6424072 align=left width=359 style='width:269pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:none;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>This
+  allows user to set the SDMCMC bus power as and when required in the board. By
+  default Hw board supplies bus power.</td>
+  <td class=xl6424072 align=left width=104 style='width:78pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Arial;border:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>R/W</td>
+ </tr>
+</table>
+
+
+
+
+@}
+*/

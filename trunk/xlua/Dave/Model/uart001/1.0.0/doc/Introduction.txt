@@ -1,0 +1,1629 @@
+/**
+@ingroup UART001_Legal
+@{
+\page UART001_legalpage Copyright and Licensing Information
+Copyright (c) 2011, Infineon Technologies AG
+All rights reserved. 
+
+Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met: 
+Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer. 
+Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution. 
+Neither the name of the copyright holders nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+To improve the quality of the software, users are encouraged to share modifications, enhancements or bug fixes with Infineon Technologies AG (dave@infineon.com).
+
+@}
+@ingroup UART001_intro
+@{
+
+\page UART001_intropage Introduction
+<p> A universal asynchronous receiver/transmitter(UART), 
+is a type of "asynchronous receiver/transmitter", a piece of computer hardware that 
+translates data between parallel and serial forms.</p>
+
+A UART usually contains the following components:
+<ul>
+<li>	a clock generator, usually a multiple of the bit rate to allow sampling in the middle of a bit period. </li>
+<li>	input and output shift registers </li>
+<li>	transmit/receive control </li>
+<li>	read/write control logic </li>
+<li>	transmit/receive buffers (optional) </li>
+<li>	First-in, first-out (FIFO) buffer memory (optional) </li>
+</ul>
+
+<p>USIC_UART_UART001 App provides non reentrant API to configure the  USIC channel and 
+Read/Write APIs/Macros which can be used for achieving a non RTOS use case. 
+Communication may be "full duplex" (both send and receive at the same time) or "half duplex" 
+(devices take turns transmitting and receiving) or "loop back mode" (Output signal is connected to the 
+receiver input of same UART channel).</p>
+
+\section UART001_scopesec Scope
+App provides non reentrant APIs to achieve  a UART communication usecase using a USIC channel.  
+
+\section UART001_abbreviation Abbreviation
+<OL>
+<LI>UART:Universal Asynchronous Receiver-Transmitter</LI>
+<LI>USIC: Universal Serial Interface Channel</LI>
+<LI>API: Application Program Interface</LI>
+<LI>App: DAVE3 Application</LI>
+<LI>GUI: Graphical User Interface</LI>
+<LI>SW: Software</LI>
+<LI>RTOS: Real Time Operating System</LI>
+</OL>
+
+
+\section UART001_reference  Reference
+<OL>
+<LI>Device Reference Manual</LI>
+</OL>
+
+\section UART001_limitation Limitations
+<OL>
+<LI>Read/Write functions are non reentrant.</LI>
+<LI>No support for DMA mode.</LI>
+<LI>Fifo buffer is always enabled.</LI>
+</OL>
+@}
+*/
+
+/**
+@ingroup UART001_overview
+@{
+\page UART001_overviewpage Overview
+USIC_UART_UART001 App provides non re-entrant APIs which allows a higher level App to reserve a USIC channel 
+(configured in UART protocol mode of operation) and use channel for data transfer/receive operations. The App 
+is designed to always use the USIC FIFO, with UI configurations
+ provided to configure the FIFO Size and Trigger Limits. The App also provides UI to configure UART parameters
+ such as Baud Rate, Word Length, Stop Bit and Parity<i>(Note:For XMC4500, parity mode cannot be used, see XMC4500 Errata Sheet Rel. 1.0, USIC_AI.007 Table 11)</i>.
+DMA mode is not used by the App to simplify the design. However this feature is provided in UART002  App.
+The App supports the below modes of operation.
+
+<OL>
+<LI>Full Duplex</LI>
+<LI>Half Duplex</LI>
+<LI>Loop Back Mode</LI>
+</OL>
+
+<b>Full Duplex</b>
+<p>In Full Duplex communication both transmission and reception can be done simultaneously. To achieve this 
+usecase independent communication line is needed for each transfer direction. UART001 App consumes two IO002 App to 
+achieve full duplex communication. User can do manual pin assignment for each IO002 App based on the 
+connectivity requirement.</p>
+
+<b>Half Duplex</b>
+<p>In Half Duplex communication a single communication line is shared for both transmission and reception. In this
+ mode UART001 App consumes a single IO002 App. Half duplex mode can be selected if user wants
+multi-transmitter communication. In this case, user has to take care that only one transmitter is active at 
+a time.
+
+Note: Collision detection is not possible for the XMC45xx series due hardware limitation.
+</p>
+
+<b>Loop Back Mode</b>
+<p>In this mode transmit pin of the allocated USIC channel is connected to receive pin of the same channel 
+<b>internally</b>. Data transmitted by the transmitter can be received by the receiver as if it would have been 
+sent by other communication partner. In this mode no IO002 App is consumed.</p>
+
+ 
+The App provides below Macros which provide register base address of mapped  USIC Channels. This allows the 
+user to achieve programming at register bit level in use cases which cannot be achieved with UART001 APIs. Below 
+macros are generated in the file UART001_Conf.h.
+<OL>
+<LI><i><b>UART001_x_USIC</b></i> - Macro to access Mapped USIC Module Base address of UART001/x App instance.
+<LI><i><b>UART001_x_USIC_CH</b></i> - Macro to access Mapped USIC Channel Base address of UART001/x App instance.  	
+</OL>
+@}
+
+@ingroup UART001_filestructure File Structure
+@{
+\page UART001_filestructurepage File Structure
+Following files are generated : 
+<OL>
+<LI>UART001.c:     This file implements the UART001 App Interfaces. </LI>
+<LI>UART001.h:     This file exposes the interfaces to use this App. </LI>
+<LI>UART001_Conf.h: This file declares the App handle instances. </LI>
+<LI>UART001_Conf.c: This file defines App instances  based on App UI configuration.  </LI>
+</OL>
+@}
+
+@ingroup UART001_appconfigdoc App Configuration Documentation
+@{
+
+\page UART001_appconfigdocpage App Documentation
+The diagram shows the UI for the App.
+<img src="..\UART001.PNG" title="GUI for UART001 App" />
+<img src="..\UART001_2.PNG" title="GUI for UART001 App" />
+<img src="..\UART001_3.PNG" title="GUI for UART001 App" />
+<br>
+
+<table border=0 cellpadding=0 cellspacing=0 width=691 style='border-collapse:
+ collapse;table-layout:fixed;width:518pt'>
+  <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl6316894 width=148 style='height:15.0pt;width:111pt;
+  font-size:11.0pt;color:white;font-weight:700;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border-top:none;border-right:
+  .5pt solid white;border-bottom:1.5pt solid white;border-left:none;background:
+  #4F81BD;mso-pattern:#4F81BD none;border-color:currentColor white white currentColor'>Name</td>
+  <td class=xl6316894 width=204 style='width:153pt;font-size:11.0pt;color:white;
+  font-weight:700;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:1.5pt solid white;border-left:none;background:#4F81BD;
+  mso-pattern:#4F81BD none;border-color:currentColor white white currentColor'>URI</td>
+  <td class=xl6316894 width=339 style='width:254pt;font-size:11.0pt;color:white;
+  font-weight:700;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  1.5pt solid white;border-left:none;background:#4F81BD;mso-pattern:#4F81BD none;
+  border-color:currentColor white white currentColor'>Description</td>
+ </tr>
+ <tr height=141 style='mso-height-source:userset;height:105.75pt'>
+  <td height=141 class=xl6316894 width=148 style='height:105.75pt;width:111pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:none;background:
+  #B8CCE4;mso-pattern:#B8CCE4 none;border-color:currentColor white white currentColor'>Operation
+  Mode</td>
+  <td class=xl6316894 width=204 style='width:153pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none;border-color:currentColor white white currentColor'>uart001_erwmode</td>
+  <td class=xl6316894 width=339 style='width:254pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none;
+  border-color:currentColor white white currentColor'>Selects Operation Mode.
+  Operation mode available are<br>
+    1. Full Duplex<br>
+    2. Half Duplex<br>
+    3. Loop Back Mode</td>
+ </tr>
+ <tr height=80 style='height:60.0pt'>
+  <td height=80 class=xl6316894 width=148 style='height:60.0pt;width:111pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:none;background:
+  #DBE5F1;mso-pattern:#DBE5F1 none;border-color:currentColor white white currentColor'>Parity
+  Selection</td>
+  <td class=xl6316894 width=204 style='width:153pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none;border-color:currentColor white white currentColor'>uart001_erwparity</td>
+  <td class=xl6316894 width=339 style='width:254pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none;
+  border-color:currentColor white white currentColor'>Selects the parity value.
+  Option available are<br>
+    1. No Parity<br>
+    2. Even Parity<br>
+    3. Odd Parity</td>
+ </tr>
+ <tr height=80 style='height:60.0pt'>
+  <td height=80 class=xl6316894 width=148 style='height:60.0pt;width:111pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:none;background:
+  #B8CCE4;mso-pattern:#B8CCE4 none;border-color:currentColor white white currentColor'>Stop
+  bit</td>
+  <td class=xl6316894 width=204 style='width:153pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none;border-color:currentColor white white currentColor'>uart001_erwstopbit</td>
+  <td class=xl6316894 width=339 style='width:254pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none;
+  border-color:currentColor white white currentColor'>Selects the number of
+  stop bits required in ASC frame. Options available are<br>
+    1. One stop bit<br>
+    2. Two Stop bit</td>
+ </tr>
+ <tr height=40 style='height:30.0pt'>
+  <td height=40 class=xl6316894 width=148 style='height:30.0pt;width:111pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:none;background:
+  #DBE5F1;mso-pattern:#DBE5F1 none;border-color:currentColor white white currentColor'>Data
+  Bits</td>
+  <td class=xl6316894 width=204 style='width:153pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none;border-color:currentColor white white currentColor'>uart001_irwdatabits</td>
+  <td class=xl6316894 width=339 style='width:254pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none;
+  border-color:currentColor white white currentColor'>This defines the data
+  word length.<br>
+    Range : 5 - 8 bits</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl6316894 width=148 style='height:15.0pt;width:111pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:none;background:
+  #B8CCE4;mso-pattern:#B8CCE4 none;border-color:currentColor white white currentColor'>Desired
+  Baud Rate</td>
+  <td class=xl6316894 width=204 style='width:153pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none;border-color:currentColor white white currentColor'>uart001_irwbaudrate</td>
+  <td class=xl6316894 width=339 style='width:254pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none;
+  border-color:currentColor white white currentColor'>UI to enter desired Baud
+  Rate.</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl6316894 width=148 style='height:15.0pt;width:111pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:none;background:
+  #DBE5F1;mso-pattern:#DBE5F1 none;border-color:currentColor white white currentColor'>Peripheral
+  Clock</td>
+  <td class=xl6316894 width=204 style='width:153pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none;border-color:currentColor white white currentColor'>uart001_iroclock</td>
+  <td class=xl6316894 width=339 style='width:254pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none;
+  border-color:currentColor white white currentColor'>Current peripheral clock
+  value</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl6316894 width=148 style='height:15.0pt;width:111pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:none;background:
+  #B8CCE4;mso-pattern:#B8CCE4 none;border-color:currentColor white white currentColor'>Real
+  Baud rate</td>
+  <td class=xl6316894 width=204 style='width:153pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none;border-color:currentColor white white currentColor'>uart001_irocalbaudrate</td>
+  <td class=xl6316894 width=339 style='width:254pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none;
+  border-color:currentColor white white currentColor'>Actual calculated baud
+  rate</td>
+ </tr>
+ <tr height=40 style='height:30.0pt'>
+  <td height=40 class=xl6316894 width=148 style='height:30.0pt;width:111pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:none;background:
+  #DBE5F1;mso-pattern:#DBE5F1 none;border-color:currentColor white white currentColor'>Transmit
+  FIFO size</td>
+  <td class=xl6316894 width=204 style='width:153pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none;border-color:currentColor white white currentColor'>uart001_irwtxfifosize</td>
+  <td class=xl6316894 width=339 style='width:254pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none;
+  border-color:currentColor white white currentColor'>This defines the no of
+  FIFO entries assigned to the transmit buffer.</td>
+ </tr>
+ <tr height=40 style='height:30.0pt'>
+  <td height=40 class=xl6316894 width=148 style='height:30.0pt;width:111pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:none;background:
+  #B8CCE4;mso-pattern:#B8CCE4 none;border-color:currentColor white white currentColor'>Receive
+  FIFO size</td>
+  <td class=xl6316894 width=204 style='width:153pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none;border-color:currentColor white white currentColor'>uart001_irwrxfifosize</td>
+  <td class=xl6316894 width=339 style='width:254pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none;
+  border-color:currentColor white white currentColor'>This defines the no of
+  FIFO entries assigned to the receive buffer.</td>
+ </tr>
+ <tr height=39 style='mso-height-source:userset;height:29.25pt'>
+  <td height=39 class=xl6316894 width=148 style='height:29.25pt;width:111pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:none;background:
+  #DBE5F1;mso-pattern:#DBE5F1 none;border-color:currentColor white white currentColor'>Transmit
+  FIFO trigger limit</td>
+  <td class=xl6316894 width=204 style='width:153pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none;border-color:currentColor white white currentColor'>uart001_irwtxfifotrigger</td>
+  <td class=xl6316894 width=339 style='width:254pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none;
+  border-color:currentColor white white currentColor'>Selects Transmit FIFO
+  trigger threshold limit that is used to generate FIFO Standard transmit
+  buffer event.<br>
+    Note: Trigger limit should be less than FIFO size. Otherwise there can be
+  an unpredictable behavior</td>
+ </tr>
+ <tr height=100 style='height:75.0pt'>
+  <td height=100 class=xl6316894 width=148 style='height:75.0pt;width:111pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:none;background:
+  #B8CCE4;mso-pattern:#B8CCE4 none;border-color:currentColor white white currentColor'>Receive
+  FIFO trigger limit</td>
+  <td class=xl6316894 width=204 style='width:153pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none;border-color:currentColor white white currentColor'>uart001_irwrxfifotrigger</td>
+  <td class=xl6316894 width=339 style='width:254pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none;
+  border-color:currentColor white white currentColor'>Selects Receive FIFO
+  trigger threshold limit that is used to generate FIFO Standard receive buffer
+  event.<br>
+    Note: Trigger limit should be less than FIFO size. Otherwise there can be
+  an unpredictable behavior</td>
+ </tr>
+ <tr height=80 style='height:60.0pt'>
+  <td height=80 class=xl6316894 width=148 style='height:60.0pt;width:111pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:none;background:
+  #DBE5F1;mso-pattern:#DBE5F1 none;border-color:currentColor white white currentColor'>Enable
+  receiver noise detection interrupt</td>
+  <td class=xl6316894 width=204 style='width:153pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none;border-color:currentColor white white currentColor'>uart001_erwRecvNoiseDetectInt</td>
+  <td class=xl6316894 width=339 style='width:254pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none;
+  border-color:currentColor white white currentColor'>This enables receiver
+  noise detection interrupt generation. This interrupt indicates that the input
+  value at the sample point of a bit and at the two time quanta before are not
+  identical.</td>
+ </tr>
+ <tr height=60 style='height:45.0pt'>
+  <td height=60 class=xl6316894 width=148 style='height:45.0pt;width:111pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:none;background:
+  #B8CCE4;mso-pattern:#B8CCE4 none;border-color:currentColor white white currentColor'>Enable
+  format error interrupt</td>
+  <td class=xl6316894 width=204 style='width:153pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none;border-color:currentColor white white currentColor'>uart001_erwFmtErrorInt</td>
+  <td class=xl6316894 width=339 style='width:254pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none;
+  border-color:currentColor white white currentColor'>This enables format error
+  interrupt generation. This interrupt is generated if sampled bit value of
+  stop bit is 0</td>
+ </tr>
+ <tr height=60 style='height:45.0pt'>
+  <td height=60 class=xl6316894 width=148 style='height:45.0pt;width:111pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:none;background:
+  #DBE5F1;mso-pattern:#DBE5F1 none;border-color:currentColor white currentColor currentColor'>Enable
+  frame finished interrupt.</td>
+  <td class=xl6316894 width=204 style='width:153pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none;border-color:currentColor white currentColor currentColor'>uart001_erwFrameFinishInt</td>
+  <td class=xl6316894 width=339 style='width:254pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none;
+  border-color:currentColor white currentColor currentColor'>This enables frame
+  finished interrupt generation. This interrupt indicates that the receiver has
+  completely finished a frame</td>
+ </tr>
+ <tr height=40 style='height:30.0pt'>
+  <td height=40 class=xl6316894 width=148 style='height:30.0pt;width:111pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:none;background:
+  #B8CCE4;mso-pattern:#B8CCE4 none'>Rx Pin Settings:<br>
+    Input Charateristics</td>
+  <td class=xl6316894 width=204 style='width:153pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>uart001_erwInputChar</td>
+  <td class=xl6316894 width=339 style='width:254pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>Input
+  charateristics of Rx Pin ( Pullup/ Pulldown)</td>
+ </tr>
+ <tr height=40 style='height:30.0pt'>
+  <td height=40 class=xl6316894 width=148 style='height:30.0pt;width:111pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:none;background:
+  #DBE5F1;mso-pattern:#DBE5F1 none'>Tx Pin Settings:<br>
+    Pad Class</td>
+  <td class=xl6316894 width=204 style='width:153pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>uart001_erwTxPadClass</td>
+  <td class=xl6316894 width=339 style='width:254pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>Pad
+  class of Tx Pin</td>
+ </tr>
+ <tr height=40 style='height:30.0pt'>
+  <td height=40 class=xl6316894 width=148 style='height:30.0pt;width:111pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border-top:none;border-right:
+  .5pt solid white;border-bottom:none;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>Tx Pin Settings:<br>
+    Pad Driver Mode</td>
+  <td class=xl6316894 width=204 style='width:153pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:none;border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>uart001_erwPadDriverModeTx</td>
+  <td class=xl6316894 width=339 style='width:254pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;background:#B8CCE4;mso-pattern:#B8CCE4 none'>This
+  option allows to select pad driver
+  strength.</td>
+ </tr>
+</table>
+
+<BR><P ALIGN="LEFT"><B>Note : </B> Above UI parameters are used for UART001 table generation.</p>
+
+@}
+*/
+
+/**
+@ingroup UART001_publishedparams
+@{
+\page Note NOTE: URIs given in tables below are for App developer use. App developer can make use of these URIs to create top level apps by consuming this app. 
+
+\section UART001_Virtual_Signal Virtual Signals
+<br>
+<table border=0 cellpadding=0 cellspacing=0 width=1190 style='border-collapse:
+ collapse;table-layout:fixed;width:894pt'>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl6312759 align=left width=165 style='height:15.0pt;
+  width:124pt;font-size:11.0pt;color:white;font-weight:700;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border-top:none;border-right:.5pt solid white;border-bottom:1.5pt solid white;
+  border-left:none;background:#4F81BD;mso-pattern:#4F81BD none;border-color:
+  currentColor white white currentColor'>Name</td>
+  <td class=xl6312759 align=left width=138 style='width:104pt;font-size:11.0pt;
+  color:white;font-weight:700;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:1.5pt solid white;border-left:none;background:#4F81BD;
+  mso-pattern:#4F81BD none;border-color:currentColor white white currentColor'>URI</td>
+  <td class=xl6312759 align=left width=369 style='width:277pt;font-size:11.0pt;
+  color:white;font-weight:700;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:1.5pt solid white;border-left:none;background:#4F81BD;
+  mso-pattern:#4F81BD none;border-color:currentColor white white currentColor'>Hardware
+  Signal</td>
+  <td class=xl6312759 align=left width=232 style='width:174pt;font-size:11.0pt;
+  color:white;font-weight:700;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:1.5pt solid white;border-left:none;background:#4F81BD;
+  mso-pattern:#4F81BD none;border-color:currentColor white white currentColor'>Description</td>
+  <td class=xl6312759 align=left width=144 style='width:108pt;font-size:11.0pt;
+  color:white;font-weight:700;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:1.5pt solid white;border-left:none;background:#4F81BD;
+  mso-pattern:#4F81BD none;border-color:currentColor white white currentColor'>UI
+  Dependency</td>
+  <td class=xl6312759 align=left width=142 style='width:107pt;font-size:11.0pt;
+  color:white;font-weight:700;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:none;
+  border-bottom:1.5pt solid white;border-left:none;background:#4F81BD;
+  mso-pattern:#4F81BD none;border-color:currentColor currentColor white'>Connections</td>
+ </tr>
+ <tr height=72 style='mso-height-source:userset;height:54.0pt'>
+  <td height=72 class=xl6312759 align=left width=165 style='height:54.0pt;
+  width:124pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border-top:none;border-right:.5pt solid white;border-bottom:.5pt solid white;
+  border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none;border-color:
+  currentColor white white currentColor'>Transmit Shift Interrupt</td>
+  <td class=xl6312759 align=left width=138 style='width:104pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none;border-color:currentColor white white currentColor'>uart001_tsi_vs</td>
+  <td class=xl6312759 align=left width=369 style='width:277pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none;border-color:currentColor white white currentColor'>peripheral/usic/*/channel/*/transmit_shift_int</td>
+  <td class=xl6312759 align=left width=232 style='width:174pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none;border-color:currentColor white white currentColor'>This
+  event occurs after the start of transmission of the last data bit of a data
+  word.</td>
+  <td class=xl6312759 align=left width=144 style='width:108pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none;border-color:currentColor white white currentColor'>None</td>
+  <td class=xl6312759 align=left width=142 style='width:107pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:none;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none;border-color:currentColor currentColor white'>NVIC002
+  signal</td>
+ </tr>
+ <tr height=72 style='mso-height-source:userset;height:54.0pt'>
+  <td height=72 class=xl6312759 align=left width=165 style='height:54.0pt;
+  width:124pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border-top:none;border-right:.5pt solid white;border-bottom:.5pt solid white;
+  border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none;border-color:
+  currentColor white white currentColor'>Transmit Buffer Interrupt</td>
+  <td class=xl6312759 align=left width=138 style='width:104pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none;border-color:currentColor white white currentColor'>uart001_tbi_vs</td>
+  <td class=xl6312759 align=left width=369 style='width:277pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none;border-color:currentColor white white currentColor'>peripheral/usic/*/channel/*/transmit_buffer_int</td>
+  <td class=xl6312759 align=left width=232 style='width:174pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none;border-color:currentColor white white currentColor'>This
+  event occurs after the start of first data bit of a data word. This is the
+  earliest point in time when a new data word can be written to TBUF.</td>
+  <td class=xl6312759 align=left width=144 style='width:108pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none;border-color:currentColor white white currentColor'>None</td>
+  <td class=xl6312759 align=left width=142 style='width:107pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:none;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none;border-color:currentColor currentColor white'>NVIC002
+  signal</td>
+ </tr>
+ <tr height=72 style='mso-height-source:userset;height:54.0pt'>
+  <td height=72 class=xl6312759 align=left width=165 style='height:54.0pt;
+  width:124pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border-top:none;border-right:.5pt solid white;border-bottom:.5pt solid white;
+  border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none;border-color:
+  currentColor white white currentColor'>Receive Start Interrupt</td>
+  <td class=xl6312759 align=left width=138 style='width:104pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none;border-color:currentColor white white currentColor'>uart001_rsi_vs</td>
+  <td class=xl6312759 align=left width=369 style='width:277pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none;border-color:currentColor white white currentColor'>peripheral/usic/*/channel/*/receive_start_int</td>
+  <td class=xl6312759 align=left width=232 style='width:174pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none;border-color:currentColor white white currentColor'>This
+  event occurs after receiving the sample point of the first data bit of a data
+  word</td>
+  <td class=xl6312759 align=left width=144 style='width:108pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none;border-color:currentColor white white currentColor'>None</td>
+  <td class=xl6312759 align=left width=142 style='width:107pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:none;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none;border-color:currentColor currentColor white'>NVIC002
+  signal</td>
+ </tr>
+ <tr height=72 style='mso-height-source:userset;height:54.0pt'>
+  <td height=72 class=xl6312759 align=left width=165 style='height:54.0pt;
+  width:124pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border-top:none;border-right:.5pt solid white;border-bottom:.5pt solid white;
+  border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none;border-color:
+  currentColor white white currentColor'>Standard Receive Interrupt</td>
+  <td class=xl6312759 align=left width=138 style='width:104pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none;border-color:currentColor white white currentColor'>uart001_sri_vs</td>
+  <td class=xl6312759 align=left width=369 style='width:277pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none;border-color:currentColor white white currentColor'>peripheral/usic/*/channel/*/standard_receive_int</td>
+  <td class=xl6312759 align=left width=232 style='width:174pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none;border-color:currentColor white white currentColor'>This
+  event occurs if a data word is received in the buffer without parity error</td>
+  <td class=xl6312759 align=left width=144 style='width:108pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none;border-color:currentColor white white currentColor'>None</td>
+  <td class=xl6312759 align=left width=142 style='width:107pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:none;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none;border-color:currentColor currentColor white'>NVIC002
+  signal</td>
+ </tr>
+ <tr height=72 style='mso-height-source:userset;height:54.0pt'>
+  <td height=72 class=xl6312759 align=left width=165 style='height:54.0pt;
+  width:124pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border-top:none;border-right:.5pt solid white;border-bottom:.5pt solid white;
+  border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none;border-color:
+  currentColor white white currentColor'>Alternative Receive Interrupt</td>
+  <td class=xl6312759 align=left width=138 style='width:104pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none;border-color:currentColor white white currentColor'>uart001_altri_vs</td>
+  <td class=xl6312759 align=left width=369 style='width:277pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none;border-color:currentColor white white currentColor'>peripheral/usic/*/channel/*/altrenate_receive_int</td>
+  <td class=xl6312759 align=left width=232 style='width:174pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none;border-color:currentColor white white currentColor'>This
+  event occurs if a data word is received in the buffer with parity error</td>
+  <td class=xl6312759 align=left width=144 style='width:108pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none;border-color:currentColor white white currentColor'>None</td>
+  <td class=xl6312759 align=left width=142 style='width:107pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:none;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none;border-color:currentColor currentColor white'>NVIC002
+  signal</td>
+ </tr>
+ <tr height=72 style='mso-height-source:userset;height:54.0pt'>
+  <td height=72 class=xl6312759 align=left width=165 style='height:54.0pt;
+  width:124pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border-top:none;border-right:.5pt solid white;border-bottom:.5pt solid white;
+  border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none;border-color:
+  currentColor white white currentColor'>Data Lost Interrupt</td>
+  <td class=xl6312759 align=left width=138 style='width:104pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none;border-color:currentColor white white currentColor'>uart001_dli_vs</td>
+  <td class=xl6312759 align=left width=369 style='width:277pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none;border-color:currentColor white white currentColor'>peripheral/usic/*/channel/*/data_lost_int</td>
+  <td class=xl6312759 align=left width=232 style='width:174pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none;border-color:currentColor white white currentColor'>This
+  event occurs if data word available in register RBUF has not been read out
+  before it becomes overwritten with new incoming data.</td>
+  <td class=xl6312759 align=left width=144 style='width:108pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none;border-color:currentColor white white currentColor'>None</td>
+  <td class=xl6312759 align=left width=142 style='width:107pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:none;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none;border-color:currentColor currentColor white'>NVIC002
+  signal</td>
+ </tr>
+ <tr height=167 style='mso-height-source:userset;height:125.25pt'>
+  <td height=167 class=xl6312759 align=left width=165 style='height:125.25pt;
+  width:124pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border-top:none;border-right:.5pt solid white;border-bottom:.5pt solid white;
+  border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none;border-color:
+  currentColor white white currentColor'>Protocol Specific Interrupt</td>
+  <td class=xl6312759 align=left width=138 style='width:104pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none;border-color:currentColor white white currentColor'>uart001_prtsi_vs</td>
+  <td class=xl6312759 align=left width=369 style='width:277pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none;border-color:currentColor white white currentColor'>peripheral/usic/*/channel/*/protocol_specific_int</td>
+  <td class=xl6312759 align=left width=232 style='width:174pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none;border-color:currentColor white white currentColor'>These
+  events are generated depending protocol interrupt configuration. Available
+  events are:<br>
+    1. Synchronization break interrupt<br>
+    2. collision detection interrupt<br>
+    3. Receiver noise detection interrupt<br>
+    4. Format error interrupt<br>
+    5. Frame finished interrupt.</td>
+  <td class=xl6312759 align=left width=144 style='width:108pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none;border-color:currentColor white white currentColor'>None</td>
+  <td class=xl6312759 align=left width=142 style='width:107pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:none;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none;border-color:currentColor currentColor white'>NVIC002
+  signal</td>
+ </tr>
+ <tr height=85 style='mso-height-source:userset;height:63.75pt'>
+  <td height=85 class=xl6312759 align=left width=165 style='height:63.75pt;
+  width:124pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border-top:none;border-right:.5pt solid white;border-bottom:.5pt solid white;
+  border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none;border-color:
+  currentColor white white currentColor'>FIFO Transmit Buffer Interrupt</td>
+  <td class=xl6312759 align=left width=138 style='width:104pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none;border-color:currentColor white white currentColor'>uart001_stbi_vs</td>
+  <td class=xl6312759 align=left width=369 style='width:277pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none;border-color:currentColor white white currentColor'>peripheral/usic/*/channel/*/standard_transmit_buffer_int</td>
+  <td class=xl6312759 align=left width=232 style='width:174pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none;border-color:currentColor white white currentColor'>The
+  standard transmit buffer interrupt occurs when the transmit buffer fill level
+  exceeds or falls below the programmed limit</td>
+  <td class=xl6312759 align=left width=144 style='width:108pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none;border-color:currentColor white white currentColor'>None</td>
+  <td class=xl6312759 align=left width=142 style='width:107pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:none;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none;border-color:currentColor currentColor white'>NVIC002
+  signal</td>
+ </tr>
+ <tr height=72 style='mso-height-source:userset;height:54.0pt'>
+  <td height=72 class=xl6312759 align=left width=165 style='height:54.0pt;
+  width:124pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border-top:none;border-right:.5pt solid white;border-bottom:.5pt solid white;
+  border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none;border-color:
+  currentColor white white currentColor'>FIFO Transmit Error Interrupt</td>
+  <td class=xl6312759 align=left width=138 style='width:104pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none;border-color:currentColor white white currentColor'>uart001_tberi_vs</td>
+  <td class=xl6312759 align=left width=369 style='width:277pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none;border-color:currentColor white white currentColor'>peripheral/usic/*/channel/*/transmit_buffer_error_int</td>
+  <td class=xl6312759 align=left width=232 style='width:174pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none;border-color:currentColor white white currentColor'>The
+  transmit buffer error event is triggered when software has written to a full
+  buffer</td>
+  <td class=xl6312759 align=left width=144 style='width:108pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none;border-color:currentColor white white currentColor'>None</td>
+  <td class=xl6312759 align=left width=142 style='width:107pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:none;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none;border-color:currentColor currentColor white'>NVIC002
+  signal</td>
+ </tr>
+ <tr height=72 style='mso-height-source:userset;height:54.0pt'>
+  <td height=72 class=xl6312759 align=left width=165 style='height:54.0pt;
+  width:124pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border-top:none;border-right:.5pt solid white;border-bottom:.5pt solid white;
+  border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none;border-color:
+  currentColor white white currentColor'>FIFO Receive Buffer Interrupt</td>
+  <td class=xl6312759 align=left width=138 style='width:104pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none;border-color:currentColor white white currentColor'>uart001_srbi_vs</td>
+  <td class=xl6312759 align=left width=369 style='width:277pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none;border-color:currentColor white white currentColor'>peripheral/usic/*/channel/*/standard_receive_buffer_int</td>
+  <td class=xl6312759 align=left width=232 style='width:174pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none;border-color:currentColor white white currentColor'>The
+  standard receive buffer interrupt occurs when the receive buffer fill level
+  exceeds or falls below the programmed limit</td>
+  <td class=xl6312759 align=left width=144 style='width:108pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none;border-color:currentColor white white currentColor'>None</td>
+  <td class=xl6312759 align=left width=142 style='width:107pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:none;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none;border-color:currentColor currentColor white'>NVIC002
+  signal</td>
+ </tr>
+ <tr height=72 style='mso-height-source:userset;height:54.0pt'>
+  <td height=72 class=xl6312759 align=left width=165 style='height:54.0pt;
+  width:124pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border-top:none;border-right:.5pt solid white;border-bottom:.5pt solid white;
+  border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none;border-color:
+  currentColor white white currentColor'>FIFO Receive Error Interrupt</td>
+  <td class=xl6312759 align=left width=138 style='width:104pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none;border-color:currentColor white white currentColor'>uart001_rberi_vs</td>
+  <td class=xl6312759 align=left width=369 style='width:277pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none;border-color:currentColor white white currentColor'>peripheral/usic/*/channel/*/receive_buffer_error_int</td>
+  <td class=xl6312759 align=left width=232 style='width:174pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none;border-color:currentColor white white currentColor'>The
+  receive buffer error event is triggered if the software reads from an empty
+  buffer</td>
+  <td class=xl6312759 align=left width=144 style='width:108pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none;border-color:currentColor white white currentColor'>None</td>
+  <td class=xl6312759 align=left width=142 style='width:107pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:none;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none;border-color:currentColor currentColor white'>NVIC002
+  signal</td>
+ </tr>
+ <tr height=72 style='mso-height-source:userset;height:54.0pt'>
+  <td height=72 class=xl6312759 align=left width=165 style='height:54.0pt;
+  width:124pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border-top:none;border-right:.5pt solid white;border-bottom:none;border-left:
+  none;background:#DBE5F1;mso-pattern:#DBE5F1 none;border-color:currentColor white white currentColor'>FIFO
+  Alternative Receive Buffer Interrupt</td>
+  <td class=xl6312759 align=left width=138 style='width:104pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:none;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none;
+  border-color:currentColor white white currentColor'>uart001_altrbi_vs</td>
+  <td class=xl6312759 align=left width=369 style='width:277pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:none;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none;
+  border-color:currentColor white white currentColor'>peripheral/usic/*/channel/*/alternate_receive_buffer_int</td>
+  <td class=xl6312759 align=left width=232 style='width:174pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:none;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none;
+  border-color:currentColor white white currentColor'>The Alternative Receive
+  buffer event will be generated if received data have parity error</td>
+  <td class=xl6312759 align=left width=144 style='width:108pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:none;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none;
+  border-color:currentColor white white currentColor'>None</td>
+  <td class=xl6312759 align=left width=142 style='width:107pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;background:#DBE5F1;mso-pattern:
+  #DBE5F1 none;border-color:currentColor currentColor white'>NVIC002 signal</td>
+ </tr>
+</table>
+
+
+
+<b>Note</b>: In non parity mode Standard receive interrupt and alternative receive interrupt 
+may be set with each received data word in XMC4500 (Hardware bug) 
+
+\section UART001_Consumed_Parameters Consumed Parameters
+
+<table border=0 cellpadding=0 cellspacing=0 width=997 style='border-collapse:
+ collapse;table-layout:fixed;width:749pt'>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl6325759 align=left width=89 style='height:15.0pt;
+  width:67pt;font-size:11.0pt;color:white;font-weight:700;text-decoration:none;
+  text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border-top:none;border-right:.5pt solid white;border-bottom:1.5pt solid white;
+  border-left:none;background:#4F81BD;mso-pattern:#4F81BD none;border-color:
+  currentColor white white currentColor'>Name</td>
+  <td class=xl6325759 align=left width=230 style='width:173pt;font-size:11.0pt;
+  color:white;font-weight:700;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:1.5pt solid white;border-left:none;background:#4F81BD;
+  mso-pattern:#4F81BD none;border-color:currentColor white white currentColor'>URI</td>
+  <td class=xl6325759 align=left width=281 style='width:211pt;font-size:11.0pt;
+  color:white;font-weight:700;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:1.5pt solid white;border-left:none;background:#4F81BD;
+  mso-pattern:#4F81BD none;border-color:currentColor white white currentColor'>Description</td>
+  <td class=xl6325759 align=left width=397 style='width:298pt;font-size:11.0pt;
+  color:white;font-weight:700;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:none;
+  border-bottom:1.5pt solid white;border-left:none;background:#4F81BD;
+  mso-pattern:#4F81BD none;border-color:currentColor currentColor white'>Conditional
+  Consumption</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl6325759 align=left width=89 style='height:15.0pt;
+  width:67pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:none;
+  text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border-top:none;border-right:.5pt solid white;border-bottom:.5pt solid white;
+  border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none;border-color:
+  currentColor white white currentColor'>channel</td>
+  <td class=xl6325759 align=left width=230 style='width:173pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none;border-color:currentColor white white currentColor'>peripheral/usic/*/channel/*</td>
+  <td class=xl6325759 align=left width=281 style='width:211pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none;border-color:currentColor white white currentColor'>This
+  is the UART channel consumed.</td>
+  <td class=xl6325759 align=left width=397 style='width:298pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:none;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none;border-color:currentColor currentColor white'>Always
+  Consumed.</td>
+ </tr>
+ <tr height=40 style='height:30.0pt'>
+  <td height=40 class=xl6325759 align=left width=89 style='height:30.0pt;
+  width:67pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:none;
+  text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border-top:none;border-right:.5pt solid white;border-bottom:.5pt solid white;
+  border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none;border-color:
+  currentColor white white currentColor'>uart_rxpin</td>
+  <td class=xl6325759 align=left width=230 style='width:173pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none;border-color:currentColor white white currentColor'>port/p/*/pad/*</td>
+  <td class=xl6325759 align=left width=281 style='width:211pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none;border-color:currentColor white white currentColor'>UART
+  Receive pin</td>
+  <td class=xl6325759 align=left width=397 style='width:298pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:none;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none;border-color:currentColor currentColor white'>This
+  pin is consumed depending on Operation
+  mode selected</td>
+ </tr>
+ <tr height=40 style='height:30.0pt'>
+  <td height=40 class=xl6325759 align=left width=89 style='height:30.0pt;
+  width:67pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:none;
+  text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border-top:none;border-right:.5pt solid white;border-bottom:.5pt solid white;
+  border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none;border-color:
+  currentColor white white currentColor'>uart_txpin</td>
+  <td class=xl6325759 align=left width=230 style='width:173pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none;border-color:currentColor white white currentColor'>port/p/*/pad/*</td>
+  <td class=xl6325759 align=left width=281 style='width:211pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none;border-color:currentColor white white currentColor'>UART
+  Transmit pin</td>
+  <td class=xl6325759 align=left width=397 style='width:298pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:none;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none;border-color:currentColor currentColor white'>This
+  pin is consumed depending on Operation
+  mode selected</td>
+ </tr>
+ <tr height=43 style='mso-height-source:userset;height:32.25pt'>
+  <td height=43 class=xl6325759 align=left width=89 style='height:32.25pt;
+  width:67pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:none;
+  text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border-top:none;border-right:.5pt solid white;border-bottom:.5pt solid white;
+  border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none;border-color:
+  currentColor white white currentColor'>Clockapp</td>
+  <td class=xl6325759 align=left width=230 style='width:173pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none;border-color:currentColor white white currentColor'>app/clk001/*</td>
+  <td class=xl6325759 align=left width=281 style='width:211pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none;border-color:currentColor white white currentColor'>This
+  CLK001 App is consumed for getting peripheral clock value</td>
+  <td class=xl6325759 align=left width=397 style='width:298pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:none;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none;border-color:currentColor currentColor white'>Always
+  Consumed.</td>
+ </tr>
+ <tr height=40 style='height:30.0pt'>
+  <td height=40 class=xl6325759 align=left width=89 style='height:30.0pt;
+  width:67pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:none;
+  text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border-top:none;border-right:.5pt solid white;border-bottom:.5pt solid white;
+  border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none;border-color:
+  currentColor white white currentColor'>resetapp</td>
+  <td class=xl6325759 align=left width=230 style='width:173pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none;border-color:currentColor white white currentColor'>app/reset001/*</td>
+  <td class=xl6325759 align=left width=281 style='width:211pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none;border-color:currentColor white white currentColor'>RESET001
+  App is consumed for resetting USIC module</td>
+  <td class=xl6325759 align=left width=397 style='width:298pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:none;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none;border-color:currentColor currentColor white'>Always
+  Consumed.</td>
+ </tr>
+ <tr height=40 style='height:30.0pt'>
+  <td height=40 class=xl6325759 align=left width=89 style='height:30.0pt;
+  width:67pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:none;
+  text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border-top:none;border-right:.5pt solid white;border-bottom:none;border-left:
+  none;background:#DBE5F1;mso-pattern:#DBE5F1 none;border-color:currentColor white currentColor currentColor'>dbglog</td>
+  <td class=xl6325759 align=left width=230 style='width:173pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:none;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none;
+  border-color:currentColor white currentColor currentColor'>app/dbg001/*</td>
+  <td class=xl6325759 align=left width=281 style='width:211pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:none;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none;
+  border-color:currentColor white currentColor currentColor'>DBG001 App is
+  consumed for debug log messages</td>
+  <td class=xl6325759 align=left width=397 style='width:298pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;background:#DBE5F1;mso-pattern:
+  #DBE5F1 none'>Always Consumed.</td>
+ </tr>
+</table>
+
+
+\section UART001_Provided_Parameters Provided Parameters
+<br>
+<table border=0 cellpadding=0 cellspacing=0 width=916 style='border-collapse:
+ collapse;table-layout:fixed;width:687pt'>
+  <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl6315997 align=left width=180 style='height:15.0pt;
+  width:135pt;font-size:11.0pt;color:white;font-weight:700;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border-top:none;border-right:.5pt solid white;border-bottom:1.5pt solid white;
+  border-left:none;background:#4F81BD;mso-pattern:#4F81BD none;border-color:
+  currentColor white white currentColor'>Name</td>
+  <td class=xl6315997 align=left width=211 style='width:158pt;font-size:11.0pt;
+  color:white;font-weight:700;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:1.5pt solid white;border-left:none;background:#4F81BD;
+  mso-pattern:#4F81BD none;border-color:currentColor white white currentColor'>URI</td>
+  <td class=xl6315997 align=left width=427 style='width:320pt;font-size:11.0pt;
+  color:white;font-weight:700;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:1.5pt solid white;border-left:none;background:#4F81BD;
+  mso-pattern:#4F81BD none;border-color:currentColor white white currentColor'>Description</td>
+  <td class=xl6315997 align=left width=98 style='width:74pt;font-size:11.0pt;
+  color:white;font-weight:700;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:none;
+  border-bottom:1.5pt solid white;border-left:none;background:#4F81BD;
+  mso-pattern:#4F81BD none;border-color:currentColor currentColor white'>Access
+  Mode</td>
+ </tr>
+ <tr height=81 style='mso-height-source:userset;height:60.75pt'>
+  <td height=81 class=xl6315997 align=left width=180 style='height:60.75pt;
+  width:135pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border-top:none;border-right:.5pt solid white;border-bottom:.5pt solid white;
+  border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none;border-color:
+  currentColor white white currentColor'>Operation Mode</td>
+  <td class=xl6315997 align=left width=211 style='width:158pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none;border-color:currentColor white white currentColor'>uart001_erwmode</td>
+  <td class=xl6315997 align=left width=427 style='width:320pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none;border-color:currentColor white white currentColor'>Selects
+  Operation Mode. Operation mode available are<br>
+    1. Full Duplex<br>
+    2. Half Duplex<br>
+    3. Loop Back Mode</td>
+  <td class=xl6315997 align=left width=98 style='width:74pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:none;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none;border-color:currentColor currentColor white'>R/W</td>
+ </tr>
+ <tr height=81 style='mso-height-source:userset;height:60.75pt'>
+  <td height=81 class=xl6315997 align=left width=180 style='height:60.75pt;
+  width:135pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border-top:none;border-right:.5pt solid white;border-bottom:.5pt solid white;
+  border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none;border-color:
+  currentColor white white currentColor'>Parity Selection</td>
+  <td class=xl6315997 align=left width=211 style='width:158pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none;border-color:currentColor white white currentColor'>uart001_erwparity</td>
+  <td class=xl6315997 align=left width=427 style='width:320pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none;border-color:currentColor white white currentColor'>Selects
+  the parity value. Option available are<br>
+    1. No Parity<br>
+    2. Even Parity<br>
+    3. Odd Parity</td>
+  <td class=xl6315997 align=left width=98 style='width:74pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:none;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>R/W</td>
+ </tr>
+ <tr height=81 style='mso-height-source:userset;height:60.75pt'>
+  <td height=81 class=xl6315997 align=left width=180 style='height:60.75pt;
+  width:135pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border-top:none;border-right:.5pt solid white;border-bottom:.5pt solid white;
+  border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none;border-color:
+  currentColor white white currentColor'>Stop bit</td>
+  <td class=xl6315997 align=left width=211 style='width:158pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none;border-color:currentColor white white currentColor'>uart001_erwstopbit</td>
+  <td class=xl6315997 align=left width=427 style='width:320pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none;border-color:currentColor white white currentColor'>Selects
+  the number of stop bits required in ASC frame. Options available are<br>
+    1. One stop bit<br>
+    2. Two Stop bit</td>
+  <td class=xl6315997 align=left width=98 style='width:74pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:none;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>R/W</td>
+ </tr>
+ <tr height=55 style='mso-height-source:userset;height:41.25pt'>
+  <td height=55 class=xl6315997 align=left width=180 style='height:41.25pt;
+  width:135pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border-top:none;border-right:.5pt solid white;border-bottom:.5pt solid white;
+  border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none;border-color:
+  currentColor white white currentColor'>Data Bits</td>
+  <td class=xl6315997 align=left width=211 style='width:158pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none;border-color:currentColor white white currentColor'>uart001_irwdatabits</td>
+  <td class=xl6315997 align=left width=427 style='width:320pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none;border-color:currentColor white white currentColor'>This
+  defines the data word length.<br>
+    Range : 5 - 8 bits</td>
+  <td class=xl6315997 align=left width=98 style='width:74pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:none;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>R/W</td>
+ </tr>
+ <tr height=37 style='mso-height-source:userset;height:27.75pt'>
+  <td height=37 class=xl6315997 align=left width=180 style='height:27.75pt;
+  width:135pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border-top:none;border-right:.5pt solid white;border-bottom:.5pt solid white;
+  border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none;border-color:
+  currentColor white white currentColor'>Desired Baud Rate</td>
+  <td class=xl6315997 align=left width=211 style='width:158pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none;border-color:currentColor white white currentColor'>uart001_irwbaudrate</td>
+  <td class=xl6315997 align=left width=427 style='width:320pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none;border-color:currentColor white white currentColor'>UI
+  to enter desired Baud Rate.</td>
+  <td class=xl6315997 align=left width=98 style='width:74pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:none;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>R/W</td>
+ </tr>
+ <tr height=34 style='mso-height-source:userset;height:25.5pt'>
+  <td height=34 class=xl6315997 align=left width=180 style='height:25.5pt;
+  width:135pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border-top:none;border-right:.5pt solid white;border-bottom:.5pt solid white;
+  border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none;border-color:
+  currentColor white white currentColor'>Peripheral Clock</td>
+  <td class=xl6315997 align=left width=211 style='width:158pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none;border-color:currentColor white white currentColor'>uart001_iroclock</td>
+  <td class=xl6315997 align=left width=427 style='width:320pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none;border-color:currentColor white white currentColor'>Current
+  peripheral clock value</td>
+  <td class=xl6315997 align=left width=98 style='width:74pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:none;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none;border-color:currentColor currentColor white'>R</td>
+ </tr>
+ <tr height=40 style='mso-height-source:userset;height:30.0pt'>
+  <td height=40 class=xl6315997 align=left width=180 style='height:30.0pt;
+  width:135pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border-top:none;border-right:.5pt solid white;border-bottom:.5pt solid white;
+  border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none;border-color:
+  currentColor white white currentColor'>Real Baud rate</td>
+  <td class=xl6315997 align=left width=211 style='width:158pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none;border-color:currentColor white white currentColor'>uart001_irocalbaudrate</td>
+  <td class=xl6315997 align=left width=427 style='width:320pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none;border-color:currentColor white white currentColor'>Actual
+  calculated baud rate</td>
+  <td class=xl6315997 align=left width=98 style='width:74pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:none;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>R</td>
+ </tr>
+ <tr height=30 style='mso-height-source:userset;height:22.5pt'>
+  <td height=30 class=xl6315997 align=left width=180 style='height:22.5pt;
+  width:135pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border-top:none;border-right:.5pt solid white;border-bottom:.5pt solid white;
+  border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none;border-color:
+  currentColor white white currentColor'>Transmit FIFO size</td>
+  <td class=xl6315997 align=left width=211 style='width:158pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none;border-color:currentColor white white currentColor'>uart001_irwtxfifosize</td>
+  <td class=xl6315997 align=left width=427 style='width:320pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none;border-color:currentColor white white currentColor'>This
+  defines the no of FIFO entries assigned to the transmit buffer.</td>
+  <td class=xl6315997 align=left width=98 style='width:74pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:none;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>R/W</td>
+ </tr>
+ <tr height=50 style='mso-height-source:userset;height:37.5pt'>
+  <td height=50 class=xl6315997 align=left width=180 style='height:37.5pt;
+  width:135pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border-top:none;border-right:.5pt solid white;border-bottom:.5pt solid white;
+  border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none;border-color:
+  currentColor white white currentColor'>Receive FIFO size</td>
+  <td class=xl6315997 align=left width=211 style='width:158pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none;border-color:currentColor white white currentColor'>uart001_irwrxfifosize</td>
+  <td class=xl6315997 align=left width=427 style='width:320pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none;border-color:currentColor white white currentColor'>This
+  defines the no of FIFO entries assigned to the receive buffer.</td>
+  <td class=xl6315997 align=left width=98 style='width:74pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:none;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>R/W</td>
+ </tr>
+ <tr height=81 style='mso-height-source:userset;height:60.75pt'>
+  <td height=81 class=xl6315997 align=left width=180 style='height:60.75pt;
+  width:135pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border-top:none;border-right:.5pt solid white;border-bottom:.5pt solid white;
+  border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none;border-color:
+  currentColor white white currentColor'>Transmit FIFO trigger limit</td>
+  <td class=xl6315997 align=left width=211 style='width:158pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none;border-color:currentColor white white currentColor'>uart001_irwtxfifotrigger</td>
+  <td class=xl6315997 align=left width=427 style='width:320pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none;border-color:currentColor white white currentColor'>Selects
+  Transmit FIFO trigger threshold limit that is used to generate FIFO Standard
+  transmit buffer event.<br>
+    Note: Trigger limit should be less than FIFO size. Otherwise there can be
+  an unpredictable behavior</td>
+  <td class=xl6315997 align=left width=98 style='width:74pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:none;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none;border-color:currentColor currentColor white'>R/W</td>
+ </tr>
+ <tr height=81 style='mso-height-source:userset;height:60.75pt'>
+  <td height=81 class=xl6315997 align=left width=180 style='height:60.75pt;
+  width:135pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border-top:none;border-right:.5pt solid white;border-bottom:.5pt solid white;
+  border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none;border-color:
+  currentColor white white currentColor'>Receive FIFO trigger limit</td>
+  <td class=xl6315997 align=left width=211 style='width:158pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none;border-color:currentColor white white currentColor'>uart001_irwrxfifotrigger</td>
+  <td class=xl6315997 align=left width=427 style='width:320pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none;border-color:currentColor white white currentColor'>Selects
+  Receive FIFO trigger threshold limit that is used to generate FIFO Standard
+  receive buffer event.<br>
+    Note: Trigger limit should be less than FIFO size. Otherwise there can be
+  an unpredictable behavior</td>
+  <td class=xl6315997 align=left width=98 style='width:74pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:none;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>R/W</td>
+ </tr>
+ <tr height=81 style='mso-height-source:userset;height:60.75pt'>
+  <td height=81 class=xl6315997 align=left width=180 style='height:60.75pt;
+  width:135pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border-top:none;border-right:.5pt solid white;border-bottom:.5pt solid white;
+  border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none;border-color:
+  currentColor white white currentColor'>Enable receiver noise detection
+  interrupt</td>
+  <td class=xl6315997 align=left width=211 style='width:158pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none;border-color:currentColor white white currentColor'>uart001_erwRecvNoiseDetectInt</td>
+  <td class=xl6315997 align=left width=427 style='width:320pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none;border-color:currentColor white white currentColor'>This
+  enables receiver noise detection interrupt generation. This interrupt
+  indicates that the input value at the sample point of a bit and at the two
+  time quanta before are not identical.</td>
+  <td class=xl6315997 align=left width=98 style='width:74pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:none;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>R/W</td>
+ </tr>
+ <tr height=58 style='mso-height-source:userset;height:43.5pt'>
+  <td height=58 class=xl6315997 align=left width=180 style='height:43.5pt;
+  width:135pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border-top:none;border-right:.5pt solid white;border-bottom:.5pt solid white;
+  border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none;border-color:
+  currentColor white white currentColor'>Enable format error interrupt</td>
+  <td class=xl6315997 align=left width=211 style='width:158pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none;border-color:currentColor white white currentColor'>uart001_erwFmtErrorInt</td>
+  <td class=xl6315997 align=left width=427 style='width:320pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none;border-color:currentColor white white currentColor'>This
+  enables format error interrupt generation. This interrupt is generated if
+  sampled bit value of stop bit is 0</td>
+  <td class=xl6315997 align=left width=98 style='width:74pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:none;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none;border-color:currentColor currentColor white'>R/W</td>
+ </tr>
+ <tr height=65 style='mso-height-source:userset;height:48.75pt'>
+  <td height=65 class=xl6315997 align=left width=180 style='height:48.75pt;
+  width:135pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border-top:none;border-right:.5pt solid white;border-bottom:.5pt solid white;
+  border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none;border-color:
+  currentColor white currentColor currentColor'>Enable frame finished
+  interrupt.</td>
+  <td class=xl6315997 align=left width=211 style='width:158pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none;border-color:currentColor white currentColor currentColor'>uart001_erwFrameFinishInt</td>
+  <td class=xl6315997 align=left width=427 style='width:320pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none;border-color:currentColor white currentColor currentColor'>This
+  enables frame finished interrupt generation. This interrupt indicates that
+  the receiver has completely finished a frame</td>
+  <td class=xl6315997 align=left width=98 style='width:74pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:none;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>R/W</td>
+ </tr>
+ <tr height=53 style='mso-height-source:userset;height:39.75pt'>
+  <td height=53 class=xl6315997 align=left width=180 style='height:39.75pt;
+  width:135pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border-top:none;border-right:.5pt solid white;border-bottom:.5pt solid white;
+  border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>Rx Pin
+  Settings:<br>
+    Input Charateristics</td>
+  <td class=xl6315997 align=left width=211 style='width:158pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>uart001_erwInputChar</td>
+  <td class=xl6315997 align=left width=427 style='width:320pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>Input charateristics of Rx Pin ( Pullup/ Pulldown)</td>
+  <td class=xl6315997 align=left width=98 style='width:74pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:none;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none;border-color:currentColor currentColor white'>R/W</td>
+ </tr>
+ <tr height=49 style='mso-height-source:userset;height:36.75pt'>
+  <td height=49 class=xl6315997 align=left width=180 style='height:36.75pt;
+  width:135pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border-top:none;border-right:.5pt solid white;border-bottom:.5pt solid white;
+  border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>Tx Pin
+  Settings:<br>
+    Pad Class</td>
+  <td class=xl6315997 align=left width=211 style='width:158pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>uart001_erwTxPadClass</td>
+  <td class=xl6315997 align=left width=427 style='width:320pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>Pad class of Tx Pin</td>
+  <td class=xl6315997 align=left width=98 style='width:74pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:none;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none;border-color:currentColor currentColor white'>R/W</td>
+ </tr>
+ <tr height=56 style='mso-height-source:userset;height:42.0pt'>
+  <td height=56 class=xl6315997 align=left width=180 style='height:42.0pt;
+  width:135pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border-top:none;border-right:.5pt solid white;border-bottom:none;border-left:
+  none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>Tx Pin Settings:<br>
+    Pad Driver Mode</td>
+  <td class=xl6315997 align=left width=211 style='width:158pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:none;border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>uart001_erwPadDriverModeTx</td>
+  <td class=xl6315997 align=left width=427 style='width:320pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:none;border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>This
+  option allows to select pad driver
+  strength.</td>
+  <td class=xl6315997 align=left width=98 style='width:74pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;background:#B8CCE4;mso-pattern:
+  #B8CCE4 none;border-color:currentColor currentColor white'>R/W</td>
+ </tr>
+</table>
+
+
+
+
+@}
+*/	

@@ -1,0 +1,316 @@
+/**
+@ingroup FATFS005_Legal
+@{
+\page FATFS005_legalpage Copyright and Licensing Information
+Copyright (c) 2011, Infineon Technologies AG
+All rights reserved. 
+
+Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met: 
+Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer. 
+Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution. 
+Neither the name of the copyright holders nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+To improve the quality of the software, users are encouraged to share modifications, enhancements or bug fixes with Infineon Technologies AG (dave@infineon.com).
+
+@}
+@ingroup FATFS005_intro
+@{
+\page FATFS005_intropage Introduction
+FileSystem_DeviceAbstraction_FATFS005 App as the name suggests abstracts all the block devices underlying it. It is a thin generic upper layer which interfaces with all other block devices'
+block interfaces in RTOS environment. The disk I/O module is not a part of FatFs module so this layer is implemented. 
+
+\section FATFS005_scopesec Scope
+FileSystem_DeviceAbstraction_FATFS005 App can use one or both of the block devices like  SDMMC Block Layer App and USB Block Layer App
+as shown below. SDMMC Block Device will be always present and fixed at drive# 0 . USB device if present will be at drive# 1 . 
+<img src="..\FATFS005.PNG" title="Overview of Device Abstraction Layer App" alt="The diagram shows the Overview of Device Abstraction Layer App." align="center" border="3" hspace="0" vspace="0" />
+
+
+\section FATFS005_abbreviation
+<OL>
+<LI>SDMMC: Secure Digital/ Multimedia Card </LI>
+<LI>API: Application Program Interface</LI>
+<LI>GUI: Graphical User Interface</LI>
+<LI>IOCTL  : Input/Output Control</LI>
+<LI>DMA: Direct Memory Access </LI>
+<LI>RTOS: Real Time Operating System </LI>
+<LI>LLD: Low Level Driver </LI>
+<LI>CSD: Card Specific Data </LI>
+<LI>CID: Card identification number</LI>
+<LI>OCR: Operation conditions register </LI>
+<LI>SCR: SD Configuration Register </LI>
+<LI>CSR: Card Status Register </LI>
+<LI>RCA: Relative card address</LI>
+<LI>DAL: Device Abstraction Layer </LI>
+</OL>
+
+\section FATFS005_reference
+<OL>
+<LI>http://elm-chan.org/fsw/ff/00index_e.html</LI>
+</OL>
+\section FATFS005_limitation
+None
+
+@}
+*/
+
+/**
+@ingroup FATFS005_overview
+@{
+\page FATFS005_overviewpage Overview
+This module works in RTOS Environment so the api's will be re-entrant. 
+Device Abstraction Layer supports the following features:<BR>
+<OL>
+ <LI> Initialize disk drive</LI> 
+ <LI> Get disk status</LI>
+ <LI> Read or Write sector(s) </LI>
+ <LI> Control device dependent features like get device type, Read device' CSD,CID, OCR registers etc</LI>
+ <LI> Device independent miscellaneous features like <I> Get Sector Size, Get Sector Count,
+ Get Block Size,Erase,Control Sync,Get current time </I> 
+</OL>
+@}
+
+@ingroup FATFS005_filestructure File Structure
+@{
+\page FATFS005_filestructurepage File Structure
+Following files are generated : 
+<OL>
+<LI>FATFS005.c:  This file contains  all public type and functions definitions of FATFS005 App. </LI>
+<LI>FATFS005.h: This file contains all public data structures,enums and function
+prototypes of FATFS005 App. </LI>
+<LI>FATFS005_Conf.c: This file conatins the App Instance configurations </LI>
+</OL>
+@}
+
+@ingroup FATFS005_appconfigdoc App Configuration Documentation
+@{
+\page FATFS005_appconfigdocpage Configuration Documentation
+The diagram shows the UI for the App.
+<table>
+<tr  height=33 width=100>
+<td>
+<img src="..\FATFS005_GUI.PNG" title="GUI for FATFS005 App" alt="The diagram shows the UI for the App."  align = "left" border="3" />
+</td>
+</tr>
+<tr height=33 width=50>
+<td>
+<table border=0 cellpadding=0 cellspacing=0 width=657 style='border-collapse:
+ collapse;table-layout:fixed;width:494pt'>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl6328884 align=left width=166 style='height:15.0pt;
+  width:125pt;font-size:11.0pt;color:white;font-weight:700;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border-top:none;border-right:.5pt solid white;border-bottom:1.5pt solid white;
+  border-left:none;background:#4F81BD;mso-pattern:#4F81BD none'>GUI
+  Configuration</td>
+  <td class=xl6328884 align=left width=209 style='width:157pt;font-size:11.0pt;
+  color:white;font-weight:700;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:1.5pt solid white;border-left:none;background:#4F81BD;
+  mso-pattern:#4F81BD none'>URI</td>
+  <td class=xl6328884 align=left width=282 style='width:212pt;font-size:11.0pt;
+  color:white;font-weight:700;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:none;
+  border-bottom:1.5pt solid white;border-left:none;background:#4F81BD;
+  mso-pattern:#4F81BD none'>Description</td>
+ </tr>
+ <tr height=76 style='height:57.0pt'>
+  <td height=76 class=xl6428884 align=left width=166 style='height:57.0pt;
+  width:125pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Arial;
+  border-top:none;border-right:.5pt solid white;border-bottom:.5pt solid white;
+  border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>Select SDMMC
+  Block Devices</td>
+  <td class=xl6428884 align=left width=209 style='width:157pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>fatfs005_devices_available</td>
+  <td class=xl6428884 align=left width=282 style='width:212pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Arial;border-top:none;border-right:none;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>This allows the user to select the SDMMC device.<br>
+    Unit : NA<br>
+    Range: NA</td>
+ </tr>
+ <tr height=76 style='height:57.0pt'>
+  <td height=76 class=xl6528884 align=left width=166 style='height:57.0pt;
+  width:125pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Arial;
+  border-top:none;border-right:.5pt solid white;border-bottom:none;border-left:
+  none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>Select USB Block Devices</td>
+  <td class=xl6528884 align=left width=209 style='width:157pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:none;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>fatfs005_usbdevice_available</td>
+  <td class=xl6528884 align=left width=282 style='width:212pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Arial;border:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>This allows the user to select the USB device.<br>
+    Unit : NA<br>
+    Range: NA</td>
+ </tr>
+</table>
+
+
+
+
+@}
+*/
+
+/**
+@ingroup FATFS005_publishedparams Published Parameters
+@{
+
+\page Note NOTE: URIs given in tables below are for App developer use. App developer can make use of these URIs to create top level apps by consuming this app. 
+
+\section FATFS005_Virtual_Signal Virtual Signals 
+NA
+
+\section FATFS005_Consumed_Parameters Consumed Parameters
+<table border=0 cellpadding=0 cellspacing=0 width=920 class=xl6517138
+ style='border-collapse:collapse;table-layout:fixed;width:690pt'>
+  <tr height=56 style='mso-height-source:userset;height:42.0pt'>
+  <td height=56 class=xl6517138 align=center width=98 style='height:42.0pt;
+  width:74pt;font-size:11.0pt;color:white;font-weight:700;text-decoration:none;
+  text-underline-style:none;text-line-through:none;font-family:arial;
+  border:.5pt solid windowtext;background:#4F81BD;mso-pattern:#4F81BD none'>Name</td>
+  <td class=xl6517138 align=center width=363 style='border-left:none;width:272pt;
+  font-size:11.0pt;color:white;font-weight:700;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:arial;border:.5pt solid windowtext;
+  background:#4F81BD;mso-pattern:#4F81BD none'>URI</td>
+  <td class=xl6517138 align=center width=279 style='border-left:none;width:209pt;
+  font-size:11.0pt;color:white;font-weight:700;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:arial;border:.5pt solid windowtext;
+  background:#4F81BD;mso-pattern:#4F81BD none'>Description</td>
+  <td class=xl6517138 align=center width=180 style='border-left:none;width:135pt;
+  font-size:11.0pt;color:white;font-weight:700;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:arial;border:.5pt solid windowtext;
+  background:#4F81BD;mso-pattern:#4F81BD none'>Conditional Consumption</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl6517138 align=center width=98 style='height:15.0pt;
+  border-top:none;width:74pt;font-size:11.0pt;color:black;font-weight:400;
+  text-decoration:none;text-underline-style:none;text-line-through:none;
+  font-family:arial;border:.5pt solid windowtext;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>SDMMC002</td>
+  <td class=xl6617138 align=center width=363 style='border-top:none;border-left:
+  none;width:272pt;font-size:11.0pt;font-weight:400;text-line-through:none;font-family:
+  arial;border:.5pt solid windowtext;background:#DBE5F1;mso-pattern:#DBE5F1 none'>app/sdmmc002/*</td>
+  <td class=xl6517138 align=center width=279 style='border-top:none;border-left:
+  none;width:209pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:arial;
+  border:.5pt solid windowtext;background:#DBE5F1;mso-pattern:#DBE5F1 none'>This
+  is to consume SDMMC Block Layer RTOS App</td>
+  <td class=xl6517138 align=center width=180 style='border-top:none;border-left:
+  none;width:135pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:arial;
+  border:.5pt solid windowtext;background:#DBE5F1;mso-pattern:#DBE5F1 none'>Always
+  Consumed</td>
+ </tr>
+ </tr>
+</table>
+
+\section FATFS005_Provided_Parameters Provided Parameters
+<table border=0 cellpadding=0 cellspacing=0 width=904 style='border-collapse:
+ collapse;table-layout:fixed;width:679pt'>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl6332132 align=left width=190 style='height:15.0pt;
+  width:143pt;font-size:11.0pt;color:white;font-weight:700;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border-top:none;border-right:.5pt solid white;border-bottom:1.5pt solid white;
+  border-left:none;background:#4F81BD;mso-pattern:#4F81BD none'>Name</td>
+  <td class=xl6332132 align=left width=217 style='width:163pt;font-size:11.0pt;
+  color:white;font-weight:700;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:1.5pt solid white;border-left:none;background:#4F81BD;
+  mso-pattern:#4F81BD none'>URI</td>
+  <td class=xl6332132 align=left width=334 style='width:251pt;font-size:11.0pt;
+  color:white;font-weight:700;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:1.5pt solid white;border-left:none;background:#4F81BD;
+  mso-pattern:#4F81BD none'>Descirption</td>
+  <td class=xl6332132 align=left width=163 style='width:122pt;font-size:11.0pt;
+  color:white;font-weight:700;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:none;
+  border-bottom:1.5pt solid white;border-left:none;background:#4F81BD;
+  mso-pattern:#4F81BD none'>Access Mode</td>
+ </tr>
+ <tr height=58 style='height:43.5pt'>
+  <td height=58 class=xl6432132 align=left width=190 style='height:43.5pt;
+  width:143pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Arial;
+  border-top:none;border-right:.5pt solid white;border-bottom:.5pt solid white;
+  border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>Select SDMMC
+  Block Devices</td>
+  <td class=xl6432132 align=left width=217 style='width:163pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>fatfs005_devices_available</td>
+  <td class=xl6432132 align=left width=334 style='width:251pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>This allows the user to select the SDMMC
+  device.<br>
+    </td>
+  <td class=xl6432132 align=left width=163 style='width:122pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Arial;border-top:none;border-right:none;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>Read only. By default SDMMC is always present at
+  drive# 0.</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl6432132 align=left width=190 style='height:15.0pt;
+  width:143pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Arial;
+  border-top:none;border-right:.5pt solid white;border-bottom:.5pt solid white;
+  border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>Select USB
+  Block Devices</td>
+  <td class=xl6432132 align=left width=217 style='width:163pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>fatfs005_usbdevice_available</td>
+  <td class=xl6432132 align=left width=334 style='width:251pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>This allows the user to select the USB device.</td>
+  <td class=xl6432132 align=left width=163 style='width:122pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Arial;border-top:none;border-right:none;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>R/W</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl6432132 width=190 style='height:15.0pt;width:143pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Arial;border-top:none;border-right:
+  .5pt solid white;border-bottom:none;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'></td>
+  <td class=xl6432132 width=217 style='width:163pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:none;border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'></td>
+  <td class=xl6432132 width=334 style='width:251pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:none;border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'></td>
+  <td class=xl6432132 width=163 style='width:122pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'></td>
+ </tr>
+</table>
+
+
+
+
+
+
+@}
+*/

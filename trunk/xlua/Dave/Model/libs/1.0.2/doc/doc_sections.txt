@@ -1,0 +1,35 @@
+/**
+    @defgroup CCU8PWMLIB CCU8 Global App
+    @{
+        @defgroup CCU8PWMLIB_Legal Copyright and Licensing Information
+        @{
+        @}
+        
+        @defgroup CCU8PWMLIB_intro Introduction
+        @{
+        @}
+        @defgroup CCU8PWMLIB_overview Overview
+        @{
+        @}
+        @defgroup CCU8PWMLIB_filestructure File Structure
+        @{
+        @}
+        @defgroup CCU8PWMLIB_appconfigdoc App Configuration Documentation
+        @{
+        @}
+        @defgroup CCU8PWMLIB_publicparam App Public Data Structures
+        @{
+        @}       
+        @defgroup CCU8PWMLIB_apidoc API Documentation
+        @{
+        @}
+        @defgroup CCU8PWMLIB_publishedparams App Published Parameters
+        @{
+        @}
+        @defgroup CCU8PWMLIB_publishedparams App Published Parameters
+        @{
+          Click <a href="../CCU8PWMLib_Version.htm"> here </a> for Release History
+        @}
+    @}
+
+*/

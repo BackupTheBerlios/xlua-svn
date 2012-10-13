@@ -1,0 +1,6 @@
+/**
+\mainpage "UART001:USIC_UART_UART001"
+<ol>
+<LI>\ref USIC_UART_UART001App "UART001 App: USIC_UART_UART001 "</LI>
+</ol>
+*/

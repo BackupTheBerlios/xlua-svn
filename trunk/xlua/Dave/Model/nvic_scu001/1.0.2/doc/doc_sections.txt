@@ -1,0 +1,31 @@
+/**
+    @defgroup NVIC_SCU001App NVIC_SCU001 App
+    @{
+        @defgroup NVIC_SCU001_Legal Copyright and Licensing Information
+        @{
+        @}
+        @defgroup NVIC_SCU001_intro Introduction
+        @{
+        @}
+        @defgroup NVIC_SCU001_overview Overview
+        @{
+        @}
+        @defgroup NVIC_SCU001_filestructure File Structure
+        @{
+        @}
+        @defgroup NVIC_SCU001_appconfigdoc App Configuration Documentation
+        @{
+        @}
+        @defgroup NVIC_SCU001_publicparam App Public structures
+        @{
+        @}       
+        @defgroup NVIC_SCU001_apidoc API Documentation
+        @{
+        @}
+        @defgroup NVIC_SCU001_publishedparams App Published Parameters
+        @{
+        @} 
+    
+    @}
+
+*/

@@ -1,0 +1,94 @@
+<%@ jet package= "CodeGenerator" class="dave3h_template" 
+imports= "java.util.* com.ifx.davex.appjetinteract.App2JetInterface" %>
+<% App2JetInterface app = (App2JetInterface) argument; %>
+
+/**************************************************************************//**
+ *
+ * Copyright (C) 2011 Infineon Technologies AG. All rights reserved.
+ *
+ * Infineon Technologies AG (Infineon) is supplying this software for use with
+ * Infineon's microcontrollers.
+ * This file can be freely distributed within development tools that are
+ * supporting such microcontrollers.
+ *
+ * THIS SOFTWARE IS PROVIDED "AS IS".  NO WARRANTIES, WHETHER EXPRESS, IMPLIED
+ * OR STATUTORY, INCLUDING, BUT NOT LIMITED TO, IMPLIED WARRANTIES OF
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE APPLY TO THIS SOFTWARE.
+ * INFINEON SHALL NOT, IN ANY CIRCUMSTANCES, BE LIABLE FOR SPECIAL, INCIDENTAL,
+ * OR CONSEQUENTIAL DAMAGES, FOR ANY REASON WHATSOEVER.
+ *
+********************************************************************************
+**                                                                            **
+**                                                                            **
+** PLATFORM : Infineon <Microcontroller name, step>                           **
+**                                                                            **
+** COMPILER : Compiler Independent                                            **
+**                                                                            **
+** MODIFICATION DATE : June 20, 2012                                       **
+**                                                                            **
+*******************************************************************************/
+
+/**
+ * @file  DAVE3.h
+ *
+ * @brief This file contains all public data structures,enums and function
+ *        prototypes
+ *
+ */
+
+#ifndef _DAVE3_H_
+#define _DAVE3_H_
+
+<% String TempApps = null;
+   String MyAppName = null;
+   ArrayList<String> apps;
+   ArrayList<String> apps_sorted = new ArrayList<String>();
+   String TempLowerApps = null; 
+   boolean CLKApp = false;   
+   apps=(ArrayList<String>)(app.getApps());
+  	 for (int k = 0; k < apps.size(); k++) {
+		 TempApps = apps.get(k);
+//		 if(app.isAppInitProvider(apps.get(k)) == true) {
+		 MyAppName = TempApps.substring(TempApps.indexOf("/app/") + 5, TempApps.lastIndexOf("/"));
+		 TempLowerApps = MyAppName.toLowerCase();
+		 if (TempLowerApps.equalsIgnoreCase("clk001")) {CLKApp = true;}		 
+		if(!apps_sorted.contains(TempLowerApps)) 
+		{        
+			 apps_sorted.add(TempLowerApps);
+		}     
+//   }  
+  } %>
+//****************************************************************************
+// @Prototypes Of Global Functions
+//****************************************************************************
+
+void DAVE_Init(void);
+
+<% if (CLKApp) { %>
+void SystemInit_DAVE3(void);
+
+<% } %>      
+//****************************************************************************
+// @Project Includes
+//****************************************************************************
+
+#include <XMC4500.h>
+
+#include "../../inc/LIBS/types.h"
+	
+#include "../../inc/DAVESupport/MULTIPLEXER.h"
+
+
+// #include APP HEADER FILES.
+<% 
+ for (int k = 0; k < apps_sorted.size(); k++) 
+ {
+ TempLowerApps = apps_sorted.get(k);
+if(TempLowerApps.compareTo("davesupport") != 0) { %>
+
+#include "../../inc/<%= TempLowerApps.toUpperCase()%>/<%=TempLowerApps.toUpperCase()%>.h" 
+<%}
+} 
+%>
+      
+#endif  // ifndef _DAVE3_H_

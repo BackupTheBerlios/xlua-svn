@@ -1,0 +1,348 @@
+<%@ jet package="CodeGenerator" class="RTX_CfgcTemplate" 
+imports="com.ifx.davex.appjetinteract.App2JetInterface" %>
+<% App2JetInterface app = (App2JetInterface) argument; %>
+/*----------------------------------------------------------------------------
+ *      RL-ARM - RTX
+ *----------------------------------------------------------------------------
+ *      Name:    RTX_Conf_CM.C
+ *      Purpose: Configuration of CMSIS RTX Kernel for Cortex-M
+ *      Rev.:    V4.20
+ *----------------------------------------------------------------------------
+ *
+ * Copyright (c) 1999-2009 KEIL, 2009-2012 ARM Germany GmbH
+ * All rights reserved.
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *  - Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ *  - Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
+ *  - Neither the name of ARM  nor the names of its contributors may be used 
+ *    to endorse or promote products derived from this software without 
+ *    specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE 
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL COPYRIGHT HOLDERS AND CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF 
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ *---------------------------------------------------------------------------*/
+/*******************************************************************************
+ Copyright (c) 2011, Infineon Technologies AG                                 **
+ All rights reserved.                                                         **
+                                                                              **
+ Redistribution and use in source and binary forms, with or without           **
+ modification,are permitted provided that the following conditions are met:   **
+                                                                              **
+ *Redistributions of source code must retain the above copyright notice,      **
+ this list of conditions and the following disclaimer.                        **
+ *Redistributions in binary form must reproduce the above copyright notice,   **
+ this list of conditions and the following disclaimer in the documentation    **
+ and/or other materials provided with the distribution.                       **
+ *Neither the name of the copyright holders nor the names of its contributors **
+ may be used to endorse or promote products derived from this software without** 
+ specific prior written permission.                                           **
+                                                                              **
+ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"  **
+ AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    **
+ IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   **
+ ARE  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE   **
+ LIABLE  FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR         **
+ CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF         **
+ SUBSTITUTE GOODS OR  SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    **
+ INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN      **
+ CONTRACT, STRICT LIABILITY,OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)       **
+ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   **
+ POSSIBILITY OF SUCH DAMAGE.                                                  **
+                                                                              **
+ To improve the quality of the software, users are encouraged to share        **
+ modifications, enhancements or bug fixes with Infineon Technologies AG       **
+ dave@infineon.com).                                                          
+********************************************************************************/
+
+#include "../../inc/RTOS001/RTOS001.h"
+<% String AppBaseuri = "app/rtos001/"; %>
+<% int appInst = 0;%>
+<% int Timer_Priority = 1;
+   if (app.getIntegerValue(AppBaseuri + appInst + "/rtos001_erwtimerprio/1") == 1)
+   {
+     Timer_Priority = 1;
+   }
+   else if (app.getIntegerValue(AppBaseuri + appInst + "/rtos001_erwtimerprio/2") == 1)
+   {
+     Timer_Priority = 2;
+   }
+   else if (app.getIntegerValue(AppBaseuri + appInst + "/rtos001_erwtimerprio/3") == 1)
+   {
+     Timer_Priority = 3;
+   }
+   else if (app.getIntegerValue(AppBaseuri + appInst + "/rtos001_erwtimerprio/4") == 1)
+   {
+     Timer_Priority = 4;
+   }
+   else if (app.getIntegerValue(AppBaseuri + appInst + "/rtos001_erwtimerprio/5") == 1)
+   {
+     Timer_Priority = 5;
+   }
+   else
+   {
+     Timer_Priority = 6;
+   }
+%>
+<%
+   int FIFOSZ = 4;
+   if (app.getIntegerValue(AppBaseuri + appInst + "/rtos001_irwfifosz/4") == 1)
+   {
+     FIFOSZ = 4;
+   }
+   else if (app.getIntegerValue(AppBaseuri + appInst + "/rtos001_irwfifosz/8") == 1)
+   {
+     FIFOSZ = 8;
+   }
+   else if (app.getIntegerValue(AppBaseuri + appInst + "/rtos001_irwfifosz/12") == 1)
+   {
+     FIFOSZ = 12;
+   }
+   else if (app.getIntegerValue(AppBaseuri + appInst + "/rtos001_irwfifosz/16") == 1)
+   {
+     FIFOSZ = 16;
+   }
+   else if (app.getIntegerValue(AppBaseuri + appInst + "/rtos001_irwfifosz/24") == 1)
+   {
+     FIFOSZ = 24;
+   }
+   else if (app.getIntegerValue(AppBaseuri + appInst + "/rtos001_irwfifosz/32") == 1)
+   {
+     FIFOSZ = 32;
+   }
+   else if (app.getIntegerValue(AppBaseuri + appInst + "/rtos001_irwfifosz/48") == 1)
+   {
+     FIFOSZ = 48;
+   }
+   else if (app.getIntegerValue(AppBaseuri + appInst + "/rtos001_irwfifosz/64") == 1)
+   {
+     FIFOSZ = 64;
+   }
+   else
+   {
+     FIFOSZ = 96;
+   }
+ %>
+
+/*----------------------------------------------------------------------------
+ *      RTX User configuration part BEGIN
+ *---------------------------------------------------------------------------*/
+
+//-------- <<< Use Configuration Wizard in Context Menu >>> -----------------
+//
+// <h>Thread Configuration
+// =======================
+//
+//   <o>Number of concurrent running threads <0-250>
+//   <i> Defines max. number of threads that will run at the same time.
+//   <i> Default: 6
+#ifndef OS_TASKCNT
+ #define OS_TASKCNT     <%= app.getIntegerValue(AppBaseuri + appInst + "/rtos001_irwtaskcnt")%>
+#endif
+
+//   <o>Number of threads with user-provided stack size <0-250>
+//   <i> Defines the number of threads with user-provided stack size.
+//   <i> Default: 0
+#ifndef OS_PRIVCNT
+ #define OS_PRIVCNT     <%= app.getIntegerValue(AppBaseuri + appInst + "/rtos001_irwpricnt")%>
+#endif
+
+//   <o>Default Thread stack size [bytes] <64-4096:8><#/4>
+//   <i> Defines default stack size for threads.
+//   <i> Default: 200
+#ifndef OS_STKSIZE
+ #define OS_STKSIZE    <%= app.getIntegerValue(AppBaseuri + appInst + "/rtos001_irwstksize")%>
+#endif
+
+//   <o>Main Thread stack size [bytes] <64-4096:8><#/4>
+//   <i> Defines stack size for main thread.
+//   <i> Default: 200
+#ifndef OS_MAINSTKSIZE
+ #define OS_MAINSTKSIZE 0
+#endif
+
+//   <o>Total stack size [bytes] for threads with user-provided stack size <0-4096:8><#/4>
+//   <i> Defines the combined stack size for threads with user-provided stack size.
+//   <i> Default: 0
+#ifndef OS_PRIVSTKSIZE
+ #define OS_PRIVSTKSIZE <%= app.getIntegerValue(AppBaseuri + appInst + "/rtos001_irwprivstksize")%>
+#endif
+
+// <q>Check for stack overflow
+// ===========================
+// <i> Includes the stack checking code for stack overflow.
+// <i> Note that additional code reduces the Kernel performance.
+#ifndef OS_STKCHECK
+ #define OS_STKCHECK    <%= app.getIntegerValue(AppBaseuri + appInst + "/rtos001_erwstkcheck/0")%>
+#endif
+
+// <q>Run in privileged mode
+// =========================
+// <i> Runs all Threads in privileged mode.
+// <i> Default: Unprivileged
+#ifndef OS_RUNPRIV
+ #define OS_RUNPRIV     <%= app.getIntegerValue(AppBaseuri + appInst + "/rtos001_erwrunpriv/0")%>
+#endif
+
+// </h>
+// <h>SysTick Timer Configuration
+// ==============================
+//
+//   <o>Timer clock value [Hz] <1-1000000000>
+//   <i> Defines the timer clock value.
+//   <i> Default: 6000000  (6MHz)
+#ifndef OS_CLOCK
+ #define OS_CLOCK       <%= app.getIntegerValue(AppBaseuri + appInst + "/rtos001_irwclock")%>
+#endif
+
+//   <o>Timer tick value [us] <1-1000000>
+//   <i> Defines the timer tick value.
+//   <i> Default: 1000  (1ms)
+#ifndef OS_TICK
+ #define OS_TICK        <%= app.getIntegerValue(AppBaseuri + appInst + "/rtos001_irwtick")%>
+#endif
+
+// </h>
+
+// <h>System Configuration
+// =======================
+//
+// <e>Round-Robin Thread switching
+// ===============================
+//
+// <i> Enables Round-Robin Thread switching.
+#ifndef OS_ROBIN
+ #define OS_ROBIN       <%= app.getIntegerValue(AppBaseuri + appInst + "/rtos001_erwrndrobin/0")%>
+#endif
+
+//   <o>Round-Robin Timeout [ticks] <1-1000>
+//   <i> Defines how long a thread will execute before a thread switch.
+//   <i> Default: 5
+#ifndef OS_ROBINTOUT
+ #define OS_ROBINTOUT  <%= app.getIntegerValue(AppBaseuri + appInst + "/rtos001_irwrobintout")%>
+#endif
+
+// </e>
+
+// <e>User Timers
+// ==============
+//   <i> Enables user Timers
+#ifndef OS_TIMERS
+ #define OS_TIMERS  <%= app.getIntegerValue(AppBaseuri + appInst + "/rtos001_erwtimers/0")%>
+#endif
+
+//   <o>Timer Thread Priority
+//                        <1=> Low
+//     <2=> Below Normal  <3=> Normal  <4=> Above Normal
+//                        <5=> High
+//                        <6=> Realtime
+//   <i> Defines priority for Timer Thread
+//   <i> Default: High
+#ifndef OS_TIMERPRIO
+ #define OS_TIMERPRIO  <%= Timer_Priority%>
+#endif
+
+//   <o>Timer Thread stack size [bytes] <64-4096:8><#/4>
+//   <i> Defines stack size for Timer thread.
+//   <i> Default: 200
+#ifndef OS_TIMERSTKSZ
+ #define OS_TIMERSTKSZ  <%= app.getIntegerValue(AppBaseuri + appInst + "/rtos001_irwtimerstksize")%>
+#endif
+
+//   <o>Timer Callback Queue size <1-32>
+//   <i> Defines number of concurrent callbacks that will be queued.
+//   <i> Default: 4
+#ifndef OS_TIMERCBQSZ
+ #define OS_TIMERCBQS  <%= app.getIntegerValue(AppBaseuri + appInst + "/rtos001_irwtimercbqsize")%>
+#endif
+
+// </e>
+
+//   <o>ISR FIFO Queue size<4=>   4 entries  <8=>   8 entries
+//                         <12=> 12 entries  <16=> 16 entries
+//                         <24=> 24 entries  <32=> 32 entries
+//                         <48=> 48 entries  <64=> 64 entries
+//                         <96=> 96 entries
+//   <i> ISR functions store requests to this buffer,
+//   <i> when they are called from the iterrupt handler.
+//   <i> Default: 16 entries
+#ifndef OS_FIFOSZ
+ #define OS_FIFOSZ      <%= FIFOSZ%>
+#endif
+
+// </h>
+
+//------------- <<< end of configuration section >>> -----------------------
+
+// Standard library system mutexes
+// ===============================
+//  Define max. number system mutexes that are used to protect 
+//  the arm standard runtime library. For microlib they are not used.
+#ifndef OS_MUTEXCNT
+ #define OS_MUTEXCNT    <%= app.getIntegerValue(AppBaseuri + appInst + "/rtos001_irwmutxes")%>
+#endif
+
+/*----------------------------------------------------------------------------
+ *      RTX User configuration part END
+ *---------------------------------------------------------------------------*/
+
+#define OS_TRV          ((uint32_t)(((double)OS_CLOCK*(double)OS_TICK)/1E6)-1)
+
+/*----------------------------------------------------------------------------
+ *      Global Functions
+ *---------------------------------------------------------------------------*/
+
+/*--------------------------- os_idle_demon ---------------------------------*/
+
+void os_idle_demon (void) {
+  /* The idle demon is a system thread, running when no other thread is      */
+  /* ready to run.                                                           */
+
+  for (;;) {
+  /* HERE: include optional user code to be executed when no thread runs.*/
+  }
+}
+
+
+/*--------------------------- os_error --------------------------------------*/
+
+void os_error (uint32_t err_code) {
+  /* This function is called when a runtime error is detected. Parameter */
+  /* 'err_code' holds the runtime error code (defined in RTL.H).         */
+
+  /* HERE: include optional code to be executed on runtime error. */
+  for (;;);
+}
+
+/*--------------------------- RTOS Init Function --------------------------------------*/
+/*
+ * added by WIPRO IFX
+ * This is to initialize OS kernel
+ * This should be called before any RTOS object creation.
+ */
+void RTOS001_Init ()
+{
+  osKernelInitialize();
+}
+
+/*----------------------------------------------------------------------------
+ *      RTX Configuration Functions
+ *---------------------------------------------------------------------------*/
+
+#include "../../src/RTOS001/INC/RTX_CM_lib.h"
+
+/*----------------------------------------------------------------------------
+ * end of file
+ *---------------------------------------------------------------------------*/
