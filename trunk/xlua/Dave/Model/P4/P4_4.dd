@@ -1,31 +1,5 @@
 <?xml version="1.0" encoding="ASCII"?>
 <ResourceModel:Peripheral xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ResourceModel="http://www.infineon.com/Davex/Resource.ecore" name="P4" description="Port 4" URI="http://www.infineon.com/0.1.29/port/p/4">
-  <provided xsi:type="ResourceModel:ResourceGroup" name="P4.0 / #124" URI="http://www.infineon.com/0.1.29/port/p/4/pad/0">
-    <upWardMappingList xsi:type="ResourceModel:ProxyResource" href="../sdmmc004/1.0.0/sdmmc004_0.app#//@consumed.4"/>
-    <resourcesList name="out_p" requiredResourceUri="http://www.infineon.com/0.1.29/port/p/4/out/p0" isResolved="true"/>
-    <resourcesList name="omr_ps" requiredResourceUri="http://www.infineon.com/0.1.29/port/p/4/omr/ps0" isResolved="true"/>
-    <resourcesList name="omr_pr" requiredResourceUri="http://www.infineon.com/0.1.29/port/p/4/omr/pr0" isResolved="true"/>
-    <resourcesList name="in_p" requiredResourceUri="http://www.infineon.com/0.1.29/port/p/4/in/p0" isResolved="true"/>
-    <resourcesList name="pps_pps" requiredResourceUri="http://www.infineon.com/0.1.29/port/p/4/pps/pps0" isResolved="true"/>
-    <resourcesList name="hwsel_hw" requiredResourceUri="http://www.infineon.com/0.1.29/port/p/4/hwsel/hw0" isResolved="true"/>
-    <resourcesList name="pdr_pd" requiredResourceUri="http://www.infineon.com/0.1.29/port/p/4/pdr0/pd0" isResolved="true"/>
-    <resourcesList name="pdisc_pdis" requiredResourceUri="http://www.infineon.com/0.1.29/port/p/4/pdisc/pdis0" isResolved="true"/>
-    <resourcesList name="iocr_oe" requiredResourceUri="http://www.infineon.com/0.1.29/port/p/4/iocr0/pc0_4" isResolved="true"/>
-    <resourcesList name="iocr_po" requiredResourceUri="http://www.infineon.com/0.1.29/port/p/4/iocr0/pc0_3" isResolved="true"/>
-    <resourcesList name="iocr_pcr" requiredResourceUri="http://www.infineon.com/0.1.29/port/p/4/iocr0/pc0_2_0" isResolved="true"/>
-    <resourcesList name="swreg_out" requiredResourceUri="http://www.infineon.com/0.1.29/port/p/4/pad_0/swreg_out" isResolved="true"/>
-    <resourcesList name="alt1" requiredResourceUri="http://www.infineon.com/0.1.29/port/p/4/pad_0/alt1" isResolved="true"/>
-    <resourcesList name="alt2" requiredResourceUri="http://www.infineon.com/0.1.29/port/p/4/pad_0/alt2" isResolved="true"/>
-    <resourcesList name="alt3" requiredResourceUri="http://www.infineon.com/0.1.29/port/p/4/pad_0/alt3" isResolved="true"/>
-    <resourcesList name="alt4" requiredResourceUri="http://www.infineon.com/0.1.29/port/p/4/pad_0/alt4" isResolved="true"/>
-    <resourcesList name="hw0_out" requiredResourceUri="http://www.infineon.com/0.1.29/port/p/4/pad_0/hw0_out" isResolved="true"/>
-    <resourcesList name="hw1_out" requiredResourceUri="http://www.infineon.com/0.1.29/port/p/4/pad_0/hw1_out" isResolved="true"/>
-    <resourcesList name="altin" requiredResourceUri="http://www.infineon.com/0.1.29/port/p/4/pad_0/altin" isResolved="true"/>
-    <resourcesList name="pad" requiredResourceUri="http://www.infineon.com/0.1.29/port/p/4/pad_0/pad" isResolved="true"/>
-  </provided>
-  <provided xsi:type="ResourceModel:SignalDeclaration" name="PAD" URI="http://www.infineon.com/0.1.29/port/p/4/pad/0/pad" padClass="A2" isVisible="true">
-    <upWardMappingList xsi:type="ResourceModel:ProxyResource" href="../sdmmc004/1.0.0/sdmmc004_0.app#//@consumed.57"/>
-  </provided>
   <provided xsi:type="ResourceModel:ResourceGroup" name="P4.1 / #123" URI="http://www.infineon.com/0.1.29/port/p/4/pad/1">
     <upWardMappingList xsi:type="ResourceModel:ProxyResource" href="../sdmmc004/1.0.0/sdmmc004_0.app#//@consumed.7"/>
     <resourcesList name="out_p" requiredResourceUri="http://www.infineon.com/0.1.29/port/p/4/out/p1" isResolved="true"/>
@@ -51,6 +25,32 @@
   </provided>
   <provided xsi:type="ResourceModel:SignalDeclaration" name="PAD" URI="http://www.infineon.com/0.1.29/port/p/4/pad/1/pad" padClass="A2" isVisible="true">
     <upWardMappingList xsi:type="ResourceModel:ProxyResource" href="../sdmmc004/1.0.0/sdmmc004_0.app#//@consumed.60"/>
+  </provided>
+  <provided xsi:type="ResourceModel:ResourceGroup" name="P4.0 / #124" URI="http://www.infineon.com/0.1.29/port/p/4/pad/0">
+    <upWardMappingList xsi:type="ResourceModel:ProxyResource" href="../sdmmc004/1.0.0/sdmmc004_0.app#//@consumed.4"/>
+    <resourcesList name="out_p" requiredResourceUri="http://www.infineon.com/0.1.29/port/p/4/out/p0" isResolved="true"/>
+    <resourcesList name="omr_ps" requiredResourceUri="http://www.infineon.com/0.1.29/port/p/4/omr/ps0" isResolved="true"/>
+    <resourcesList name="omr_pr" requiredResourceUri="http://www.infineon.com/0.1.29/port/p/4/omr/pr0" isResolved="true"/>
+    <resourcesList name="in_p" requiredResourceUri="http://www.infineon.com/0.1.29/port/p/4/in/p0" isResolved="true"/>
+    <resourcesList name="pps_pps" requiredResourceUri="http://www.infineon.com/0.1.29/port/p/4/pps/pps0" isResolved="true"/>
+    <resourcesList name="hwsel_hw" requiredResourceUri="http://www.infineon.com/0.1.29/port/p/4/hwsel/hw0" isResolved="true"/>
+    <resourcesList name="pdr_pd" requiredResourceUri="http://www.infineon.com/0.1.29/port/p/4/pdr0/pd0" isResolved="true"/>
+    <resourcesList name="pdisc_pdis" requiredResourceUri="http://www.infineon.com/0.1.29/port/p/4/pdisc/pdis0" isResolved="true"/>
+    <resourcesList name="iocr_oe" requiredResourceUri="http://www.infineon.com/0.1.29/port/p/4/iocr0/pc0_4" isResolved="true"/>
+    <resourcesList name="iocr_po" requiredResourceUri="http://www.infineon.com/0.1.29/port/p/4/iocr0/pc0_3" isResolved="true"/>
+    <resourcesList name="iocr_pcr" requiredResourceUri="http://www.infineon.com/0.1.29/port/p/4/iocr0/pc0_2_0" isResolved="true"/>
+    <resourcesList name="swreg_out" requiredResourceUri="http://www.infineon.com/0.1.29/port/p/4/pad_0/swreg_out" isResolved="true"/>
+    <resourcesList name="alt1" requiredResourceUri="http://www.infineon.com/0.1.29/port/p/4/pad_0/alt1" isResolved="true"/>
+    <resourcesList name="alt2" requiredResourceUri="http://www.infineon.com/0.1.29/port/p/4/pad_0/alt2" isResolved="true"/>
+    <resourcesList name="alt3" requiredResourceUri="http://www.infineon.com/0.1.29/port/p/4/pad_0/alt3" isResolved="true"/>
+    <resourcesList name="alt4" requiredResourceUri="http://www.infineon.com/0.1.29/port/p/4/pad_0/alt4" isResolved="true"/>
+    <resourcesList name="hw0_out" requiredResourceUri="http://www.infineon.com/0.1.29/port/p/4/pad_0/hw0_out" isResolved="true"/>
+    <resourcesList name="hw1_out" requiredResourceUri="http://www.infineon.com/0.1.29/port/p/4/pad_0/hw1_out" isResolved="true"/>
+    <resourcesList name="altin" requiredResourceUri="http://www.infineon.com/0.1.29/port/p/4/pad_0/altin" isResolved="true"/>
+    <resourcesList name="pad" requiredResourceUri="http://www.infineon.com/0.1.29/port/p/4/pad_0/pad" isResolved="true"/>
+  </provided>
+  <provided xsi:type="ResourceModel:SignalDeclaration" name="PAD" URI="http://www.infineon.com/0.1.29/port/p/4/pad/0/pad" padClass="A2" isVisible="true">
+    <upWardMappingList xsi:type="ResourceModel:ProxyResource" href="../sdmmc004/1.0.0/sdmmc004_0.app#//@consumed.57"/>
   </provided>
   <provided xsi:type="ResourceModel:BitField" name="PC1_4" URI="http://www.infineon.com/0.1.29/port/p/4/pad/1/iocr_oe" maxValue="1" minValue="0" startPos="15" stopPos="15" accessPermission="rw">
     <defaultValue xsi:type="ResourceModel:IntegerValue" value="0"/>
