@@ -1,4 +1,0 @@
-== My xLua ==
-I would like to say 
-thiat this is a good idea
-[[build | test ]]
