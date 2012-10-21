@@ -1,17 +1,11 @@
-== My Build ==
+= Download and compile xLua =
 
+== Requirements ==
 
-# This is an example
-# text2
+# Install latest Dave&trade;3 [http://dave.infineon.com link]
+# Download project from the [http://developer.berlios.de/svn/?group_id=13007 Berlios SVN]. Remember that you can do this from Dave&trade;3 by installing a subversion
 
+== Compile & Download ==
 
-{| border="1"
-|+ The table's caption
-! Column heading 1 !! Column heading 2 
-|-
-|Cell 1 || Cell 2 || Cell 3
-|-
-|Cell A 
-|Cell B
-|Cell C
-|}
+# Press Generate and Compile
+

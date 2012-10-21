@@ -1,3 +1,10 @@
 = xLua =
 
+
+[http://developer.berlios.de/projects/xlua/ Developer website ]
+
+[[build | How to compile and install xLua]]
+
+[[add_app | How to interface a Dave (tm) app to xLua ]]
+
 [[script_embedded | Scripting Language in embedded systems]]
