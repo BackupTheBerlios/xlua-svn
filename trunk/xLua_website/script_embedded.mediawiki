@@ -1,0 +1,30 @@
+= Scripting Languages in embedded systems =
+
+Scripts are a popular choice for wide variety of applications. They contribute to most of the applications running on the web (For example, Java scripts) and myriad other system programs. Scripts usually run on bigger platforms with high processing speed and advanced memory features since they better accommodate complex system programs.
+
+ 
+
+Can scripts ever be used on smaller devices like micro-controllers? Are they fit enough to handle a language interpreter?
+
+ 
+
+The world’s first single-chip microprocessor was the 4-bit Intel 4004 released in 1971. From there on, the design of micro-controllers is evolving by the day. For a long time, 8 bit and 16 bit micro-controllers have been extremely popular among hobbyists and professionals on account of their performance and low cost. Nevertheless, such micro-controllers have very limited resources on the chip. On an average, these devices have not more than 16K of flash memory and a kilo byte of ram (data) memory! They are also very slow in processing when compared to their 32 bit counterparts. This observation illustrates that it is not viable to run a complex system program (such as a language interpreter) on such devices. (With optimization techniques, it is theoretically possible to run such programs on smaller devices only void of any practical significance).
+
+ 
+
+The time has now changed. 32 bit micro-controllers are ruling the embedded market. They are simply designed for better speed and performance. In the 32 bit domain, many micro-controllers typically have a flash memory in the range of 64 kilo bytes to 128 kilo bytes and 32 kilo bytes to 64 kilo bytes of ram (data) memory. With such advanced micro-controllers being sold at the price of their 8 bit counterparts, it seems logical to move to the 32 bit world for embedded design. Such micro-controllers can easily accomadate huge programs by crunching the numbers at faster speeds.
+
+ 
+
+The world has turned around. It is certainly possible to run scripts on 32 bit micro-controllers maintaining practical significance.
+
+== Lua in commercial embedded systems ==
+
+* Lua (Full fledged and supported by community):
+* ATE  (Automatic test equipment): http://www.cabletest.com/pdf/LuaInATE.pdf
+*  [https://www.sierrawireless.com/Newsroom/newsreleases/2007/12-06-wavecom_slashes_time_to_develop_m2m_applications_by_offering_open_source_lua_plug_in_for_free.aspx Wireless Com modules]
+* Smart, programmable LCD: http://store.earthlcd.com/ezLCD107
+* Home automation: http://www.netstreams.com/resproducts.php?ID=2&PId=134#
+* Embedded web server: http://industrial-embedded.com/real-server-pages-embedded-systems
+* Keithley Series 2600A System SourceMeter: http://www.metrictest.com/catalog/brands/keithley/kei_2600a.jsp
+ 

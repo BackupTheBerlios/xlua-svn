@@ -1,0 +1,42 @@
+<project name="MyProject" default="generate-html" >
+
+<property name="wikitext.standalone" value=""/>
+<!-- path to wikitext standalone package -->
+
+	<path id="wikitext.classpath">
+		<fileset dir="${eclipse.home}/plugins">
+			<include name="org.eclipse.mylyn.wikitext.*core*.jar"/>
+		</fileset>
+	</path>
+
+	<taskdef classpathref="wikitext.classpath" resource="org/eclipse/mylyn/wikitext/core/util/anttask/tasks.properties" />
+
+
+	
+	<target name="generate-html"  description="Generate HTML from textile source">
+		<mkdir dir="${basedir}/build"/>
+		<wikitext-to-html markupLanguage="MediaWiki" internalLinkPattern='{0}.html' linkRel='./'>
+			<fileset dir="${basedir}">
+    				<include name="*.mediawiki"/>
+			</fileset>
+			<stylesheet url="styles/main.css"/>
+		</wikitext-to-html>
+			  <move todir="${basedir}/build">
+			    <fileset dir="${basedir}">
+			      <include name="*.html"/>
+			    </fileset>
+			  </move>
+
+		
+	</target>
+
+    <target name="clean">
+        <delete dir="${basedir}/build"/>
+    </target>
+
+
+
+
+
+
+</project>
