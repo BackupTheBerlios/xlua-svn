@@ -211,7 +211,7 @@ static void shell_recv( char* args )
 static void shell_ver( char* args )
 {
   args = args;
-  printf( "eLua version %s\n", ELUA_STR_VERSION );
+  printf( "xLua version %s\n", ELUA_STR_VERSION );
   printf( "For more information visit www.eluaproject.net and wiki.eluaproject.net\n" );
 }
 
