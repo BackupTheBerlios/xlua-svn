@@ -4,7 +4,7 @@
 #define __PLATFORM_CONF_H__
 #define __DAVE3__
 #include "auxmods.h"
-#include "exported_apps.h"
+#include "exportedapps.h"
 
 // *****************************************************************************
 // Define here what components you want for this platform
