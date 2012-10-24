@@ -1,0 +1,7 @@
+/**
+\mainpage "TMPS001:Die_Temperature_Sensor"
+<ol>
+<LI>\ref Die_Temperature_Sensor_TMPS001App "TMPS001 App"</LI>
+</ol>
+*/
+

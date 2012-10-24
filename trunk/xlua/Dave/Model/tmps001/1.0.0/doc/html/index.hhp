@@ -1,0 +1,46 @@
+[OPTIONS]
+Compiled file=RESET001.chm
+Compatibility=1.1
+Full-text search=Yes
+Contents file=index.hhc
+Default Window=main
+Default topic=index.html
+Index file=index.hhk
+Language=0x409 English (United States)
+Title=
+
+[WINDOWS]
+main="","index.hhc","index.hhk","index.html","index.html",,,,,0x23520,,0x10387e,,,,,,,,0
+
+[FILES]
+_t_m_p_s001_8c_source.html
+_t_m_p_s001_8h_source.html
+_t_m_p_s001_8c.html
+_t_m_p_s001_8h.html
+group___die___temperature___sensor___t_m_p_s001_app.html
+group___t_m_p_s001___legal.html
+group___t_m_p_s001__intro.html
+group___t_m_p_s001__overview.html
+group___t_m_p_s001__filestructure.html
+group___t_m_p_s001__appconfigdoc.html
+group___t_m_p_s001__publicparam.html
+group___t_m_p_s001__apidoc.html
+group___t_m_p_s001__publishedparams.html
+index.html
+modules.html
+files.html
+globals.html
+globals_func.html
+globals_type.html
+globals_enum.html
+globals_defs.html
+tab_a.png
+tab_b.png
+tab_h.png
+tab_s.png
+nav_h.png
+nav_f.png
+bc_s.png
+doxygen.png
+closed.png
+open.png

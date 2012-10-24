@@ -39,9 +39,10 @@
   _ROM( AUXLIB_BIT, luaopen_bit, bit_map )\
   _ROM( AUXLIB_CPU, luaopen_cpu, cpu_map )\
   _ROM( AUXLIB_ELUA, luaopen_elua, elua_map )\
-  _ROM( LUA_MATHLIBNAME, luaopen_math, math_map )
+  _ROM( LUA_MATHLIBNAME, luaopen_math, math_map )\
+  EXPORTED_APPS_ROM
 
-#define DAVE_APPS_ROM EXPORTED_APPS_ROM
+
 
 // *****************************************************************************
 // Configuration data

@@ -35,10 +35,6 @@ static const luaL_Reg lualibs[] = {
 #define _ROM( name, openf, table ) { name, openf },
   LUA_PLATFORM_LIBS_ROM
 #endif
-#if defined(DAVE_APPS_ROM)
-#define _ROM( name, openf, table ) { name, openf },
-  DAVE_APPS_ROM
-#endif
   {NULL, NULL}
 };
 
@@ -52,11 +48,6 @@ extern const luaR_entry co_funcs[];
 #define _ROM( name, openf, table ) extern const luaR_entry table[];
 LUA_PLATFORM_LIBS_ROM;
 #endif
-#if defined(DAVE_APPS_ROM) && LUA_OPTIMIZE_MEMORY == 2
-#undef _ROM
-#define _ROM( name, openf, table ) extern const luaR_entry table[];
-DAVE_APPS_ROM;
-#endif
 const luaR_table lua_rotable[] = 
 {
 #if LUA_OPTIMIZE_MEMORY > 0
@@ -68,11 +59,6 @@ const luaR_table lua_rotable[] =
 #undef _ROM
 #define _ROM( name, openf, table ) { name, table },
   LUA_PLATFORM_LIBS_ROM
-#endif
-#if defined(DAVE_APPS_ROM) && LUA_OPTIMIZE_MEMORY == 2
-#undef _ROM
-#define _ROM( name, openf, table ) { name, table },
-  DAVE_APPS_ROM
 #endif
 #endif
   {NULL, NULL}

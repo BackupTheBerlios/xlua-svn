@@ -9,15 +9,11 @@ void IO002_DisableOutputDriver(const IO002_HandleType* Handle,IO002_InputModeTyp
 void IO002_EnableOutputDriver(const IO002_HandleType* Handle,IO002_OutputModeType Mode);
 %}
 
-%rename ("pin_high") IO002_DisableOutputDriver(const IO002_HandleType* Handle,IO002_InputModeType Mode);
-%rename ("pin_low") IO002_EnableOutputDriver(const IO002_HandleType* Handle,IO002_OutputModeType Mode);
+%rename ("DisableOutputDriver") IO002_DisableOutputDriver(const IO002_HandleType* Handle,IO002_InputModeType Mode);
+%rename ("EnableOutputDriver") IO002_EnableOutputDriver(const IO002_HandleType* Handle,IO002_OutputModeType Mode);
 %rename ("Handle0") IO002_Handle0;
 
-extern const IO002_HandleType IO002_Handle0 = {
-  .PortNr   = 3 , /* Mapped Port */
-  .PortPin  = 9,   /* Mapped Pin */
-  .PortRegs = (PORTS_TypeDef*)PORT3_BASE /* Port Base Address*/		
-};
+extern const IO002_HandleType IO002_Handle0;
 
 /**
  *This data type describes the App Handle

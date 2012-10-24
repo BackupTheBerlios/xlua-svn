@@ -82,5 +82,7 @@ void SystemInit_DAVE3(void);
 #include "../../inc/FATFS003/FATFS003.h" 
 
 #include "../../inc/IO002/IO002.h" 
+
+#include "../../inc/TMPS001/TMPS001.h" 
       
 #endif  // ifndef _DAVE3_H_

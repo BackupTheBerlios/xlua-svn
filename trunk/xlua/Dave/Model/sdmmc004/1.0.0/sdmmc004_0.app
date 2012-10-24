@@ -372,7 +372,7 @@ This signal should be checked only when it is supported by the kit. </toolTipHel
     <requiredResource uriString="port/p/*/pad/*" uriType="LOCALTYPE"/>
   </consumed>
   <consumed xsi:type="ResourceModel:ProxyResource" name="Data0" URI="http://www.infineon.com/1.0.0/app/sdmmc004/0/data0_pin">
-    <downWardmappedList xsi:type="ResourceModel:ResourceGroup" href="../../P4/P4_4.dd#//@provided.0"/>
+    <downWardmappedList xsi:type="ResourceModel:ResourceGroup" href="../../P4/P4_4.dd#//@provided.2"/>
     <requiredResource uriString="port/p/*/pad/*" uriType="LOCALTYPE"/>
   </consumed>
   <consumed xsi:type="ResourceModel:ProxyResource" name="Data1" evalFunction="function resourceCondition() {&#xD;&#xA;                    var Msgs = Solver.getResource(&quot;index&quot;);&#xD;&#xA;                    var No = Solver.getIntValue(Msgs);&#xD;&#xA;                    if (No == 1) {&#xD;&#xA;                        return true; &#xD;&#xA;                    }&#xD;&#xA;                    return false;       &#xD;&#xA;&#xD;&#xA;                }" URI="http://www.infineon.com/1.0.0/app/sdmmc004/0/data1_pin">
@@ -384,11 +384,10 @@ This signal should be checked only when it is supported by the kit. </toolTipHel
     <requiredResource uriString="port/p/*/pad/*" uriType="LOCALTYPE"/>
   </consumed>
   <consumed xsi:type="ResourceModel:ProxyResource" name="Data3" evalFunction="function resourceCondition() {&#xD;&#xA;                    var Msgs = Solver.getResource(&quot;index&quot;);&#xD;&#xA;                    var No = Solver.getIntValue(Msgs);&#xD;&#xA;                    if (No == 1) {&#xD;&#xA;                        return true; &#xD;&#xA;                    } &#xD;&#xA;                    return false;&#xD;&#xA;&#xD;&#xA;                }" URI="http://www.infineon.com/1.0.0/app/sdmmc004/0/data3_pin">
-    <downWardmappedList xsi:type="ResourceModel:ResourceGroup" href="../../P4/P4_4.dd#//@provided.2"/>
+    <downWardmappedList xsi:type="ResourceModel:ResourceGroup" href="../../P4/P4_4.dd#//@provided.0"/>
     <requiredResource uriString="port/p/*/pad/*" uriType="LOCALTYPE"/>
   </consumed>
   <consumed xsi:type="ResourceModel:ProxyResource" name="Command" URI="http://www.infineon.com/1.0.0/app/sdmmc004/0/cmd_pin">
-    <downWardmappedList xsi:type="ResourceModel:ResourceGroup" href="../../P3/P3_3.dd#//@provided.7"/>
     <downWardmappedList xsi:type="ResourceModel:ResourceGroup" href="../../P3/P3_3.dd#//@provided.7"/>
     <requiredResource uriString="port/p/*/pad/*" uriType="LOCALTYPE"/>
   </consumed>
@@ -400,7 +399,7 @@ This signal should be checked only when it is supported by the kit. </toolTipHel
   </consumed>
   <consumed xsi:type="ResourceModel:ProxyResource" name="Clock" URI="http://www.infineon.com/1.0.0/app/sdmmc004/0/clk_pin">
     <downWardmappedList xsi:type="ResourceModel:SignalDeclaration" href="../../P3/P3_3.dd#//@provided.9"/>
-    <downWardmappedList xsi:type="ResourceModel:ResourceGroup" href="../../P3/P3_3.dd#//@provided.10"/>
+    <downWardmappedList xsi:type="ResourceModel:ResourceGroup" href="../../P3/P3_3.dd#//@provided.8"/>
     <requiredResource uriString="port/p/*/pad/*" uriType="LOCALTYPE"/>
   </consumed>
   <consumed xsi:type="ResourceModel:ProxyResource" URI="http://www.infineon.com/1.0.0/app/sdmmc004/0/clkapp">
@@ -628,15 +627,14 @@ This signal should be checked only when it is supported by the kit. </toolTipHel
   <consumed xsi:type="ResourceModel:ProxyResource" URI="http://www.infineon.com/1.0.0/app/sdmmc004/0/sdcd_pin/pad" isSystemDefined="true"/>
   <consumed xsi:type="ResourceModel:ProxyResource" URI="http://www.infineon.com/1.0.0/app/sdmmc004/0/sdwc_pin/pad" isSystemDefined="true"/>
   <consumed xsi:type="ResourceModel:ProxyResource" URI="http://www.infineon.com/1.0.0/app/sdmmc004/0/clk_pin/pad" isSystemDefined="true">
-    <downWardmappedList xsi:type="ResourceModel:ResourceGroup" href="../../P3/P3_3.dd#//@provided.10"/>
-    <downWardmappedList xsi:type="ResourceModel:SignalDeclaration" href="../../P3/P3_3.dd#//@provided.8"/>
-  </consumed>
-  <consumed xsi:type="ResourceModel:ProxyResource" URI="http://www.infineon.com/1.0.0/app/sdmmc004/0/cmd_pin/pad" isSystemDefined="true">
-    <downWardmappedList xsi:type="ResourceModel:SignalDeclaration" href="../../P3/P3_3.dd#//@provided.8"/>
+    <downWardmappedList xsi:type="ResourceModel:BitField" href="../../P3/P3_3.dd#//@provided.10"/>
     <downWardmappedList xsi:type="ResourceModel:SignalDeclaration" href="../../P3/P3_3.dd#//@provided.9"/>
   </consumed>
+  <consumed xsi:type="ResourceModel:ProxyResource" URI="http://www.infineon.com/1.0.0/app/sdmmc004/0/cmd_pin/pad" isSystemDefined="true">
+    <downWardmappedList xsi:type="ResourceModel:ResourceGroup" href="../../P3/P3_3.dd#//@provided.8"/>
+  </consumed>
   <consumed xsi:type="ResourceModel:ProxyResource" URI="http://www.infineon.com/1.0.0/app/sdmmc004/0/data0_pin/pad" isSystemDefined="true">
-    <downWardmappedList xsi:type="ResourceModel:SignalDeclaration" href="../../P4/P4_4.dd#//@provided.1"/>
+    <downWardmappedList xsi:type="ResourceModel:SignalDeclaration" href="../../P4/P4_4.dd#//@provided.3"/>
   </consumed>
   <consumed xsi:type="ResourceModel:ProxyResource" URI="http://www.infineon.com/1.0.0/app/sdmmc004/0/data1_pin/pad" isSystemDefined="true">
     <downWardmappedList xsi:type="ResourceModel:SignalDeclaration" href="../../P1/P1_1.dd#//@provided.3"/>
@@ -645,7 +643,7 @@ This signal should be checked only when it is supported by the kit. </toolTipHel
     <downWardmappedList xsi:type="ResourceModel:SignalDeclaration" href="../../P1/P1_1.dd#//@provided.1"/>
   </consumed>
   <consumed xsi:type="ResourceModel:ProxyResource" URI="http://www.infineon.com/1.0.0/app/sdmmc004/0/data3_pin/pad" isSystemDefined="true">
-    <downWardmappedList xsi:type="ResourceModel:SignalDeclaration" href="../../P4/P4_4.dd#//@provided.3"/>
+    <downWardmappedList xsi:type="ResourceModel:SignalDeclaration" href="../../P4/P4_4.dd#//@provided.1"/>
   </consumed>
   <consumed xsi:type="ResourceModel:ProxyResource" URI="http://www.infineon.com/1.0.0/app/sdmmc004/0/led_pin/pad" isSystemDefined="true"/>
   <consumed xsi:type="ResourceModel:ProxyResource" URI="http://www.infineon.com/1.0.0/app/sdmmc004/0/bus_power_pin/pad" isSystemDefined="true"/>

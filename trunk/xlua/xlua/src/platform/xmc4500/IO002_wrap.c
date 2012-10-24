@@ -2046,7 +2046,7 @@ fail:
 }
 
 
-static int _wrap_pin_high(lua_State* L) {
+static int _wrap_DisableOutputDriver(lua_State* L) {
   int SWIG_arg = 0;
   IO002_HandleType *arg1 = (IO002_HandleType *) 0 ;
   IO002_InputModeType arg2 ;
@@ -2056,7 +2056,7 @@ static int _wrap_pin_high(lua_State* L) {
   if(!lua_isnumber(L,2)) SWIG_fail_arg("IO002_DisableOutputDriver",2,"IO002_InputModeType");
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_IO002_HandleType,0))){
-    SWIG_fail_ptr("pin_high",1,SWIGTYPE_p_IO002_HandleType);
+    SWIG_fail_ptr("DisableOutputDriver",1,SWIGTYPE_p_IO002_HandleType);
   }
   
   arg2 = (IO002_InputModeType)(int)lua_tonumber(L, 2);
@@ -2072,7 +2072,7 @@ fail:
 }
 
 
-static int _wrap_pin_low(lua_State* L) {
+static int _wrap_EnableOutputDriver(lua_State* L) {
   int SWIG_arg = 0;
   IO002_HandleType *arg1 = (IO002_HandleType *) 0 ;
   IO002_OutputModeType arg2 ;
@@ -2082,7 +2082,7 @@ static int _wrap_pin_low(lua_State* L) {
   if(!lua_isnumber(L,2)) SWIG_fail_arg("IO002_EnableOutputDriver",2,"IO002_OutputModeType");
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_IO002_HandleType,0))){
-    SWIG_fail_ptr("pin_low",1,SWIGTYPE_p_IO002_HandleType);
+    SWIG_fail_ptr("EnableOutputDriver",1,SWIGTYPE_p_IO002_HandleType);
   }
   
   arg2 = (IO002_OutputModeType)(int)lua_tonumber(L, 2);
@@ -2112,8 +2112,8 @@ const LUA_REG_TYPE mt[];
 const LUA_REG_TYPE swig_commands[] = {
     {LSTRKEY("IO002_HandleType"), LFUNCVAL(_wrap_new_IO002_HandleType)},
     {LSTRKEY("IO002_Init"), LFUNCVAL(_wrap_IO002_Init)},
-    {LSTRKEY("pin_high"), LFUNCVAL(_wrap_pin_high)},
-    {LSTRKEY("pin_low"), LFUNCVAL(_wrap_pin_low)},
+    {LSTRKEY("DisableOutputDriver"), LFUNCVAL(_wrap_DisableOutputDriver)},
+    {LSTRKEY("EnableOutputDriver"), LFUNCVAL(_wrap_EnableOutputDriver)},
     {LSTRKEY("const"), LROVAL(swig_constants)},
     {LSTRKEY("__metatable"), LROVAL(mt)},
     {LNILKEY, LNILVAL}
