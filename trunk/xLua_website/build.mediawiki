@@ -3,9 +3,26 @@
 == Requirements ==
 
 # Install latest Dave&trade;3 [http://dave.infineon.com link]
-# Download project from the [http://developer.berlios.de/svn/?group_id=13007 Berlios SVN]. Remember that you can do this from Dave&trade;3 by installing a subversion
+# You the following choices to download a project:
+## Download one of configured project directly from [https://developer.berlios.de/project/showfiles.php?group_id=13007 download files].
+## Import project directly from [http://developer.berlios.de/svn/?group_id=13007 Berlios SVN]. ''Remember that you can do this from Dave&trade;3 by installing a subversion''
+
+== Configuration ==
+
+The project in the file repository and the Lua in the trunk of svn are already working and there is no need to configure them in the most of cases.
+However it is possible to customize the project by changing the following settings of 
+# RTOS ''(not covered here see Dave(tm) RTOS001 app documentation)''
+# [[Changing xLua settings | xlua_settings]]
+# [[add_apps | Adding more apps and/or C libraries and interfacing them using SWIG]] 
+
 
 == Compile & Download ==
 
-# Press Generate and Compile
+# Press Generate Code
+# Due to a bug of Dave(tm)3 after code generation the project ''forgets'' the include paths. It is required to them to the project following the bewlo method:
+## Select Properties-> C/C++ General -> Paths & Symbol
+## Press Inport settings
+## Select File :<todo>
+# Compile it
+# Download and run. 
 

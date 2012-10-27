@@ -1,33 +1,9 @@
 = xLua =
-==Introduction==
-xLua is a fork of the project [http://www.eluaproject.net/ eLua]
-
-We would like to foster the adoption of Lua in the Industrial embedded applications.
-
-We performed the following modification:
-
-----
-'''Removed almost all peripheral modules'''
-
-: User can interface peripheral specific libraries by [http://www.swig.org Swig]
-: (extended by Raman Gopalan to support the specific implementation of eLua xLua).
-----
-'''Integration with a RTOS''' 
-
-: We think that the most typical use case for Lua is safe execution of user code not interfering with real time process.
-: For this reason xLua is executed in lower priority thread of a RTOS in other case a compliant CMSIS RTOS (in our case ARM RTX).
-----
-'''Implementation for Infineon XMC4500'''
-
-: We ported to Infineon XMC4500 using Dave(tm)3 IDE. However the code is highly portable and we used Dave(tm)3 
-: just to generate the low level drivers.
 
 
+[http://developer.berlios.de/projects/xlua/ Downloads & Developer website ]
 
-
-== Index ==
-
-[http://developer.berlios.de/projects/xlua/ Developer website ]
+[[introduction | Introduction]]
 
 [[build | How to compile and install xLua]]
 
