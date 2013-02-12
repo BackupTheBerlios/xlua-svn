@@ -1,0 +1,1547 @@
+/**
+@ingroup RTC001_Legal
+@{
+\page RTC001_legalpage Copyright and Licensing Information
+Copyright (c) 2011, Infineon Technologies AG
+All rights reserved. 
+
+Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met: 
+Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer. 
+Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution. 
+Neither the name of the copyright holders nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+To improve the quality of the software, users are encouraged to share modifications, enhancements or bug fixes with Infineon Technologies AG (dave@infineon.com).
+
+@}
+@ingroup RTC001_intro
+@{
+\page RTC001_intropage Introduction 
+<p>
+Real-time clock (RTC) is a clock that keeps track of the current time.
+ The RTC is capable of running from an alternate source of power, so it 
+ can continue to keep time while the primary source of power is off or 
+ unavailable. The timer remains operational when the core domain is in 
+ power-down. The kernel part of the RTC keeps running as long as the 
+ hibernate domain is powered with an alternate supply source.
+</p>
+<div style="text-align: center;"><IMG SRC="..\rtc_new0.PNG" border=2 bordercolor=#336699 title="RTC Block Diagram"></div>
+
+<p>
+RTC001  App  provides   APIs to  Enable/Disable the RTC module and also 
+provides timer & alarm interfaces for other Apps. The Alarm and Periodic Timer 
+Interrupts can be enabled from the App UI.
+</p>
+
+\section RTC001_scopesec Scope
+App provides timer as well as alarm interfaces for top level Apps. 
+The periodic timer events and alarm event may be used as wake up source for Hibernate mode.
+
+\section Abbreviation
+<OL>
+<LI>API: Application Program Interface</LI>
+<LI>App: DAVE3 Application</LI>
+<LI>GUI: Graphical User Interface</LI>
+<LI>SW: Software</LI>
+<LI>RTC: Real Time Clock</LI>
+</OL>
+
+\section Reference
+Device Reference Manual.
+
+\section Limitation
+NA
+
+@}
+*/
+
+/**
+@ingroup RTC001_overview
+@{
+\page RTC001_overviewpage Overview
+
+The use cases of RTC001 App APIs  are as below.
+<p>
+The user can enable/disable the RTC by calling RTC001_Enable() & RTC001_Disable() APIs.
+ App allows the user to configure the current date and time through the UI provided or can be 
+ configured at runtime by using RTC001_Clock_SetTime() & RTC001_Clock_GetTime() APIs. Also App provides
+ user to configure alarm through UI or at run time using API RTC001_ConfigAlarm()
+</p> 
+<p>
+The configurations done in hibernate mode include the enabling of alarm event, periodic second event,
+periodic minute event, periodic hour event, periodic month event and periodic year event.
+</p>
+<p>
+App also provides UI to configure Interrupt handler for both alarm and RTC Periodic Timer interrupts. 
+</p>
+<p>
+The App provides option for the user to manage the trigger either using NVIC_SCU001 App or EXCP001 App.
+In the case of NVIC_SCU001 App the user has to define the timer and alarm handlers and configure the same in RTC001 App.
+While in the case of EXCP001 App, handling of NMI shall be enabled in EXCP001 app.
+</p>
+<br>
+<table border=2 bordercolor=#336699 align=center cellpadding=0 cellspacing=0 width=357>
+ <tr height=31 style='mso-height-source:userset;height:23.25pt'>
+  <td colspan=3 height=31 class=xl6721682 width=357 style='border-right:1.0pt solid black;
+  height:23.25pt;width:269pt'><b>App Memory Requirements</b></td>
+ </tr>
+ <tr height=52 style='mso-height-source:userset;height:39.0pt;mso-yfti-irow:
+  1'>
+  <td height=52 class=xl6321682 width=109 style='height:39.0pt;width:82pt'><b><i>App
+  Configuration</i></b></td>
+  <td class=xl6421682 width=126 style='width:95pt'><b><i>Code Size (Bytes)</i></b></td>
+  <td class=xl6421682 width=122 style='width:92pt'><b><i>RAM Size (Bytes)</i></b></td>
+ </tr>
+ <tr height=48 style='mso-height-source:userset;height:36.0pt;mso-yfti-irow:
+  2'>
+  <td height=48 class=xl6521682 width=109 style='height:36.0pt;width:82pt'>App
+  default configuration</td>
+  <td class=xl6621682 align=right width=126 style='width:95pt'>3300</td>
+  <td class=xl6621682 align=right width=122 style='width:92pt'>20</td>
+ </tr>
+</table>
+<br>
+
+@}
+
+@ingroup RTC001_filestructure File Structure
+@{
+\page RTC001_filestructurepage File Structure
+Following files are generated : 
+<OL>
+<LI>RTC001.c:     This file implements the RTC001 Configuration. </LI>
+<LI>RTC001.h:     This file exposes the interfaces to use this App. </LI>
+<LI>RTC001_Conf.h: This file exposes the interfaces to use this App. </LI>
+<LI>RTC001_Conf.c: This file defines the App handle instances.  </LI>
+</OL>
+@}
+
+@ingroup RTC001_appconfigdoc App Configuration Documentation
+@{
+
+\page RTC001_appconfigdocpage App Documentation
+<br>
+The diagram shows the RTC Configuration for the App.
+
+<img src="..\RTC001_1.png" title="GUI for RTC001 App" />
+
+
+
+<br>
+The table depicts the UI used for RTC configuration.
+
+
+<table border=0 cellpadding=0 cellspacing=0 width=949 class=xl6318425
+ style='border-collapse:collapse;table-layout:fixed;width:712pt'>
+ 
+ 
+ 
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl6318425 width=344 style='height:15.0pt;width:258pt;
+  font-size:11.0pt;color:white;font-weight:700;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border-top:none;border-right:
+  .5pt solid white;border-bottom:1.5pt solid white;border-left:none;background:
+  #4F81BD;mso-pattern:#4F81BD none'>Name</td>
+  <td class=xl6318425 width=297 style='width:223pt;font-size:11.0pt;color:white;
+  font-weight:700;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:1.5pt solid white;border-left:none;background:#4F81BD;
+  mso-pattern:#4F81BD none'>URI</td>
+  <td class=xl6318425 width=308 style='width:231pt;font-size:11.0pt;color:white;
+  font-weight:700;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  1.5pt solid white;border-left:none;background:#4F81BD;mso-pattern:#4F81BD none'>Description</td>
+ </tr>
+ <tr height=60 style='height:45.0pt'>
+  <td height=60 class=xl6318425 width=344 style='height:45.0pt;width:258pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:none;background:
+  #B8CCE4;mso-pattern:#B8CCE4 none'>RTC Enable</td>
+  <td class=xl6318425 width=297 style='width:223pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>app/rtc001/0/RTC001_erwEnableRTC</td>
+  <td class=xl6318425 width=308 style='width:231pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>Enables
+  the RTC module. Required for RTC to work. If this is enabled, hibernate
+  domain is enabled in the CLK001 App.</td>
+ </tr>
+ <tr height=140 style='height:105.0pt'>
+  <td height=140 class=xl6318425 width=344 style='height:105.0pt;width:258pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:none;background:
+  #DBE5F1;mso-pattern:#DBE5F1 none'>Enable Time initialization once</td>
+  <td class=xl6318425 width=297 style='width:223pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>app/rtc001/0/RTC001_erwTimeInitialisation</td>
+  <td class=xl6318425 width=308 style='width:231pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>If
+  this flag is checked during initialization of RTC then the time and date will
+  be written only once; any update of
+  time and date will be ineffective even after power off or reset as long as
+  RTC runs from the battery. The RTC has to be disabled in order to reprogram
+  the initial time</td>
+ </tr>
+ <tr height=60 style='height:45.0pt'>
+  <td height=60 class=xl6318425 width=344 style='height:45.0pt;width:258pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:none;background:
+  #B8CCE4;mso-pattern:#B8CCE4 none'>User configured calendar date value</td>
+  <td class=xl6318425 width=297 style='width:223pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>app/rtc001/0/RTC001_srwDateValue</td>
+  <td class=xl6318425 width=308 style='width:231pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>Text
+  box to enter date value for initial RTC time. The value should be entered as
+  mm/dd/yyyy.</td>
+ </tr>
+ <tr height=40 style='height:30.0pt'>
+  <td height=40 class=xl6318425 width=344 style='height:30.0pt;width:258pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:none;background:
+  #DBE5F1;mso-pattern:#DBE5F1 none'>User configured clock time value</td>
+  <td class=xl6318425 width=297 style='width:223pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>app/rtc001/0/RTC001_srwTimeValue</td>
+  <td class=xl6318425 width=308 style='width:231pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>Text
+  box to enter time value for initial RTC time. The value should be entered as
+  hh:mm:ss</td>
+ </tr>
+ <tr height=140 style='height:105.0pt'>
+  <td height=140 class=xl6318425 width=344 style='height:105.0pt;width:258pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:none;background:
+  #B8CCE4;mso-pattern:#B8CCE4 none'>Event Trigger for Timer</td>
+  <td class=xl6318425 width=297 style='width:223pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>app/rtc001/0/RTC001_Eventtrigger_timer</td>
+  <td class=xl6318425 width=308 style='width:231pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>Selects
+  if the RTC Periodic timer event generates an SCU interrupt or an NMI. If it
+  is SCU interrupt then the signal shall be connected NVIC_SCU001 and user
+  needs to define the interrupt handler. In the latter case, it shall be
+  connected to EXCP001 app, and NMI handling shall be enabled in EXCP001 App</td>
+ </tr>
+ <tr height=60 style='height:45.0pt'>
+  <td height=60 class=xl6318425 width=344 style='height:45.0pt;width:258pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:none;background:
+  #DBE5F1;mso-pattern:#DBE5F1 none'>Timer Status Flag</td>
+  <td class=xl6318425 width=297 style='width:223pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>app/rtc001/0/RTC001_eroString</td>
+  <td class=xl6318425 width=308 style='width:231pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>Used
+  for giving message on how the Periodic Timer event is handled based on the
+  &quot;Event Trigger for Timer&quot; parameter.</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl6318425 width=344 style='height:15.0pt;width:258pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:none;background:
+  #B8CCE4;mso-pattern:#B8CCE4 none'>Enable periodic seconds interrupt</td>
+  <td class=xl6318425 width=297 style='width:223pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>app/rtc001/0/RTC001_erwPeriodicSecInter</td>
+  <td class=xl6318425 width=308 style='width:231pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>Enables
+  periodic seconds interrupt</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl6318425 width=344 style='height:15.0pt;width:258pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:none;background:
+  #DBE5F1;mso-pattern:#DBE5F1 none'>Enable periodic minutes interrupt</td>
+  <td class=xl6318425 width=297 style='width:223pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>app/rtc001/0/RTC001_erwPeriodicMinInter</td>
+  <td class=xl6318425 width=308 style='width:231pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>Enables
+  periodic minutes interrupt</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl6318425 width=344 style='height:15.0pt;width:258pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:none;background:
+  #B8CCE4;mso-pattern:#B8CCE4 none'>Enable periodic hours interrupt</td>
+  <td class=xl6318425 width=297 style='width:223pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>app/rtc001/0/RTC001_erwPeriodicHrsInter</td>
+  <td class=xl6318425 width=308 style='width:231pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>Enables
+  periodic hours interrupt</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl6318425 width=344 style='height:15.0pt;width:258pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:none;background:
+  #DBE5F1;mso-pattern:#DBE5F1 none'>Enable periodic days interrupt</td>
+  <td class=xl6318425 width=297 style='width:223pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>app/rtc001/0/RTC001_erwPeriodicDaysInter</td>
+  <td class=xl6318425 width=308 style='width:231pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>Enables
+  periodic days interrupt</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl6318425 width=344 style='height:15.0pt;width:258pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:none;background:
+  #B8CCE4;mso-pattern:#B8CCE4 none'>Enable periodic months interrupt</td>
+  <td class=xl6318425 width=297 style='width:223pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>app/rtc001/0/RTC001_erwPeriodicMonths</td>
+  <td class=xl6318425 width=308 style='width:231pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>Enables
+  periodic months interrupt</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl6318425 width=344 style='height:15.0pt;width:258pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:none;background:
+  #DBE5F1;mso-pattern:#DBE5F1 none'>Enable periodic years interrupt</td>
+  <td class=xl6318425 width=297 style='width:223pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>app/rtc001/0/RTC001_erwPeriodicYears</td>
+  <td class=xl6318425 width=308 style='width:231pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>Enables
+  periodic years interrupt</td>
+ </tr>
+ <tr height=60 style='height:45.0pt'>
+  <td height=60 class=xl6318425 width=344 style='height:45.0pt;width:258pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:none;background:
+  #B8CCE4;mso-pattern:#B8CCE4 none'>User defined interrupt handler for Periodic
+  interrupts</td>
+  <td class=xl6318425 width=297 style='width:223pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>app/rtc001/0/RTC001_srwTimerUserFunction</td>
+  <td class=xl6318425 width=308 style='width:231pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>If
+  the periodic timer event is used for SCU interrupt, then the user defined
+  interrupt handler name shall be entered here.</td>
+ </tr>
+ <tr height=80 style='height:60.0pt'>
+  <td height=80 class=xl6318425 width=344 style='height:60.0pt;width:258pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:none;background:
+  #DBE5F1;mso-pattern:#DBE5F1 none'>Enable alarm interrupt</td>
+  <td class=xl6318425 width=297 style='width:223pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>app/rtc001/0/RTC001_erwAlarmIntrptEna</td>
+  <td class=xl6318425 width=308 style='width:231pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>Enables
+  alarm interrupt. RTC module generate and alarm event when the current date
+  and time matches the time in the alarm date and time registers.</td>
+ </tr>
+ <tr height=60 style='height:45.0pt'>
+  <td height=60 class=xl6318425 width=344 style='height:45.0pt;width:258pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:none;background:
+  #B8CCE4;mso-pattern:#B8CCE4 none'>User configured alarm date value</td>
+  <td class=xl6318425 width=297 style='width:223pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>app/rtc001/0/RTC001_srwAlarmDate</td>
+  <td class=xl6318425 width=308 style='width:231pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>Text
+  box to enter date value for alarm configuration The value should be entered
+  as mm/dd/yyyy.</td>
+ </tr>
+ <tr height=60 style='height:45.0pt'>
+  <td height=60 class=xl6318425 width=344 style='height:45.0pt;width:258pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:none;background:
+  #DBE5F1;mso-pattern:#DBE5F1 none'>User configured alarm time value</td>
+  <td class=xl6318425 width=297 style='width:223pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>app/rtc001/0/RTC001_srwAlarmTime</td>
+  <td class=xl6318425 width=308 style='width:231pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>Text
+  box to enter time value for alarm configuration. The value should be entered
+  as hh:mm:ss</td>
+ </tr>
+ <tr height=121 style='mso-height-source:userset;height:90.75pt'>
+  <td height=121 class=xl6318425 width=344 style='height:90.75pt;width:258pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:none;background:
+  #B8CCE4;mso-pattern:#B8CCE4 none'>Event Trigger for Alarm</td>
+  <td class=xl6318425 width=297 style='width:223pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>app/rtc001/0/RTC001_Eventtrigger_Alarm</td>
+  <td class=xl6318425 width=308 style='width:231pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>Selects
+  if the RTC alarm event generates an SCU interrupt or an NMI. If it is SCU
+  interrupt then the signal shall be connected NVIC_SCU001 and user needs to
+  define the interrupt handler. In the latter case, it shall be connected to
+  EXCP001 app and NMI handling shall be enabled in EXCP001 app.</td>
+ </tr>
+ <tr height=60 style='height:45.0pt'>
+  <td height=60 class=xl6318425 width=344 style='height:45.0pt;width:258pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:none;background:
+  #DBE5F1;mso-pattern:#DBE5F1 none'>Alarm Status Flag</td>
+  <td class=xl6318425 width=297 style='width:223pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>app/rtc001/0/RTC001_eroString1</td>
+  <td class=xl6318425 width=308 style='width:231pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>Used
+  for giving message on how the Periodic Timer event is handled based on the
+  &quot;Event Trigger for Alarm&quot; parameter.</td>
+ </tr>
+ <tr height=60 style='height:45.0pt'>
+  <td height=60 class=xl6318425 width=344 style='height:45.0pt;width:258pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border-top:none;border-right:
+  .5pt solid white;border-bottom:none;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>User defined interrupt handler for Alarm interrupts</td>
+  <td class=xl6318425 width=297 style='width:223pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:none;border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>app/rtc001/0/RTC001_srwAlarmUserFunction</td>
+  <td class=xl6318425 width=308 style='width:231pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;background:#B8CCE4;mso-pattern:#B8CCE4 none'>If the
+  alarm event is used for SCU interrupt, then the user defined interrupt
+  handler name shall be entered here.</td>
+ </tr>
+
+</table>
+
+
+<br>
+The diagram shows the Hibernate Configuration in the RTC App.
+<img src="..\RTC001_2.png" title="GUI for RTC001 App" />
+
+<br>
+The table depicts the UI used for Hibernate mode related configuration.
+
+<table border=0 cellpadding=0 cellspacing=0 width=809 class=xl6321171
+ style='border-collapse:collapse;table-layout:fixed;width:607pt'>
+ 
+ 
+ 
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl6321171 width=319 style='height:15.0pt;width:239pt'>Name</td>
+  <td class=xl6321171 width=194 style='width:146pt'>URI</td>
+  <td class=xl6321171 width=296 style='width:222pt'>Description</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl6321171 width=319 style='height:15.0pt;width:239pt;
+  font-size:11.0pt;color:white;font-weight:700;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border-top:none;border-right:
+  .5pt solid white;border-bottom:1.5pt solid white;border-left:none;background:
+  #4F81BD;mso-pattern:#4F81BD none'>Column1</td>
+  <td class=xl6321171 width=194 style='width:146pt;font-size:11.0pt;color:white;
+  font-weight:700;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:1.5pt solid white;border-left:none;background:#4F81BD;
+  mso-pattern:#4F81BD none'>Column2</td>
+  <td class=xl6321171 width=296 style='width:222pt;font-size:11.0pt;color:white;
+  font-weight:700;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  1.5pt solid white;border-left:none;background:#4F81BD;mso-pattern:#4F81BD none'>Column3</td>
+ </tr>
+ <tr height=40 style='height:30.0pt'>
+  <td height=40 class=xl6321171 width=319 style='height:30.0pt;width:239pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:none;background:
+  #B8CCE4;mso-pattern:#B8CCE4 none'>Enable alarm event in hibernate mode</td>
+  <td class=xl6321171 width=194 style='width:146pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>RTC001_erwTimerAlarm</td>
+  <td class=xl6321171 width=296 style='width:222pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>Enables
+  wake up from Hibernate mode on an RTC alarm event</td>
+ </tr>
+ <tr height=40 style='height:30.0pt'>
+  <td height=40 class=xl6321171 width=319 style='height:30.0pt;width:239pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:none;background:
+  #DBE5F1;mso-pattern:#DBE5F1 none'>Enable periodic seconds event in hibernate
+  mode</td>
+  <td class=xl6321171 width=194 style='width:146pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>RTC001_erwEnaSecComp</td>
+  <td class=xl6321171 width=296 style='width:222pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>Enables
+  wake up from Hibernate mode on an RTC periodic seconds event</td>
+ </tr>
+ <tr height=40 style='height:30.0pt'>
+  <td height=40 class=xl6321171 width=319 style='height:30.0pt;width:239pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:none;background:
+  #B8CCE4;mso-pattern:#B8CCE4 none'>Enable periodic minutes event in hibernate
+  mode</td>
+  <td class=xl6321171 width=194 style='width:146pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>RTC001_erwEnaMinComp</td>
+  <td class=xl6321171 width=296 style='width:222pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>Enables
+  wake up from Hibernate mode on an RTC periodic minutes event</td>
+ </tr>
+ <tr height=40 style='height:30.0pt'>
+  <td height=40 class=xl6321171 width=319 style='height:30.0pt;width:239pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:none;background:
+  #DBE5F1;mso-pattern:#DBE5F1 none'>Enable periodic hours event in hibernate
+  mode</td>
+  <td class=xl6321171 width=194 style='width:146pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>RTC001_erwEnaHrsComp</td>
+  <td class=xl6321171 width=296 style='width:222pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>Enables
+  wake up from Hibernate mode on an RTC periodic hours event</td>
+ </tr>
+ <tr height=40 style='height:30.0pt'>
+  <td height=40 class=xl6321171 width=319 style='height:30.0pt;width:239pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:none;background:
+  #B8CCE4;mso-pattern:#B8CCE4 none'>Enable periodic days event in hibernate
+  mode</td>
+  <td class=xl6321171 width=194 style='width:146pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>RTC001_erwEnaDaysComp</td>
+  <td class=xl6321171 width=296 style='width:222pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>Enables
+  wake up from Hibernate mode on an RTC periodic days</td>
+ </tr>
+ <tr height=40 style='height:30.0pt'>
+  <td height=40 class=xl6321171 width=319 style='height:30.0pt;width:239pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:none;background:
+  #DBE5F1;mso-pattern:#DBE5F1 none'>Enable periodic months event in hibernate
+  mode</td>
+  <td class=xl6321171 width=194 style='width:146pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>RTC001_erwEnaMonthsComp</td>
+  <td class=xl6321171 width=296 style='width:222pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>Enables
+  wake up from Hibernate mode on an RTC periodic months event</td>
+ </tr>
+ <tr height=40 style='height:30.0pt'>
+  <td height=40 class=xl6321171 width=319 style='height:30.0pt;width:239pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border-top:none;border-right:
+  .5pt solid white;border-bottom:none;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>Enable periodic years event in hibernate mode</td>
+  <td class=xl6321171 width=194 style='width:146pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:none;border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>RTC001_erwEnaYearsComp</td>
+  <td class=xl6321171 width=296 style='width:222pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;background:#B8CCE4;mso-pattern:#B8CCE4 none'>Enables
+  wake up from Hibernate mode on an RTC periodic years event</td>
+ </tr>
+
+</table>
+
+<BR><P ALIGN="LEFT"><B>Note : </B> Above UI parameters are used for RTC001 table generation.</p>
+
+@}
+*/
+
+/**
+@ingroup RTC001_publishedparams
+@{
+
+\page Note NOTE: URIs given in tables below are for App developer use. App developer can make use of these URIs to create top level apps by consuming this app. 
+
+\section RTC001_Virtual_Signal Virtual Signals
+<br>
+<table border=2 bordercolor=#336699 cellpadding=0 cellspacing=0 width=780>
+
+ <tr height=46 style='mso-height-source:userset;height:34.5pt'>
+  <td height=46 class=xl6328421 width=144 style='height:34.5pt;width:108pt;
+  font-size:11.0pt;color:white;font-weight:700;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border:.5pt solid black;
+  background:#4F81BD;mso-pattern:#4F81BD none'>Name</td>
+  <td class=xl6328421 width=204 style='border-left:none;width:153pt;font-size:
+  11.0pt;color:white;font-weight:700;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border:.5pt solid black;
+  background:#4F81BD;mso-pattern:#4F81BD none'>URI</td>
+  <td class=xl6428421 width=130 style='border-left:none;width:98pt;font-size:
+  11.0pt;color:white;font-weight:700;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border-top:.5pt solid black;
+  border-right:none;border-bottom:.5pt solid black;border-left:.5pt solid black;
+  background:#4F81BD;mso-pattern:#4F81BD none'>Hardware Signal</td>
+  <td class=xl6628421 width=136 style='width:102pt;font-size:11.0pt;color:white;
+  font-weight:700;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid windowtext;border-left:.5pt solid windowtext;background:#4F81BD;
+  mso-pattern:#4F81BD none'>Description</td>
+  <td class=xl6628421 width=84 style='width:63pt;font-size:11.0pt;color:white;
+  font-weight:700;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid windowtext;border-left:.5pt solid windowtext;background:#4F81BD;
+  mso-pattern:#4F81BD none'>UI Dependency</td>
+  <td class=xl6628421 width=82 style='width:62pt;font-size:11.0pt;color:white;
+  font-weight:700;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid windowtext;border-left:.5pt solid windowtext;background:#4F81BD;
+  mso-pattern:#4F81BD none'>Connections</td>
+ </tr>
+ <tr height=25 style='mso-height-source:userset;height:18.75pt'>
+  <td height=25 class=xl1528421 style='height:18.75pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>Timer Interrupt</td>
+  <td class=xl1528421 style='font-size:11.0pt;color:black;font-weight:400;
+  text-decoration:none;text-underline-style:none;text-line-through:none;
+  font-family:Calibri;border-top:none;border-right:.5pt solid white;border-bottom:
+  .5pt solid white;border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>rtc/timer_int</td>
+  <td class=xl1528421 style='font-size:11.0pt;color:black;font-weight:400;
+  text-decoration:none;text-underline-style:none;text-line-through:none;
+  font-family:Calibri;border-top:none;border-right:.5pt solid white;border-bottom:
+  .5pt solid white;border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>TIMER_INT</td>
+  <td class=xl6528421 width=136 style='width:102pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>Timer Interrupt</td>
+  <td class=xl6528421 width=84 style='width:63pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>Yes</td>
+  <td class=xl6528421 width=82 style='width:62pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>None</td>
+ </tr>
+ <tr height=25 style='mso-height-source:userset;height:18.75pt'>
+  <td height=25 class=xl1528421 style='height:18.75pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>Alarm Interrupt</td>
+  <td class=xl1528421 style='font-size:11.0pt;color:black;font-weight:400;
+  text-decoration:none;text-underline-style:none;text-line-through:none;
+  font-family:Calibri;border-top:none;border-right:.5pt solid white;border-bottom:
+  .5pt solid white;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>rtc/alarm_int</td>
+  <td class=xl1528421 style='font-size:11.0pt;color:black;font-weight:400;
+  text-decoration:none;text-underline-style:none;text-line-through:none;
+  font-family:Calibri;border-top:none;border-right:.5pt solid white;border-bottom:
+  .5pt solid white;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>ALARM_INT</td>
+  <td class=xl6528421 width=136 style='width:102pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>Alarm interrupt</td>
+  <td class=xl6528421 width=84 style='width:63pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>Yes</td>
+  <td class=xl6528421 width=82 style='width:62pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>None</td>
+ </tr>
+ <tr height=25 style='mso-height-source:userset;height:18.75pt'>
+  <td height=25 class=xl1528421 style='height:18.75pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>GCU RTC Timer Event</td>
+  <td class=xl1528421 style='font-size:11.0pt;color:black;font-weight:400;
+  text-decoration:none;text-underline-style:none;text-line-through:none;
+  font-family:Calibri;border-top:none;border-right:.5pt solid white;border-bottom:
+  .5pt solid white;border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>gcu_intrtctick/rtc_timer_int</td>
+  <td class=xl1528421 style='font-size:11.0pt;color:black;font-weight:400;
+  text-decoration:none;text-underline-style:none;text-line-through:none;
+  font-family:Calibri;border-top:none;border-right:.5pt solid white;border-bottom:
+  .5pt solid white;border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>RTC_TIMER_INT</td>
+  <td class=xl6528421 width=136 style='width:102pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>GCU Timer Event</td>
+  <td class=xl6528421 width=84 style='width:63pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>Yes</td>
+  <td class=xl6528421 width=82 style='width:62pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>None</td>
+ </tr>
+ <tr height=25 style='mso-height-source:userset;height:18.75pt'>
+  <td height=25 class=xl1528421 style='height:18.75pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:none;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>GCU
+  RTC Alarm Event</td>
+  <td class=xl1528421 style='font-size:11.0pt;color:black;font-weight:400;
+  text-decoration:none;text-underline-style:none;text-line-through:none;
+  font-family:Calibri;border-top:none;border-right:.5pt solid white;border-bottom:
+  none;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>gcu_intrtcalarm/rtc_alarm_int</td>
+  <td class=xl1528421 style='font-size:11.0pt;color:black;font-weight:400;
+  text-decoration:none;text-underline-style:none;text-line-through:none;
+  font-family:Calibri;border-top:none;border-right:.5pt solid white;border-bottom:
+  none;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>RTC_ALARM_INT</td>
+  <td class=xl6528421 width=136 style='width:102pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:none;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>GCU
+  Alarm Event</td>
+  <td class=xl6528421 width=84 style='width:63pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:none;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>Yes</td>
+  <td class=xl6528421 width=82 style='width:62pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>None</td>
+ </tr>
+</table>
+
+
+
+\section RTC001_Consumed_Parameters Consumed Parameters
+<br>
+<table border=2 bordercolor=#336699 cellpadding=0 cellspacing=0 width=642>
+ <tr height=40 style='height:30.0pt'>
+  <td height=40 class=xl6525458 width=101 style='height:30.0pt;width:76pt;
+  font-size:11.0pt;color:white;font-weight:700;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border-top:.5pt solid windowtext;
+  border-right:none;border-bottom:.5pt solid windowtext;border-left:.5pt solid windowtext;
+  background:#4F81BD;mso-pattern:#4F81BD none'>Name</td>
+  <td class=xl6625458 width=148 style='width:111pt;font-size:11.0pt;color:white;
+  font-weight:700;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border:.5pt solid windowtext;background:#4F81BD;
+  mso-pattern:#4F81BD none'>URI</td>
+  <td class=xl6625458 width=264 style='border-left:none;width:198pt;font-size:
+  11.0pt;color:white;font-weight:700;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border:.5pt solid windowtext;
+  background:#4F81BD;mso-pattern:#4F81BD none'>Description</td>
+  <td class=xl6625458 width=129 style='border-left:none;width:97pt;font-size:
+  11.0pt;color:white;font-weight:700;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border:.5pt solid windowtext;
+  background:#4F81BD;mso-pattern:#4F81BD none'>Conditional Consumption</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl1525458 style='height:15.0pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>rtc</td>
+  <td class=xl6425458 style='font-size:11.0pt;color:blue;font-weight:400;
+  text-decoration:underline;text-underline-style:single;text-line-through:none;
+  font-family:Calibri;border-top:none;border-right:.5pt solid white;border-bottom:
+  .5pt solid white;border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>peripheral/rtc/0/*</td>
+  <td class=xl1525458 style='font-size:11.0pt;color:black;font-weight:400;
+  text-decoration:none;text-underline-style:none;text-line-through:none;
+  font-family:Calibri;border-top:none;border-right:.5pt solid white;border-bottom:
+  .5pt solid white;border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>This
+  is the consumption of rtc module</td>
+  <td class=xl6725458 width=129 style='width:97pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>Always
+  Consumed</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl1525458 style='height:15.0pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>scu</td>
+  <td class=xl6425458 style='font-size:11.0pt;color:blue;font-weight:400;
+  text-decoration:underline;text-underline-style:single;text-line-through:none;
+  font-family:Calibri;border-top:none;border-right:.5pt solid white;border-bottom:
+  .5pt solid white;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>app/nvic_scu001/0</td>
+  <td class=xl1525458 style='font-size:11.0pt;color:black;font-weight:400;
+  text-decoration:none;text-underline-style:none;text-line-through:none;
+  font-family:Calibri;border-top:none;border-right:.5pt solid white;border-bottom:
+  .5pt solid white;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>This
+  is the consumption of scu module</td>
+  <td class=xl6725458 width=129 style='width:97pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>Conditionally
+  Consumed</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl1525458 style='height:15.0pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:none;border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>dbgapp1</td>
+  <td class=xl6425458 style='font-size:11.0pt;color:blue;font-weight:400;
+  text-decoration:underline;text-underline-style:single;text-line-through:none;
+  font-family:Calibri;border-top:none;border-right:.5pt solid white;border-bottom:
+  none;border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>app/dbg001/*</td>
+  <td class=xl1525458 style='font-size:11.0pt;color:black;font-weight:400;
+  text-decoration:none;text-underline-style:none;text-line-through:none;
+  font-family:Calibri;border-top:none;border-right:.5pt solid white;border-bottom:
+  none;border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>This is
+  the consumption of debug module</td>
+  <td class=xl6725458 width=129 style='width:97pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>Always
+  Consumed</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl1525458 style='height:15.0pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>excep001</td>
+  <td class=xl6425458 style='font-size:11.0pt;color:blue;font-weight:400;
+  text-decoration:underline;text-underline-style:single;text-line-through:none;
+  font-family:Calibri;border-top:none;border-right:.5pt solid white;border-bottom:
+  .5pt solid white;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>app/excp001/0</td>
+  <td class=xl1525458 style='font-size:11.0pt;color:black;font-weight:400;
+  text-decoration:none;text-underline-style:none;text-line-through:none;
+  font-family:Calibri;border-top:none;border-right:.5pt solid white;border-bottom:
+  .5pt solid white;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>This
+  is the consumption of exception app</td>
+  <td class=xl6725458 width=129 style='width:97pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>Conditionally
+  Consumed</td>
+ </tr>
+</table>
+
+\section RTC001_Provided_Parameters Provided Parameters
+<br>
+
+
+<table border=0 cellpadding=0 cellspacing=0 width=1023 class=xl6322832
+ style='border-collapse:collapse;table-layout:fixed;width:768pt'>
+ 
+ 
+ 
+ 
+ <tr height=40 style='height:30.0pt'>
+  <td height=40 class=xl6322832 width=354 style='height:30.0pt;width:266pt;
+  font-size:11.0pt;color:white;font-weight:700;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border-top:none;border-right:
+  .5pt solid white;border-bottom:1.5pt solid white;border-left:none;background:
+  #4F81BD;mso-pattern:#4F81BD none'>Name</td>
+  <td class=xl6322832 width=297 style='width:223pt;font-size:11.0pt;color:white;
+  font-weight:700;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:1.5pt solid white;border-left:none;background:#4F81BD;
+  mso-pattern:#4F81BD none'>URI</td>
+  <td class=xl6322832 width=308 style='width:231pt;font-size:11.0pt;color:white;
+  font-weight:700;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:1.5pt solid white;border-left:none;background:#4F81BD;
+  mso-pattern:#4F81BD none'>Description</td>
+  <td class=xl6322832 width=64 style='width:48pt;font-size:11.0pt;color:white;
+  font-weight:700;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  1.5pt solid white;border-left:none;background:#4F81BD;mso-pattern:#4F81BD none'>Access
+  mode</td>
+ </tr>
+ <tr height=60 style='height:45.0pt'>
+  <td height=60 class=xl6322832 width=354 style='height:45.0pt;width:266pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:none;background:
+  #B8CCE4;mso-pattern:#B8CCE4 none'>RTC Enable</td>
+  <td class=xl6322832 width=297 style='width:223pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>app/rtc001/0/RTC001_erwEnableRTC</td>
+  <td class=xl6322832 width=308 style='width:231pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>Enables the RTC module. Required for RTC to work.
+  If this is enabled, hibernate domain is enabled in the CLK001 App.</td>
+  <td class=xl6322832 width=64 style='width:48pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>R/W</td>
+ </tr>
+ <tr height=140 style='height:105.0pt'>
+  <td height=140 class=xl6322832 width=354 style='height:105.0pt;width:266pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:none;background:
+  #DBE5F1;mso-pattern:#DBE5F1 none'>Enable Time initialization once</td>
+  <td class=xl6322832 width=297 style='width:223pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>app/rtc001/0/RTC001_erwTimeInitialisation</td>
+  <td class=xl6322832 width=308 style='width:231pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>If this flag is checked during initialization of
+  RTC then the time and date will be written only once; any update of time and date will be
+  ineffective even after power off or reset as long as RTC runs from the battery.
+  The RTC has to be disabled in order to reprogram the initial time</td>
+  <td class=xl6322832 width=64 style='width:48pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>R/W</td>
+ </tr>
+ <tr height=60 style='height:45.0pt'>
+  <td height=60 class=xl6322832 width=354 style='height:45.0pt;width:266pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:none;background:
+  #B8CCE4;mso-pattern:#B8CCE4 none'>User configured calendar date value</td>
+  <td class=xl6322832 width=297 style='width:223pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>app/rtc001/0/RTC001_srwDateValue</td>
+  <td class=xl6322832 width=308 style='width:231pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>Text box to enter date value for initial RTC time.
+  The value should be entered as mm/dd/yyyy.</td>
+  <td class=xl6322832 width=64 style='width:48pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>R/W</td>
+ </tr>
+ <tr height=40 style='height:30.0pt'>
+  <td height=40 class=xl6322832 width=354 style='height:30.0pt;width:266pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:none;background:
+  #DBE5F1;mso-pattern:#DBE5F1 none'>User configured clock time value</td>
+  <td class=xl6322832 width=297 style='width:223pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>app/rtc001/0/RTC001_srwTimeValue</td>
+  <td class=xl6322832 width=308 style='width:231pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>Text box to enter time value for initial RTC time.
+  The value should be entered as hh:mm:ss</td>
+  <td class=xl6322832 width=64 style='width:48pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>R/W</td>
+ </tr>
+ <tr height=140 style='height:105.0pt'>
+  <td height=140 class=xl6322832 width=354 style='height:105.0pt;width:266pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:none;background:
+  #B8CCE4;mso-pattern:#B8CCE4 none'>Event Trigger for Timer</td>
+  <td class=xl6322832 width=297 style='width:223pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>app/rtc001/0/RTC001_Eventtrigger_timer</td>
+  <td class=xl6322832 width=308 style='width:231pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>Selects if the RTC Periodic timer event generates
+  an SCU interrupt or an NMI. If it is SCU interrupt then the signal shall be
+  connected NVIC_SCU001 and user needs to define the interrupt handler. In the
+  latter case, it shall be connected to EXCP001 app NMI handling shall be enabled in EXCP001 App.
+  </td>
+  <td class=xl6322832 width=64 style='width:48pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>R/W</td>
+ </tr>
+ <tr height=60 style='height:45.0pt'>
+  <td height=60 class=xl6322832 width=354 style='height:45.0pt;width:266pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:none;background:
+  #DBE5F1;mso-pattern:#DBE5F1 none'>Timer Status Flag</td>
+  <td class=xl6322832 width=297 style='width:223pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>app/rtc001/0/RTC001_eroString</td>
+  <td class=xl6322832 width=308 style='width:231pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>Used for giving message on how the Periodic Timer
+  event is handled based on the &quot;Event Trigger for Timer&quot; parameter.</td>
+  <td class=xl6322832 width=64 style='width:48pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>R/W</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl6322832 width=354 style='height:15.0pt;width:266pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:none;background:
+  #B8CCE4;mso-pattern:#B8CCE4 none'>Enable periodic seconds interrupt</td>
+  <td class=xl6322832 width=297 style='width:223pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>app/rtc001/0/RTC001_erwPeriodicSecInter</td>
+  <td class=xl6322832 width=308 style='width:231pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>Enables periodic seconds interrupt</td>
+  <td class=xl6322832 width=64 style='width:48pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>R/W</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl6322832 width=354 style='height:15.0pt;width:266pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:none;background:
+  #DBE5F1;mso-pattern:#DBE5F1 none'>Enable periodic minutes interrupt</td>
+  <td class=xl6322832 width=297 style='width:223pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>app/rtc001/0/RTC001_erwPeriodicMinInter</td>
+  <td class=xl6322832 width=308 style='width:231pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>Enables periodic minutes interrupt</td>
+  <td class=xl6322832 width=64 style='width:48pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>R/W</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl6322832 width=354 style='height:15.0pt;width:266pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:none;background:
+  #B8CCE4;mso-pattern:#B8CCE4 none'>Enable periodic hours interrupt</td>
+  <td class=xl6322832 width=297 style='width:223pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>app/rtc001/0/RTC001_erwPeriodicHrsInter</td>
+  <td class=xl6322832 width=308 style='width:231pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>Enables periodic hours interrupt</td>
+  <td class=xl6322832 width=64 style='width:48pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>R/W</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl6322832 width=354 style='height:15.0pt;width:266pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:none;background:
+  #DBE5F1;mso-pattern:#DBE5F1 none'>Enable periodic days interrupt</td>
+  <td class=xl6322832 width=297 style='width:223pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>app/rtc001/0/RTC001_erwPeriodicDaysInter</td>
+  <td class=xl6322832 width=308 style='width:231pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>Enables periodic days interrupt</td>
+  <td class=xl6322832 width=64 style='width:48pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>R/W</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl6322832 width=354 style='height:15.0pt;width:266pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:none;background:
+  #B8CCE4;mso-pattern:#B8CCE4 none'>Enable periodic months interrupt</td>
+  <td class=xl6322832 width=297 style='width:223pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>app/rtc001/0/RTC001_erwPeriodicMonths</td>
+  <td class=xl6322832 width=308 style='width:231pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>Enables periodic months interrupt</td>
+  <td class=xl6322832 width=64 style='width:48pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>R/W</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl6322832 width=354 style='height:15.0pt;width:266pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:none;background:
+  #DBE5F1;mso-pattern:#DBE5F1 none'>Enable periodic years interrupt</td>
+  <td class=xl6322832 width=297 style='width:223pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>app/rtc001/0/RTC001_erwPeriodicYears</td>
+  <td class=xl6322832 width=308 style='width:231pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>Enables periodic years interrupt</td>
+  <td class=xl6322832 width=64 style='width:48pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>R/W</td>
+ </tr>
+ <tr height=60 style='height:45.0pt'>
+  <td height=60 class=xl6322832 width=354 style='height:45.0pt;width:266pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:none;background:
+  #B8CCE4;mso-pattern:#B8CCE4 none'>User defined interrupt handler for Periodic
+  interrupts</td>
+  <td class=xl6322832 width=297 style='width:223pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>app/rtc001/0/RTC001_srwTimerUserFunction</td>
+  <td class=xl6322832 width=308 style='width:231pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>If the periodic timer event is used for SCU
+  interrupt, then the user defined interrupt handler name shall be entered
+  here.</td>
+  <td class=xl6322832 width=64 style='width:48pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>R/W</td>
+ </tr>
+ <tr height=80 style='height:60.0pt'>
+  <td height=80 class=xl6322832 width=354 style='height:60.0pt;width:266pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:none;background:
+  #DBE5F1;mso-pattern:#DBE5F1 none'>Enable alarm interrupt</td>
+  <td class=xl6322832 width=297 style='width:223pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>app/rtc001/0/RTC001_erwAlarmIntrptEna</td>
+  <td class=xl6322832 width=308 style='width:231pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>Enables alarm interrupt. RTC module generate and
+  alarm event when the current date and time matches the time in the alarm date
+  and time registers.</td>
+  <td class=xl6322832 width=64 style='width:48pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>R/W</td>
+ </tr>
+ <tr height=60 style='height:45.0pt'>
+  <td height=60 class=xl6322832 width=354 style='height:45.0pt;width:266pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:none;background:
+  #B8CCE4;mso-pattern:#B8CCE4 none'>User configured alarm date value</td>
+  <td class=xl6322832 width=297 style='width:223pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>app/rtc001/0/RTC001_srwAlarmDate</td>
+  <td class=xl6322832 width=308 style='width:231pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>Text box to enter date value for alarm
+  configuration The value should be entered as mm/dd/yyyy.</td>
+  <td class=xl6322832 width=64 style='width:48pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>R/W</td>
+ </tr>
+ <tr height=60 style='height:45.0pt'>
+  <td height=60 class=xl6322832 width=354 style='height:45.0pt;width:266pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:none;background:
+  #DBE5F1;mso-pattern:#DBE5F1 none'>User configured alarm time value</td>
+  <td class=xl6322832 width=297 style='width:223pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>app/rtc001/0/RTC001_srwAlarmTime</td>
+  <td class=xl6322832 width=308 style='width:231pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>Text box to enter time value for alarm
+  configuration. The value should be entered as hh:mm:ss</td>
+  <td class=xl6322832 width=64 style='width:48pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>R/W</td>
+ </tr>
+ <tr height=121 style='mso-height-source:userset;height:90.75pt'>
+  <td height=121 class=xl6322832 width=354 style='height:90.75pt;width:266pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:none;background:
+  #B8CCE4;mso-pattern:#B8CCE4 none'>Event Trigger for Alarm</td>
+  <td class=xl6322832 width=297 style='width:223pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>app/rtc001/0/RTC001_Eventtrigger_Alarm</td>
+  <td class=xl6322832 width=308 style='width:231pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>Selects if the RTC alarm event generates an SCU
+  interrupt or an NMI. If it is SCU interrupt then the signal shall be
+  connected NVIC_SCU001 and user needs to define the interrupt handler. In the
+  latter case, it shall be connected to EXCP001 app NMI handling shall be enabled in EXCP001 App.
+  </td>
+  <td class=xl6322832 width=64 style='width:48pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>R/W</td>
+ </tr>
+ <tr height=60 style='height:45.0pt'>
+  <td height=60 class=xl6322832 width=354 style='height:45.0pt;width:266pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:none;background:
+  #DBE5F1;mso-pattern:#DBE5F1 none'>Alarm Status Flag</td>
+  <td class=xl6322832 width=297 style='width:223pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>app/rtc001/0/RTC001_eroString1</td>
+  <td class=xl6322832 width=308 style='width:231pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>Used for giving message on how the Periodic Timer
+  event is handled based on the &quot;Event Trigger for Alarm&quot; parameter.</td>
+  <td class=xl6322832 width=64 style='width:48pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>R/W</td>
+ </tr>
+ <tr height=60 style='height:45.0pt'>
+  <td height=60 class=xl6322832 width=354 style='height:45.0pt;width:266pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:none;background:
+  #B8CCE4;mso-pattern:#B8CCE4 none'>User defined interrupt handler for Alarm
+  interrupts</td>
+  <td class=xl6322832 width=297 style='width:223pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>app/rtc001/0/RTC001_srwAlarmUserFunction</td>
+  <td class=xl6322832 width=308 style='width:231pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>If the alarm event is used for SCU interrupt, then
+  the user defined interrupt handler name shall be entered here.</td>
+  <td class=xl6322832 width=64 style='width:48pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>R/W</td>
+ </tr>
+ <tr height=40 style='height:30.0pt'>
+  <td height=40 class=xl6322832 width=354 style='height:30.0pt;width:266pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:none;background:
+  #DBE5F1;mso-pattern:#DBE5F1 none'>Enable alarm event in hibernate mode</td>
+  <td class=xl6322832 width=297 style='width:223pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>RTC001_erwTimerAlarm</td>
+  <td class=xl6322832 width=308 style='width:231pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>Enables wake up from Hibernate mode on an RTC alarm
+  event</td>
+  <td class=xl6322832 width=64 style='width:48pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>R/W</td>
+ </tr>
+ <tr height=40 style='height:30.0pt'>
+  <td height=40 class=xl6322832 width=354 style='height:30.0pt;width:266pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:none;background:
+  #B8CCE4;mso-pattern:#B8CCE4 none'>Enable periodic seconds event in hibernate
+  mode</td>
+  <td class=xl6322832 width=297 style='width:223pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>RTC001_erwEnaSecComp</td>
+  <td class=xl6322832 width=308 style='width:231pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>Enables wake up from Hibernate mode on an RTC
+  periodic seconds event</td>
+  <td class=xl6322832 width=64 style='width:48pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>R/W</td>
+ </tr>
+ <tr height=40 style='height:30.0pt'>
+  <td height=40 class=xl6322832 width=354 style='height:30.0pt;width:266pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:none;background:
+  #DBE5F1;mso-pattern:#DBE5F1 none'>Enable periodic minutes event in hibernate
+  mode</td>
+  <td class=xl6322832 width=297 style='width:223pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>RTC001_erwEnaMinComp</td>
+  <td class=xl6322832 width=308 style='width:231pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>Enables wake up from Hibernate mode on an RTC
+  periodic minutes event</td>
+  <td class=xl6322832 width=64 style='width:48pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>R/W</td>
+ </tr>
+ <tr height=40 style='height:30.0pt'>
+  <td height=40 class=xl6322832 width=354 style='height:30.0pt;width:266pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:none;background:
+  #B8CCE4;mso-pattern:#B8CCE4 none'>Enable periodic hours event in hibernate
+  mode</td>
+  <td class=xl6322832 width=297 style='width:223pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>RTC001_erwEnaHrsComp</td>
+  <td class=xl6322832 width=308 style='width:231pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>Enables wake up from Hibernate mode on an RTC
+  periodic hours event</td>
+  <td class=xl6322832 width=64 style='width:48pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>R/W</td>
+ </tr>
+ <tr height=40 style='height:30.0pt'>
+  <td height=40 class=xl6322832 width=354 style='height:30.0pt;width:266pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:none;background:
+  #DBE5F1;mso-pattern:#DBE5F1 none'>Enable periodic days event in hibernate
+  mode</td>
+  <td class=xl6322832 width=297 style='width:223pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>RTC001_erwEnaDaysComp</td>
+  <td class=xl6322832 width=308 style='width:231pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>Enables wake up from Hibernate mode on an RTC
+  periodic days</td>
+  <td class=xl6322832 width=64 style='width:48pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>R/W</td>
+ </tr>
+ <tr height=40 style='height:30.0pt'>
+  <td height=40 class=xl6322832 width=354 style='height:30.0pt;width:266pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:none;background:
+  #B8CCE4;mso-pattern:#B8CCE4 none'>Enable periodic months event in hibernate
+  mode</td>
+  <td class=xl6322832 width=297 style='width:223pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>RTC001_erwEnaMonthsComp</td>
+  <td class=xl6322832 width=308 style='width:231pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>Enables wake up from Hibernate mode on an RTC
+  periodic months event</td>
+  <td class=xl6322832 width=64 style='width:48pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>R/W</td>
+ </tr>
+ <tr height=40 style='height:30.0pt'>
+  <td height=40 class=xl6322832 width=354 style='height:30.0pt;width:266pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border-top:none;border-right:
+  .5pt solid white;border-bottom:none;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>Enable periodic years event in hibernate mode</td>
+  <td class=xl6322832 width=297 style='width:223pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:none;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>RTC001_erwEnaYearsComp</td>
+  <td class=xl6322832 width=308 style='width:231pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:none;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>Enables
+  wake up from Hibernate mode on an RTC periodic years event</td>
+  <td class=xl6322832 width=64 style='width:48pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;background:#DBE5F1;mso-pattern:#DBE5F1 none'>R/W</td>
+ </tr>
+
+</table>
+
+
+
+@}
+*/	

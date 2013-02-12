@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<contexts>
+    <context id="http://www.infineon.com/1.0.24/app/davesupport/0" title="DAVESupport">
+        <description>DAVESupport App</description>
+    </context>
+</contexts>

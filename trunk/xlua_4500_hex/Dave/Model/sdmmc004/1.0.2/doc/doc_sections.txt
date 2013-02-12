@@ -1,0 +1,34 @@
+/**
+    @defgroup SDMMC004App SDMMC_LowLevel_RTOS_SDMMC004 App
+    @{
+        @defgroup SDMMC004_Legal Copyright and Licensing Information
+        @{
+        @}        
+        @defgroup SDMMC004_intro Introduction
+        @{
+        @}
+        @defgroup SDMMC004_overview Overview
+        @{
+        @}
+        @defgroup SDMMC004_filestructure File Structure
+        @{
+        @}
+        @defgroup SDMMC004_appconfigdoc App Configuration Documentation
+        @{
+        @}
+        @defgroup SDMMC004_publicparam App Public Data Structures
+        @{
+        @}       
+        @defgroup SDMMC004_apidoc API Documentation
+        @{
+        @}
+        @defgroup SDMMC004_publishedparams App Published Parameters
+        @{
+        @}
+        @defgroup SDMMC004_revisionhistory Release History
+        @{
+          Click <a href="../SDMMC004.htm"> here </a> for Release History
+        @}
+    @}
+
+*/

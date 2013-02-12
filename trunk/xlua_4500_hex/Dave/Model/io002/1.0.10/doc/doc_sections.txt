@@ -1,0 +1,35 @@
+/**
+    @defgroup IO_Digital_IO002App IO_Digital_IO002App
+    @{
+        @defgroup IO002_Legal Copyright and Licensing Information
+        @{
+        @}
+        @defgroup IO002_intro Introduction
+        @{
+        @}
+        @defgroup IO002_overview Overview
+        @{
+        @}
+        @defgroup IO002_filestructure File Structure
+        @{
+        @}
+        @defgroup IO002_appconfigdoc App Configuration Documentation
+        @{
+        @}
+        @defgroup IO002_publicparam App Public structures
+        @{
+        @}       
+        @defgroup IO002_apidoc API Documentation
+        @{
+        @}
+        @defgroup IO002_publishedparams App Published Parameters
+        @{
+        @} 
+        @defgroup IO002_releasehistory Release History
+        @{
+          Click <a href="../IO002_Version.htm"> here </a> for Release History
+        @}
+    
+    @}
+
+*/

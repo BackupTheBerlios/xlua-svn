@@ -1,0 +1,475 @@
+/**
+@ingroup IO002_Legal
+@{
+\page IO002_legalpage Copyright and Licensing Information
+Copyright (c) 2011, Infineon Technologies AG
+All rights reserved. 
+
+Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met: 
+Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer. 
+Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution. 
+Neither the name of the copyright holders nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+To improve the quality of the software, users are encouraged to share modifications, enhancements or bug fixes with Infineon Technologies AG (dave@infineon.com).
+
+@}
+@ingroup IO002_intro
+@{
+\page IO002_intropage Introduction 
+
+IO002 App is used  by a top level App to configure a digital pin. Based on signal connectivity,
+ the pin resource is allocated. The Output/Input characteristics for the pin can be configured by
+ the user. The user can also manually allocate a  pin resource by using the <i>"Manual Pin Assignment"</i> menu item in DAVE3 toolbar.
+
+<b>Note</b><br>
+<OL>
+<LI> For using a digital pin as GPIO, user needs to use IO004 App.</LI>
+<LI> The level of the pin can always be read,independent whether the pin is configured as input or output. </LI>
+<LI> Customer has to pay attention to the DAVE Apps initalization sequence. User might need to reorder the App initalization sequence to achieve a specific usecase.</LI>
+<LI>User needs to take care of the pin input configuration, incase a reconfiguration of a pin is required at run time.</LI>
+</OL>
+\section IO002_scopesec Scope
+IO002 App provides configuration and control of a digital pin.
+
+
+\section Abbreviation
+<OL>
+<LI>API: Application Program Interface</LI>
+<LI>App: DAVE3 Application</LI>
+<LI>GUI: Graphical User Interface</LI>
+<LI>SW: Software</LI>
+</OL>
+
+
+\section Reference
+Device Reference Manual.
+
+
+\section Limitation
+HW Control mode can be set by top level Apps by changing the value of provided resource parameter "IO002_irwHWControl"(hardware control)
+in case App needs HW control to be enabled(default value is 0).
+
+@}
+*/
+
+/**
+@ingroup IO002_overview
+@{
+\page IO002_overviewpage Overview
+
+IO002 App can be used by top level Apps to consume and configure a digital pin resource. The App provides a Virtual Signal which allows connectivity
+ to top level Apps. If IO002 App is consumed directly by top level App, the signal connectivity is done internally, and solver allocates the
+ appropriate Port Pin. Based on the connectivity, the pin is configured either in input mode or output mode. The DaveSupport App generates the 
+ pin multiplexor settings based on signal connectivity.
+<img src="..\IO002_TopLevel.PNG" title="Manual pin assignment for IO002 App" /> 
+The user can assign the port pin manually also as shown in the diagram below using "Manual pin assignment" toolbar item in DAVE3.
+<img src="..\IO002_PinAssignment.PNG" title="Manual pin assignment for IO002 App" />
+ 
+@}
+
+@ingroup IO002_filestructure File Structure
+@{
+\page IO002_filestructurepage File Structure
+Following files are generated : 
+<OL>
+<LI>IO002.c:     This file implements the IO002 App Interfaces. </LI>
+<LI>IO002.h:     This file exposes the interfaces to use this App. </LI>
+</OL>
+@}
+
+
+@ingroup IO002_appconfigdoc App Configuration Documentation
+@{
+
+\page IO002_appconfigdocpage App Documentation
+The diagram shows the UI for the App.
+<img src="..\IO002.PNG" title="GUI for IO002 App" />
+
+<BR>The below UI parameters are used for IO002 table generation.<BR>
+<table border=0 cellpadding=0 cellspacing=0 width=663 style='border-collapse:
+ collapse;table-layout:fixed;width:497pt'>
+  <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl159074 width=156 style='height:15.0pt;width:117pt;
+  font-size:11.0pt;color:white;font-weight:700;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border-top:none;border-right:
+  .5pt solid white;border-bottom:1.5pt solid white;border-left:none;background:
+  #4F81BD;mso-pattern:#4F81BD none'>Name</td>
+  <td class=xl159074 width=200 style='width:150pt;font-size:11.0pt;color:white;
+  font-weight:700;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:1.5pt solid white;border-left:none;background:#4F81BD;
+  mso-pattern:#4F81BD none'>URI</td>
+  <td class=xl639074 width=243 style='width:182pt;font-size:11.0pt;color:white;
+  font-weight:700;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  1.5pt solid white;border-left:none;background:#4F81BD;mso-pattern:#4F81BD none'>Description</td>
+  <td class=xl159074 width=64 style='width:48pt'></td>
+ </tr>
+ <tr height=120 style='height:90.0pt'>
+  <td height=120 class=xl159074 style='height:90.0pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>Output Driver Enabled</td>
+  <td class=xl159074 style='font-size:11.0pt;color:black;font-weight:400;
+  text-decoration:none;text-underline-style:none;text-line-through:none;
+  font-family:Calibri;border-top:none;border-right:.5pt solid white;border-bottom:
+  .5pt solid white;border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>IO002_erwOutputMode</td>
+  <td class=xl639074 width=243 style='width:182pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>This
+  selection enables the port pin in
+  output Mode. This is a read only UI , since the output mode is determined
+  based on signal connectivity</td>
+  <td class=xl639074 width=64 style='width:48pt'></td>
+ </tr>
+ <tr height=60 style='height:45.0pt'>
+  <td height=60 class=xl159074 style='height:45.0pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>Output characteristics</td>
+  <td class=xl159074 style='font-size:11.0pt;color:black;font-weight:400;
+  text-decoration:none;text-underline-style:none;text-line-through:none;
+  font-family:Calibri;border-top:none;border-right:.5pt solid white;border-bottom:
+  .5pt solid white;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>IO002_erwOutputChar</td>
+  <td class=xl639074 width=243 style='width:182pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>Select
+  to configure output pin in Push Pull/Open Drain configuration.</td>
+  <td class=xl159074></td>
+ </tr>
+ <tr height=60 style='height:45.0pt'>
+  <td height=60 class=xl159074 style='height:45.0pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>Default Output level</td>
+  <td class=xl159074 style='font-size:11.0pt;color:black;font-weight:400;
+  text-decoration:none;text-underline-style:none;text-line-through:none;
+  font-family:Calibri;border-top:none;border-right:.5pt solid white;border-bottom:
+  .5pt solid white;border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>IO002_erwDefaultOutputLevel</td>
+  <td class=xl639074 width=243 style='width:182pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>This
+  selection configures the pin default output level to High.</td>
+  <td class=xl159074></td>
+ </tr>
+ <tr height=60 style='height:45.0pt'>
+  <td height=60 class=xl159074 style='height:45.0pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>Input characteristics</td>
+  <td class=xl159074 style='font-size:11.0pt;color:black;font-weight:400;
+  text-decoration:none;text-underline-style:none;text-line-through:none;
+  font-family:Calibri;border-top:none;border-right:.5pt solid white;border-bottom:
+  .5pt solid white;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>IO002_erwInputChar</td>
+  <td class=xl639074 width=243 style='width:182pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>Input
+  characteristics of Pin ( Tristate,
+  Pull up, Pull Down etc)</td>
+  <td class=xl159074></td>
+ </tr>
+ <tr height=40 style='height:30.0pt'>
+  <td height=40 class=xl159074 style='height:30.0pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>Pad Driver Mode</td>
+  <td class=xl159074 style='font-size:11.0pt;color:black;font-weight:400;
+  text-decoration:none;text-underline-style:none;text-line-through:none;
+  font-family:Calibri;border-top:none;border-right:.5pt solid white;border-bottom:
+  .5pt solid white;border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>IO002_erwPadDriverMode</td>
+  <td class=xl639074 width=243 style='width:182pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid white;border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>Pad
+  driver strength based on Pad class selection.</td>
+  <td class=xl159074></td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl159074 style='height:15.0pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:none;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>Pad
+  Class</td>
+  <td class=xl159074 style='font-size:11.0pt;color:black;font-weight:400;
+  text-decoration:none;text-underline-style:none;text-line-through:none;
+  font-family:Calibri;border-top:none;border-right:.5pt solid white;border-bottom:
+  none;border-left:none;background:#DBE5F1;mso-pattern:#DBE5F1 none'>IO002_erwPadClass</td>
+  <td class=xl639074 width=243 style='width:182pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;background:#DBE5F1;mso-pattern:#DBE5F1 none'>Desired
+  Pad class of Pin.</td>
+  <td class=xl159074></td>
+ </tr>
+ </table>
+
+@}
+*/
+
+/**
+@ingroup IO002_publishedparams
+@{
+\page Note NOTE: URIs given in tables below are for App developer use. App developer can make use of these URIs to create top level apps by consuming this app. 
+
+\section IO002_Provided_Parameters Provided Parameters
+<br>
+<table border=0 cellpadding=0 cellspacing=0 width=712>
+  <tr height=40 style='mso-height-source:userset;height:30.0pt'>
+  <td height=40 class=xl637041 width=160 style='height:30.0pt;width:120pt;
+  font-size:11.0pt;color:white;font-weight:700;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border:.5pt solid black;
+  background:#4F81BD;mso-pattern:#4F81BD none'>Name</td>
+  <td class=xl637041 width=203 style='border-left:none;width:152pt;font-size:
+  11.0pt;color:white;font-weight:700;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border:.5pt solid black;
+  background:#4F81BD;mso-pattern:#4F81BD none'>URI</td>
+  <td class=xl637041 width=262 style='border-left:none;width:197pt;font-size:
+  11.0pt;color:white;font-weight:700;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border:.5pt solid black;
+  background:#4F81BD;mso-pattern:#4F81BD none'>Description</td>
+  <td class=xl637041 width=87 style='border-left:none;width:65pt;font-size:
+  11.0pt;color:white;font-weight:700;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border:.5pt solid black;
+  background:#4F81BD;mso-pattern:#4F81BD none'>Access Mode</td>
+ </tr>
+ <tr height=40 style='mso-height-source:userset;height:30.0pt'>
+  <td height=40 class=xl647041 width=160 style='height:30.0pt;border-top:none;
+  width:120pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border:.5pt solid black;background:#DBE5F1;mso-pattern:#DBE5F1 none'>Output
+  Driver Enabled</td>
+  <td class=xl647041 width=203 style='border-top:none;border-left:none;
+  width:152pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border:.5pt solid black;background:#DBE5F1;mso-pattern:#DBE5F1 none'>IO002_erwOutputMode</td>
+  <td class=xl647041 width=262 style='border-top:none;border-left:none;
+  width:197pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border:.5pt solid black;background:#DBE5F1;mso-pattern:#DBE5F1 none'>Indicates
+  if the pin is configured in output Mode</td>
+  <td class=xl647041 width=87 style='border-top:none;border-left:none;
+  width:65pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:none;
+  text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border:.5pt solid black;background:#DBE5F1;mso-pattern:#DBE5F1 none'>R</td>
+ </tr>
+ <tr height=40 style='mso-height-source:userset;height:30.0pt'>
+  <td height=40 class=xl647041 width=160 style='height:30.0pt;border-top:none;
+  width:120pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border:.5pt solid black;background:#B8CCE4;mso-pattern:#B8CCE4 none'>Output
+  characteristics</td>
+  <td class=xl647041 width=203 style='border-top:none;border-left:none;
+  width:152pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border:.5pt solid black;background:#B8CCE4;mso-pattern:#B8CCE4 none'>IO002_erwOutputChar</td>
+  <td class=xl647041 width=262 style='border-top:none;border-left:none;
+  width:197pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border:.5pt solid black;background:#B8CCE4;mso-pattern:#B8CCE4 none'>Configures pin
+  output characteristics (Push Pull/Open drain).</td>
+  <td class=xl647041 width=87 style='border-top:none;border-left:none;
+  width:65pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:none;
+  text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border:.5pt solid black;background:#B8CCE4;mso-pattern:#B8CCE4 none'>R/W</td>
+ </tr>
+ <tr height=40 style='mso-height-source:userset;height:30.0pt'>
+  <td height=40 class=xl647041 width=160 style='height:30.0pt;border-top:none;
+  width:120pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border:.5pt solid black;background:#DBE5F1;mso-pattern:#DBE5F1 none'>Default
+  Output level</td>
+  <td class=xl647041 width=203 style='border-top:none;border-left:none;
+  width:152pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border:.5pt solid black;background:#DBE5F1;mso-pattern:#DBE5F1 none'>IO002_erwDefaultOutputLevel</td>
+  <td class=xl647041 width=262 style='border-top:none;border-left:none;
+  width:197pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border:.5pt solid black;background:#DBE5F1;mso-pattern:#DBE5F1 none'>Setting this
+  option sets the pin output level to high.</td>
+  <td class=xl647041 width=87 style='border-top:none;border-left:none;
+  width:65pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:none;
+  text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border:.5pt solid black;background:#DBE5F1;mso-pattern:#DBE5F1 none'>R/W</td>
+ </tr>
+ <tr height=40 style='mso-height-source:userset;height:30.0pt'>
+  <td height=40 class=xl657041 width=160 style='height:30.0pt;border-top:none;
+  width:120pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border-top:.5pt solid black;border-right:.5pt solid black;border-bottom:none;
+  border-left:.5pt solid black;background:#B8CCE4;mso-pattern:#B8CCE4 none'>Input
+  characteristics</td>
+  <td class=xl657041 width=203 style='border-top:none;border-left:none;
+  width:152pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border-top:.5pt solid black;border-right:.5pt solid black;border-bottom:none;
+  border-left:.5pt solid black;background:#B8CCE4;mso-pattern:#B8CCE4 none'>IO002_erwInputChar</td>
+  <td class=xl647041 width=262 style='border-top:none;border-left:none;
+  width:197pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border:.5pt solid black;background:#B8CCE4;mso-pattern:#B8CCE4 none'> Pin input
+  characteristics configuration</td>
+  <td class=xl647041 width=87 style='border-top:none;border-left:none;
+  width:65pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:none;
+  text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border:.5pt solid black;background:#B8CCE4;mso-pattern:#B8CCE4 none'>R/W</td>
+ </tr>
+ <tr height=40 style='mso-height-source:userset;height:30.0pt'>
+  <td height=40 class=xl677041 width=160 style='height:30.0pt;width:120pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border:.5pt solid windowtext;
+  background:#DBE5F1;mso-pattern:#DBE5F1 none'>Pad Driver Mode</td>
+  <td class=xl677041 width=203 style='border-left:none;width:152pt;font-size:
+  11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border:.5pt solid windowtext;
+  background:#DBE5F1;mso-pattern:#DBE5F1 none'>IO002_erwPadDriverMode</td>
+  <td class=xl667041 width=262 style='border-top:none;width:197pt;font-size:
+  11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border-top:.5pt solid black;
+  border-right:.5pt solid black;border-bottom:none;border-left:none;background:
+  #DBE5F1;mso-pattern:#DBE5F1 none'>Configure pad driver strength based on Pad class selection.</td>
+  <td class=xl647041 width=87 style='border-top:none;border-left:none;
+  width:65pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:none;
+  text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border:.5pt solid black;background:#DBE5F1;mso-pattern:#DBE5F1 none'>R/W</td>
+ </tr>
+ <tr height=40 style='mso-height-source:userset;height:30.0pt'>
+  <td height=40 class=xl677041 width=160 style='height:30.0pt;border-top:none;
+  width:120pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border:.5pt solid windowtext;background:#B8CCE4;mso-pattern:#B8CCE4 none'>Hardware
+  Control</td>
+  <td class=xl677041 width=203 style='border-top:none;border-left:none;
+  width:152pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border:.5pt solid windowtext;background:#B8CCE4;mso-pattern:#B8CCE4 none'>IO002_irwHWControl</td>
+  <td class=xl677041 width=262 style='border-left:none;width:197pt;font-size:
+  11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border:.5pt solid windowtext;
+  background:#B8CCE4;mso-pattern:#B8CCE4 none'>Hidden parameter not displayed in
+  UI,used in case when App needs HW Control</td>
+  <td class=xl647041 width=87 style='border-top:none;border-left:none;
+  width:65pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:none;
+  text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border:.5pt solid black;background:#B8CCE4;mso-pattern:#B8CCE4 none'>R/W</td>
+ </tr>
+</table>
+
+
+\section IO002_Virtual Virtual Signals
+<br>
+<table border=0 cellpadding=0 cellspacing=0 width=799>
+ <tr height=31 style='mso-height-source:userset;height:23.25pt'>
+  <td height=31 class=xl636647 width=173 style='height:23.25pt;width:130pt;
+  font-size:11.0pt;color:white;font-weight:700;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border:.5pt solid black;
+  background:#4F81BD;mso-pattern:#4F81BD none'>Name</td>
+  <td class=xl636647 width=129 style='border-left:none;width:97pt;font-size:
+  11.0pt;color:white;font-weight:700;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border:.5pt solid black;
+  background:#4F81BD;mso-pattern:#4F81BD none'>URI</td>
+  <td class=xl646647 width=115 style='border-left:none;width:86pt;font-size:
+  11.0pt;color:white;font-weight:700;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border-top:.5pt solid black;
+  border-right:none;border-bottom:.5pt solid black;border-left:.5pt solid black;
+  background:#4F81BD;mso-pattern:#4F81BD none'>Hardware Signal</td>
+  <td class=xl666647 width=160 style='width:120pt;font-size:11.0pt;color:white;
+  font-weight:700;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid windowtext;border-left:.5pt solid windowtext;background:#4F81BD;
+  mso-pattern:#4F81BD none'>Description</td>
+  <td class=xl666647 width=115 style='width:86pt;font-size:11.0pt;color:white;
+  font-weight:700;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid windowtext;border-left:.5pt solid windowtext;background:#4F81BD;
+  mso-pattern:#4F81BD none'>UI Dependency</td>
+  <td class=xl666647 width=107 style='width:80pt;font-size:11.0pt;color:white;
+  font-weight:700;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:none;border-bottom:
+  .5pt solid windowtext;border-left:.5pt solid windowtext;background:#4F81BD;
+  mso-pattern:#4F81BD none'>Connections</td>
+ </tr>
+ <tr height=62 style='mso-height-source:userset;height:46.5pt'>
+  <td height=62 class=xl156647 align=left style='height:46.5pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:none;border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>Pin
+  Virtual Signal</td>
+  <td class=xl156647 align=left style='font-size:11.0pt;color:black;font-weight:
+  400;text-decoration:none;text-underline-style:none;text-line-through:none;
+  font-family:Calibri;border-top:none;border-right:.5pt solid white;border-bottom:
+  none;border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>io002_vs</td>
+  <td class=xl156647 align=left style='font-size:11.0pt;color:black;font-weight:
+  400;text-decoration:none;text-underline-style:none;text-line-through:none;
+  font-family:Calibri;border-top:none;border-right:.5pt solid white;border-bottom:
+  none;border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>PAD</td>
+  <td class=xl656647 width=160 style='width:120pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:none;border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>The
+  signal of the pin; it can be mapped to input/output signal</td>
+  <td class=xl656647 width=115 style='width:86pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:none;border-right:.5pt solid white;
+  border-bottom:none;border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>None</td>
+  <td class=xl656647 width=107 style='width:80pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>Connected to top level App Pin signals</td>
+ </tr>
+</table>
+
+\section IO002_Consumed_Parameters Consumed Parameters
+<br>
+<table border=0 cellpadding=0 cellspacing=0 width=746>
+ <tr height=40 style='mso-height-source:userset;height:30.0pt'>
+  <td height=40 class=xl6529928 align=left width=96 style='height:30.0pt;
+  width:72pt;font-size:11.0pt;color:white;font-weight:700;text-decoration:none;
+  text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border:.5pt solid black;background:#4F81BD;mso-pattern:#4F81BD none'>Name</td>
+  <td class=xl6529928 align=left width=438 style='border-left:none;width:329pt;
+  font-size:11.0pt;color:white;font-weight:700;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border:.5pt solid black;
+  background:#4F81BD;mso-pattern:#4F81BD none'>URI</td>
+  <td class=xl6529928 align=left width=114 style='border-left:none;width:86pt;
+  font-size:11.0pt;color:white;font-weight:700;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border:.5pt solid black;
+  background:#4F81BD;mso-pattern:#4F81BD none'>Description</td>
+  <td class=xl6529928 align=left width=98 style='border-left:none;width:74pt;
+  font-size:11.0pt;color:white;font-weight:700;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border:.5pt solid black;
+  background:#4F81BD;mso-pattern:#4F81BD none'>Conditional Consumption</td>
+ </tr>
+ <tr height=40 style='height:30.0pt'>
+  <td height=40 class=xl6629928 align=left width=96 style='height:30.0pt;
+  border-top:none;width:72pt;font-size:11.0pt;color:black;font-weight:400;
+  text-decoration:none;text-underline-style:none;text-line-through:none;
+  font-family:Calibri;border:.5pt solid black;background:#B8CCE4;mso-pattern:
+  #B8CCE4 none'>pin</td>
+  <td class=xl6729928 align=left width=438 style='border-top:none;border-left:
+  none;width:329pt;font-size:11.0pt;color:blue;font-weight:400;text-decoration:
+  underline;text-underline-style:single;text-line-through:none;font-family:
+  Calibri;border:.5pt solid black;background:#B8CCE4;mso-pattern:#B8CCE4 none'>port/p/*/pad/*</td>
+  <td class=xl6629928 align=left width=114 style='border-top:none;border-left:
+  none;width:86pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border:.5pt solid black;background:#B8CCE4;mso-pattern:#B8CCE4 none'>pin</td>
+  <td class=xl6629928 align=left width=98 style='border-top:none;border-left:
+  none;width:74pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border:.5pt solid black;background:#B8CCE4;mso-pattern:#B8CCE4 none'>Always
+  Consumed</td>
+ </tr>
+</table>
+
+@}
+*/	

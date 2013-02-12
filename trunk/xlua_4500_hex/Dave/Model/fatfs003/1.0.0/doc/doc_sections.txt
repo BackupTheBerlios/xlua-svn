@@ -1,0 +1,38 @@
+/**
+    @defgroup FATFS003App FileSystem_FATFS_RTOS_FATFS003 App
+    @{
+        @defgroup FATFS003_Legal Copyright and Licensing Information
+        @{
+        @}
+		@defgroup FATFS003_intro Introduction
+        @{
+        @}
+        @defgroup FATFS003_overview Overview
+        @{
+        @}
+        @defgroup FATFS003_filestructure File Structure
+        @{
+        @}
+        @defgroup FATFS003_appconfigdoc App Configuration Documentation
+        @{
+        @}
+        @defgroup FATFS003_publicparam App Public Data Structures
+        @{
+        This is a third Party code. For more details, refer the source files.
+        @} 
+        
+        @defgroup FATFS003_apidoc API Documentation
+        @{
+        This is a third Party code. For more details, refer the source files.
+        @}
+        @defgroup FATFS003_publishedparams App Published Parameters
+        @{
+        @}
+        @defgroup FATFS003_revisionhistory Release History
+        @{
+          Click <a href="../FATFS003.htm"> here </a> for Release History
+        @}
+    
+    @}
+
+*/

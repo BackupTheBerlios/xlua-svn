@@ -1,0 +1,76 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HTML><HEAD></HEAD><BODY>
+<OBJECT type="text/site properties">
+<param name="FrameName" value="right">
+</OBJECT>
+<UL>
+<LI><OBJECT type="text/sitemap"><param name="Name" value=""TMPS001:Die_Temperature_Sensor""><param name="Local" value="index.html"><param name="ImageNumber" value="11"></OBJECT>
+<LI><OBJECT type="text/sitemap"><param name="Name" value="Apps"><param name="Local" value="modules.html"><param name="ImageNumber" value="1"></OBJECT>
+  <UL>
+  <LI><OBJECT type="text/sitemap"><param name="Name" value="TMPS001:Die_Temperature_Sensor"><param name="Local" value="group___die___temperature___sensor___t_m_p_s001_app.html"><param name="ImageNumber" value="1"></OBJECT>
+    <UL>
+    <LI><OBJECT type="text/sitemap"><param name="Name" value="Copyright and Licensing Information"><param name="Local" value="group___t_m_p_s001___legal.html"><param name="ImageNumber" value="1"></OBJECT>
+      <UL>
+      <LI><OBJECT type="text/sitemap"><param name="Name" value="Copyright and Licensing Information"><param name="Local" value="group___t_m_p_s001___legal.html#TMPS001_legalpage"><param name="ImageNumber" value="11"></OBJECT>
+      </UL>
+    <LI><OBJECT type="text/sitemap"><param name="Name" value="Introduction"><param name="Local" value="group___t_m_p_s001__intro.html"><param name="ImageNumber" value="1"></OBJECT>
+      <UL>
+      <LI><OBJECT type="text/sitemap"><param name="Name" value="Introduction"><param name="Local" value="group___t_m_p_s001__intro.html#TMPS001_intropage"><param name="ImageNumber" value="11"></OBJECT>
+      </UL>
+    <LI><OBJECT type="text/sitemap"><param name="Name" value="Overview"><param name="Local" value="group___t_m_p_s001__overview.html"><param name="ImageNumber" value="1"></OBJECT>
+      <UL>
+      <LI><OBJECT type="text/sitemap"><param name="Name" value="Overview"><param name="Local" value="group___t_m_p_s001__overview.html#TMPS001_overviewpage"><param name="ImageNumber" value="11"></OBJECT>
+      </UL>
+    <LI><OBJECT type="text/sitemap"><param name="Name" value="File Structure"><param name="Local" value="group___t_m_p_s001__filestructure.html"><param name="ImageNumber" value="1"></OBJECT>
+      <UL>
+      <LI><OBJECT type="text/sitemap"><param name="Name" value="File Structure"><param name="Local" value="group___t_m_p_s001__filestructure.html#TMPS001_filestructurepage"><param name="ImageNumber" value="11"></OBJECT>
+      </UL>
+    <LI><OBJECT type="text/sitemap"><param name="Name" value="App Configuration Documentation"><param name="Local" value="group___t_m_p_s001__appconfigdoc.html"><param name="ImageNumber" value="1"></OBJECT>
+      <UL>
+      <LI><OBJECT type="text/sitemap"><param name="Name" value="App Configuration Parameters"><param name="Local" value="group___t_m_p_s001__appconfigdoc.html#TMPS001_appconfigdocpage"><param name="ImageNumber" value="11"></OBJECT>
+      </UL>
+    <LI><OBJECT type="text/sitemap"><param name="Name" value="App Public Structures"><param name="Local" value="group___t_m_p_s001__publicparam.html"><param name="ImageNumber" value="11"></OBJECT>
+      <UL>
+      </UL>
+    <LI><OBJECT type="text/sitemap"><param name="Name" value="API Documentation"><param name="Local" value="group___t_m_p_s001__apidoc.html"><param name="ImageNumber" value="11"></OBJECT>
+      <UL>
+      </UL>
+    <LI><OBJECT type="text/sitemap"><param name="Name" value="App Published Parameters"><param name="Local" value="group___t_m_p_s001__publishedparams.html"><param name="ImageNumber" value="1"></OBJECT>
+      <UL>
+      <LI><OBJECT type="text/sitemap"><param name="Name" value="NOTE: URIs given in tables below are for App developer use. App developer can make use of these URIs to create top level apps by consuming this app."><param name="Local" value="group___t_m_p_s001__publishedparams.html#Note"><param name="ImageNumber" value="11"></OBJECT>
+      </UL>
+    </UL>
+  </UL>
+<LI><OBJECT type="text/sitemap"><param name="Name" value="Files"><param name="ImageNumber" value="1"></OBJECT>
+  <UL>
+  <LI><OBJECT type="text/sitemap"><param name="Name" value="File List"><param name="Local" value="files.html"><param name="ImageNumber" value="1"></OBJECT>
+    <UL>
+    <LI><OBJECT type="text/sitemap"><param name="Name" value="TMPS001.c"><param name="Local" value="_t_m_p_s001_8c.html"><param name="ImageNumber" value="1"></OBJECT>
+      <UL>
+      <LI><OBJECT type="text/sitemap"><param name="Name" value="TMPS001_GetStatus"><param name="Local" value="_t_m_p_s001_8c.html#a1b8916ff42b7377c89e4556e2ac6badf"><param name="ImageNumber" value="11"></OBJECT>
+      <LI><OBJECT type="text/sitemap"><param name="Name" value="TMPS001_ReadTemp"><param name="Local" value="_t_m_p_s001_8c.html#ae9ac24477e8de068240aa11acab7d2ca"><param name="ImageNumber" value="11"></OBJECT>
+      <LI><OBJECT type="text/sitemap"><param name="Name" value="TMPS001_StartMeasurement"><param name="Local" value="_t_m_p_s001_8c.html#a4cff8310aac7de17124ab0e3a5ef23f2"><param name="ImageNumber" value="11"></OBJECT>
+      </UL>
+    <LI><OBJECT type="text/sitemap"><param name="Name" value="TMPS001.h"><param name="Local" value="_t_m_p_s001_8h.html"><param name="ImageNumber" value="1"></OBJECT>
+      <UL>
+      <LI><OBJECT type="text/sitemap"><param name="Name" value="TMPS001_Disable"><param name="Local" value="group___t_m_p_s001__apidoc.html#ga6afb8a7c0965dbcfa6258c4be08d423f"><param name="ImageNumber" value="11"></OBJECT>
+      <LI><OBJECT type="text/sitemap"><param name="Name" value="TMPS001_Enable"><param name="Local" value="group___t_m_p_s001__apidoc.html#ga641cfbed220f688424c0e338d804ef90"><param name="ImageNumber" value="11"></OBJECT>
+      <LI><OBJECT type="text/sitemap"><param name="Name" value="TMPS001_SensorStateType"><param name="Local" value="group___t_m_p_s001__publicparam.html#ga775fa2eecabd40a635d53908afb6dc71"><param name="ImageNumber" value="11"></OBJECT>
+      <LI><OBJECT type="text/sitemap"><param name="Name" value="TMPS001_SensorStateType"><param name="Local" value="group___t_m_p_s001__publicparam.html#gaebd2817aba807e8d66db8bf61f9ffd09"><param name="ImageNumber" value="11"></OBJECT>
+      <LI><OBJECT type="text/sitemap"><param name="Name" value="TMPS001_GetStatus"><param name="Local" value="group___t_m_p_s001__apidoc.html#ga1b8916ff42b7377c89e4556e2ac6badf"><param name="ImageNumber" value="11"></OBJECT>
+      <LI><OBJECT type="text/sitemap"><param name="Name" value="TMPS001_ReadTemp"><param name="Local" value="group___t_m_p_s001__apidoc.html#gae9ac24477e8de068240aa11acab7d2ca"><param name="ImageNumber" value="11"></OBJECT>
+      <LI><OBJECT type="text/sitemap"><param name="Name" value="TMPS001_StartMeasurement"><param name="Local" value="group___t_m_p_s001__apidoc.html#ga4cff8310aac7de17124ab0e3a5ef23f2"><param name="ImageNumber" value="11"></OBJECT>
+      </UL>
+    </UL>
+  <LI><OBJECT type="text/sitemap"><param name="Name" value="Globals"><param name="Local" value="globals.html"><param name="ImageNumber" value="11"></OBJECT>
+    <UL>
+    <LI><OBJECT type="text/sitemap"><param name="Name" value="All"><param name="Local" value="globals.html"><param name="ImageNumber" value="11"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Name" value="Functions"><param name="Local" value="globals_func.html"><param name="ImageNumber" value="11"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Name" value="Typedefs"><param name="Local" value="globals_type.html"><param name="ImageNumber" value="11"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Name" value="Enumerations"><param name="Local" value="globals_enum.html"><param name="ImageNumber" value="11"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Name" value="Defines"><param name="Local" value="globals_defs.html"><param name="ImageNumber" value="11"></OBJECT>
+    </UL>
+  </UL>
+</UL>
+</BODY>
+</HTML>

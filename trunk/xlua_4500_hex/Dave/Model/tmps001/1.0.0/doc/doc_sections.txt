@@ -1,0 +1,31 @@
+/**
+    @defgroup Die_Temperature_Sensor_TMPS001App TMPS001:Die_Temperature_Sensor
+    @{  
+    	@defgroup TMPS001_Legal Copyright and Licensing Information
+        @{
+        @}
+        @defgroup TMPS001_intro Introduction
+        @{
+        @}
+        @defgroup TMPS001_overview Overview
+        @{
+        @}
+        @defgroup TMPS001_filestructure File Structure
+        @{
+        @}
+        @defgroup TMPS001_appconfigdoc App Configuration Documentation
+        @{
+        @}
+        @defgroup TMPS001_publicparam App Public Structures
+        @{
+        @}       
+        @defgroup TMPS001_apidoc API Documentation
+        @{
+        @}
+        @defgroup TMPS001_publishedparams App Published Parameters
+        @{
+        @} 
+    
+    @}
+
+*/

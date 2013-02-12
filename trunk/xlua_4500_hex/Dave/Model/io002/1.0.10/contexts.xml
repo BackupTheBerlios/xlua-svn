@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<contexts>
+    <context id="http://www.infineon.com/1.0.10/app/io002/0" title="IO002">
+        <description>IO002 App used by a higher level
+ app to configure a digital pin.
+For using the pin in GPIO mode,
+user needs to use IO004 App</description>
+        <topic href="/PLUGINS_ROOT/com.ifx.davex.help/www.infineon.com/1.0.10/app/io002/0/doc/html/group___i_o___digital___i_o002_app.html" label="More Info"/>
+    </context>
+    <context id="http://www.infineon.com/1.0.10/app/io002/0/io002_vs" title="Pad Signal">
+        <description>The signal of the pin; it can be mapped to input/output signal</description>
+    </context>
+    <context id="http://www.infineon.com/1.0.10/app/io002/0/io002_erwoutputmode" title="Output Driver Enabled">
+        <description>Description is not available</description>
+    </context>
+    <context id="http://www.infineon.com/1.0.10/app/io002/0/io002_erwoutputmode/0" title="Output Enable">
+        <description>Description is not available</description>
+    </context>
+    <context id="http://www.infineon.com/1.0.10/app/io002/0/io002_erwoutputchar" title="Output characteristics">
+        <description>Description is not available</description>
+    </context>
+    <context id="http://www.infineon.com/1.0.10/app/io002/0/io002_erwoutputchar/0" title="Push Pull">
+        <description>Description is not available</description>
+    </context>
+    <context id="http://www.infineon.com/1.0.10/app/io002/0/io002_erwoutputchar/1" title="Open Drain">
+        <description>Description is not available</description>
+    </context>
+    <context id="http://www.infineon.com/1.0.10/app/io002/0/io002_erwdefaultoutputlevel" title="Default Output level">
+        <description>Description is not available</description>
+    </context>
+    <context id="http://www.infineon.com/1.0.10/app/io002/0/io002_erwdefaultoutputlevel/0" title="High">
+        <description>Description is not available</description>
+    </context>
+    <context id="http://www.infineon.com/1.0.10/app/io002/0/io002_erwinputchar" title="Input characteristics">
+        <description>Description is not available</description>
+    </context>
+    <context id="http://www.infineon.com/1.0.10/app/io002/0/io002_erwinputchar/0" title="Tristate">
+        <description>Description is not available</description>
+    </context>
+    <context id="http://www.infineon.com/1.0.10/app/io002/0/io002_erwinputchar/1" title="Pull down device">
+        <description>Description is not available</description>
+    </context>
+    <context id="http://www.infineon.com/1.0.10/app/io002/0/io002_erwinputchar/2" title="Pull up device">
+        <description>Description is not available</description>
+    </context>
+    <context id="http://www.infineon.com/1.0.10/app/io002/0/io002_erwinputchar/3" title="Continuous polling mode">
+        <description>Description is not available</description>
+    </context>
+    <context id="http://www.infineon.com/1.0.10/app/io002/0/io002_erwinputchar/4" title="InvertedTristate">
+        <description>Description is not available</description>
+    </context>
+    <context id="http://www.infineon.com/1.0.10/app/io002/0/io002_erwinputchar/5" title="Inverted Pull down device">
+        <description>Description is not available</description>
+    </context>
+    <context id="http://www.infineon.com/1.0.10/app/io002/0/io002_erwinputchar/6" title="Inverted Pull up device">
+        <description>Description is not available</description>
+    </context>
+    <context id="http://www.infineon.com/1.0.10/app/io002/0/io002_erwinputchar/7" title="Inverted Continuous polling mode">
+        <description>Description is not available</description>
+    </context>
+    <context id="http://www.infineon.com/1.0.10/app/io002/0/io002_erwpaddrivermode" title="Pad Driver Mode">
+        <description>Description is not available</description>
+    </context>
+    <context id="http://www.infineon.com/1.0.10/app/io002/0/io002_erwpaddrivermode/0" title="Medium driver">
+        <description>Description is not available</description>
+    </context>
+    <context id="http://www.infineon.com/1.0.10/app/io002/0/io002_erwpaddrivermode/1" title="Weak driver">
+        <description>Description is not available</description>
+    </context>
+    <context id="http://www.infineon.com/1.0.10/app/io002/0/io002_erwpaddrivermode/2" title="Strong Driver,Soft Edge">
+        <description>Description is not available</description>
+    </context>
+    <context id="http://www.infineon.com/1.0.10/app/io002/0/io002_erwpaddrivermode/3" title="Strong Driver,Slow Edge">
+        <description>Description is not available</description>
+    </context>
+    <context id="http://www.infineon.com/1.0.10/app/io002/0/io002_erwpaddrivermode/4" title="Strong Driver,Sharp Edge">
+        <description>Description is not available</description>
+    </context>
+    <context id="http://www.infineon.com/1.0.10/app/io002/0/io002_erwpaddrivermode/5" title="Strong Driver,Medium Edge">
+        <description>Description is not available</description>
+    </context>
+    <context id="http://www.infineon.com/1.0.10/app/io002/0/io002_erwpadclass" title="Pad Class">
+        <description>Description is not available</description>
+    </context>
+    <context id="http://www.infineon.com/1.0.10/app/io002/0/io002_erwpadclass/0" title="A1">
+        <description>Description is not available</description>
+    </context>
+    <context id="http://www.infineon.com/1.0.10/app/io002/0/io002_erwpadclass/1" title="A1+">
+        <description>Description is not available</description>
+    </context>
+    <context id="http://www.infineon.com/1.0.10/app/io002/0/io002_erwpadclass/2" title="A2">
+        <description>Description is not available</description>
+    </context>
+    <context id="http://www.infineon.com/1.0.10/app/io002/0/io002_irwhwcontrol" title="Hardware Control">
+        <description>Description is not available</description>
+    </context>
+    <context id="http://www.infineon.com/1.0.10/app/io002/0/io002_init" title="">
+        <description>This is the initialization function of pin.</description>
+    </context>
+    <context id="http://www.infineon.com/1.0.10/app/io002/0/io002_readpin" title="">
+        <description>This function returns value of the pin.</description>
+    </context>
+    <context id="http://www.infineon.com/1.0.10/app/io002/0/io002_setpin" title="">
+        <description>This function sets value of the pin to 1.</description>
+    </context>
+    <context id="http://www.infineon.com/1.0.10/app/io002/0/io002_resetpin" title="">
+        <description>This function resets value of the pin to 0.</description>
+    </context>
+    <context id="http://www.infineon.com/1.0.10/app/io002/0/io002_togglepin" title="">
+        <description>This function toggles value of the pin.</description>
+    </context>
+    <context id="http://www.infineon.com/1.0.10/app/io002/0/io002_disableoutputdriver" title="">
+        <description>This function configures pin as input driver.</description>
+    </context>
+    <context id="http://www.infineon.com/1.0.10/app/io002/0/io002_enableoutputdriver" title="">
+        <description>This function enables pin as output driver.</description>
+    </context>
+    <context id="http://www.infineon.com/1.0.10/app/io002/0/pin" title="">
+        <description>Description is not available</description>
+    </context>
+    <context id="http://www.infineon.com/1.0.10/app/io002/0/io002_padclassdummy" title="">
+        <description>Description is not available</description>
+    </context>
+    <context id="http://www.infineon.com/1.0.10/app/io002/0/io002_inputchardummy" title="">
+        <description>Description is not available</description>
+    </context>
+    <context id="http://www.infineon.com/1.0.10/app/io002/0/pin/iocr_oe" title="">
+        <description>Description is not available</description>
+    </context>
+    <context id="http://www.infineon.com/1.0.10/app/io002/0/pin/iocr_po" title="">
+        <description>Description is not available</description>
+    </context>
+    <context id="http://www.infineon.com/1.0.10/app/io002/0/pin/iocr_pcr" title="">
+        <description>Description is not available</description>
+    </context>
+    <context id="http://www.infineon.com/1.0.10/app/io002/0/pin/omr_ps" title="">
+        <description>Description is not available</description>
+    </context>
+    <context id="http://www.infineon.com/1.0.10/app/io002/0/pin/pdr_pd" title="">
+        <description>Description is not available</description>
+    </context>
+    <context id="http://www.infineon.com/1.0.10/app/io002/0/pin/pad" title="">
+        <description>Description is not available</description>
+    </context>
+</contexts>

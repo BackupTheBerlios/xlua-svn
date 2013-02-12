@@ -1,0 +1,138 @@
+/**
+@ingroup TMPS001_Legal
+@{
+\page TMPS001_legalpage Copyright and Licensing Information
+Copyright (c) 2011, Infineon Technologies AG
+All rights reserved. 
+
+Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met: 
+Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer. 
+Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution. 
+Neither the name of the copyright holders nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+To improve the quality of the software, users are encouraged to share modifications, enhancements or bug fixes with Infineon Technologies AG (dave@infineon.com).
+
+@}
+@ingroup TMPS001_intro
+@{
+\page TMPS001_intropage Introduction 
+
+Die Temperature Sensor (DTS), of XMC core allows measurement of the die temperature.
+TMPS001 App provides APIs to enable  the Die Temperature Sensor and measure the Die temperature.
+
+<b>Note:</b>
+<UL><LI> The App provides no UI configuration.</LI></UL>
+
+
+\section TMPS001_scopesec Scope
+The TMPS001 App provides APIs to configure & service the Die Temperature Sensor.
+
+\section Abbreviation
+<OL>
+<LI>API: Application Program Interface</LI>
+<LI>App: DAVE3 Application</LI>
+<LI>GUI: Graphical User Interface</LI>
+<LI>SW: Software</LI>
+<LI>DTS: Die Temperature Sensor</LI>
+</OL>
+
+\section Reference
+<UL><LI> Device Reference Manual.</LI></UL>
+
+\section Limitation
+NA
+
+@}
+*/
+
+/**
+@ingroup TMPS001_overview
+@{
+\page TMPS001_overviewpage Overview
+The DTS has to be enabled before it can be used.The sensor can be powered up by calling <i>TMPS001_Enable()</i> .
+The temperature measurement is started by calling <i>TMPS001_StartMeasurement()</i>.
+The result of the measurement can be obtained <i>by calling TMPS001_ReadTemp()</i>. 
+
+<b>Note:</b>
+<UL><LI> Measurement data is available certain time after measurement started.Hence user needs to
+poll the status of DTS by calling TMPS001_GetStatus() before reading the temperature.</LI>
+<LI> The first measurement after the DTS is powered delivers a result without calibration adjustment and should be ignored.</LI>
+</UL>
+
+
+@}
+
+@ingroup TMPS001_filestructure File Structure
+@{
+\page TMPS001_filestructurepage File Structure
+Following files are generated : 
+<OL>
+<LI>TMPS001.c:     This file implements the TMPS001 App interfaces. </LI>
+<LI>TMPS001.h:     This file exposes the interfaces to use this App. </LI>
+</OL>
+@}
+
+@ingroup TMPS001_appconfigdoc App Configuration Documentation
+@{
+
+\page TMPS001_appconfigdocpage App Configuration Parameters
+
+The App doesnt provide any GUI configuration. All the APIs/Macros provided by the App 
+needs to be used at runtime.
+
+
+@}
+*/
+
+/**
+@ingroup TMPS001_publishedparams
+\page Note NOTE: URIs given in tables below are for App developer use. App developer can make use of these URIs to create top level apps by consuming this app. 
+
+
+
+\section TMPS001_Consumed_Parameters Consumed Parameters
+<br>
+<table border=0 cellpadding=0 cellspacing=0 width=766>
+ <tr height=40 style='height:30.0pt'>
+  <td height=40 class=xl6529928 width=109 style='height:30.0pt;width:82pt;
+  font-size:11.0pt;color:white;font-weight:700;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border:.5pt solid black;
+  background:#4F81BD;mso-pattern:#4F81BD none'>Name</td>
+  <td class=xl6529928 width=438 style='border-left:none;width:329pt;font-size:
+  11.0pt;color:white;font-weight:700;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border:.5pt solid black;
+  background:#4F81BD;mso-pattern:#4F81BD none'>URI</td>
+  <td class=xl6529928 width=114 style='border-left:none;width:86pt;font-size:
+  11.0pt;color:white;font-weight:700;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border:.5pt solid black;
+  background:#4F81BD;mso-pattern:#4F81BD none'>Description</td>
+  <td class=xl6529928 width=105 style='border-left:none;width:79pt;font-size:
+  11.0pt;color:white;font-weight:700;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border:.5pt solid black;
+  background:#4F81BD;mso-pattern:#4F81BD none'>Conditional Consumption</td>
+ </tr>
+ <tr height=40 style='height:30.0pt'>
+  <td height=40 class=xl6629928 width=109 style='height:30.0pt;border-top:none;
+  width:82pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:none;
+  text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border:.5pt solid black;background:#B8CCE4;mso-pattern:#B8CCE4 none'>DTS</td>
+  <td class=xl6729928 width=438 style='border-top:none;border-left:none;
+  width:329pt;font-size:11.0pt;color:blue;font-weight:400;text-decoration:underline;
+  text-underline-style:single;text-line-through:none;font-family:Calibri;
+  border:.5pt solid black;background:#B8CCE4;mso-pattern:#B8CCE4 none'>peripheral/scu/0/gcu/dts</td>
+  <td class=xl6629928 width=114 style='border-top:none;border-left:none;
+  width:86pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:none;
+  text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border:.5pt solid black;background:#B8CCE4;mso-pattern:#B8CCE4 none'>DTS proxy resource group</td>
+  <td class=xl6629928 width=105 style='border-top:none;border-left:none;
+  width:79pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:none;
+  text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border:.5pt solid black;background:#B8CCE4;mso-pattern:#B8CCE4 none'>Always
+  Consumed</td>
+ </tr>
+</table>
+
+@}
+*/	

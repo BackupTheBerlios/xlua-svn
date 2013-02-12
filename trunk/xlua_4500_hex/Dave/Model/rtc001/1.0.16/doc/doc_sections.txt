@@ -1,0 +1,35 @@
+/**
+    @defgroup RTC001App RTC_Timer_RTC001 App
+    @{
+        @defgroup RTC001_Legal Copyright and Licensing Information
+        @{
+        @}
+        @defgroup RTC001_intro Introduction
+        @{
+        @}
+        @defgroup RTC001_overview Overview
+        @{
+        @}
+        @defgroup RTC001_filestructure File Structure
+        @{
+        @}
+        @defgroup RTC001_appconfigdoc App Configuration Documentation
+        @{
+        @}
+        @defgroup RTC001_publicparam App Public structures
+        @{
+        @}       
+        @defgroup RTC001_apidoc API Documentation
+        @{
+        @}
+        @defgroup RTC001_publishedparams App Published Parameters
+        @{
+        @} 
+        @defgroup RTC001_revisionhistory Release History
+        @{
+          Click <a href="../RTC001_Version.htm"> here </a> for Release History
+        @}
+    
+    @}
+
+*/

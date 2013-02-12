@@ -1,0 +1,1048 @@
+/**
+@ingroup FATFS003_Legal
+@{
+\page FATFS003_legalpage Copyright and Licensing Information
+----------------------------------------------------------------------------\n 
+ FatFs - FAT file system module  R0.09                 (C)ChaN, 2011\n
+----------------------------------------------------------------------------\n
+FatFs module is a generic FAT file system module for small embedded systems.
+This is a free software that opened for education, research and commercial
+developments under license policy of following terms.
+
+Copyright (C) 2010, ChaN, all right reserved.
+
+The FatFs module is a free software and there is NO WARRANTY.
+No restriction on use. You can use, modify and redistribute it for
+personal, non-profit or commercial products UNDER YOUR RESPONSIBILITY.
+Redistributions of source code must retain the above copyright notice.\n
+-----------------------------------------------------------------------------
+
+Copyright (c) 2011, Infineon Technologies AG
+All rights reserved. 
+
+Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met: 
+Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer. 
+Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution. 
+Neither the name of the copyright holders nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+To improve the quality of the software, users are encouraged to share modifications, enhancements or bug fixes with Infineon Technologies AG (dave@infineon.com).
+
+@}
+
+@ingroup FATFS003_intro
+@{
+\page FATFS003_intropage Introduction
+FatFs is a software module used to organize a storage medium. It abstracts the physical layer interfaces
+to the storage medium and provides the functionalities to manage user data more efficiently with files and
+directories. Embedded file system library (EFSL) and FatFs are two popular and freely available FAT
+libraries for developing small embedded systems. FatFs is a generic FAT file system module for small embedded systems that can be ported to any
+underlying hardware. It has been architected with separate layers for hardware accesses
+Some applications may directly use this App bypassing the Standard Library Wrapper App above it. 
+User must mount the device first before doing any operations on the disk. Make File system api f_mkfs() takes
+long time to create file system on the disk using driver code. This is due to the fact that FAT file system erases and writes single block at
+a time.  FATFS003 App is used in RTOS environment.ID's is used as a synchronization object.Please refer the link below for more information on the FAT FS Api's.
+<OL>
+<LI>http://elm-chan.org/fsw/ff/00index_e.html</LI>
+</OL>
+
+
+\section FATFS003_scopesec Scope
+FileSystem_FATFS_RTOS_FATFS003 App lies below the Standard Library App .FatFs module is completely separated from disk I/O layer. 
+FatFs version R0.09 is used.It intergerates with Device Abstraction Layer to access the physical media in RTOS environment as shown below:
+<img src="..\FATFS003.PNG" title="Overview of FAT File System App" alt="The diagram shows the Overview of FAT File System App." align="center" border="3" hspace="0" vspace="0" /> 
+
+
+\section FATFS003_abbreviation
+<OL>
+<LI>FAT : File Allocation Table</LI>
+<LI>API: Application Program Interface</LI>
+<LI>GUI: Graphical User Interface</LI>
+<LI>RTOS: Real Time Operating System </LI>
+<LI>LLD: Low Level Driver </LI>
+<LI> ANSI: American National Standards Institutes </LI>
+<LI>DAL: Device Abstarction Layer </LI>
+</OL>
+
+\section FATFS003_reference
+<OL>
+<LI>http://elm-chan.org/fsw/ff/00index_e.html</LI>
+</OL>
+\section FATFS003_limitation
+1. Only short filenames(11 chars) are supported by this filesystem. 
+
+@}
+*/
+
+/**
+@ingroup FATFS003_overview
+@{
+\page FATFS003_overviewpage Overview
+<OL>
+<LI> Platform independence and easy to port</LI>
+<LI> Very small footprint for code and work area</LI>
+<LI> Various configuration options:
+  <OL>
+  	<LI> Multiple volumes (physical drives and partitions)</LI>
+	<LI> Multiple sector size support</LI>
+	<LI> Read-only, minimized API, I/O buffer, etc.</LI>
+  </OL>
+</LI> 
+</OL>
+The FatFs module is a free software opened for education, research and development.You can use, modify and/or redistribute it for personal projects or commercial products 
+without any restriction under your responsibility.For further information, refer the link below:
+<OL>
+<LI>http://elm-chan.org/fsw/ff/00index_e.html</LI>
+</OL>
+
+@}
+
+@ingroup FATFS003_filestructure File Structure
+@{
+\page FATFS003_filestructurepage File Structure 
+Following files are generated : 
+<OL>
+<LI>ff.c:This is the third party source file containing all the function definations of FAT FS App. </LI>
+<LI>FATFS003_Conf.c: This file defines the App's Init function.  </LI>
+<LI>FATFS003.h: This file contains function prototype & data structure declarations.  </LI>
+<LI>ff.h: This is the third party file containing FatFs configurations and declarations </LI>
+<LI>ffconf.h: This is the FAT file system module configuration file. </LI>
+<LI>syscall.c: This contains code of OS dependent controls for FatFs. </LI>
+</OL>
+@}
+
+@ingroup FATFS003_appconfigdoc App Configuration Documentation
+@{
+\page FATFS003_appconfigdocpage App Configuration Documentation
+The diagram shows the UI for the App.
+<table>
+<tr  height=33 width=100>
+<td>
+<img src="..\GUI_Config1.PNG" title="Function and Buffer Configurations Tab" alt="The diagram shows the UI for the App."  align = "left" border="3" />
+</td>
+</tr>
+<tr>
+<td>
+<table border=0 cellpadding=0 cellspacing=0 width=973 style='border-collapse:
+ collapse;table-layout:fixed;width:730pt'>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl154305 align=left width=244 style='height:15.0pt;
+  width:183pt;font-size:11.0pt;color:white;font-weight:700;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border-top:.5pt solid windowtext;border-right:.5pt solid white;border-bottom:
+  1.5pt solid white;border-left:.5pt solid windowtext;background:#4F81BD;
+  mso-pattern:#4F81BD none'>GUI Configuration</td>
+  <td class=xl154305 align=left width=274 style='width:206pt;font-size:11.0pt;
+  color:white;font-weight:700;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:.5pt solid windowtext;
+  border-right:.5pt solid white;border-bottom:1.5pt solid white;border-left:
+  none;background:#4F81BD;mso-pattern:#4F81BD none'>URI</td>
+  <td class=xl154305 align=left width=455 style='width:341pt;font-size:11.0pt;
+  color:white;font-weight:700;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:.5pt solid windowtext;
+  border-right:.5pt solid windowtext;border-bottom:1.5pt solid white;
+  border-left:none;background:#4F81BD;mso-pattern:#4F81BD none'>Description</td>
+ </tr>
+ <tr height=115 style='height:86.25pt'>
+  <td height=115 class=xl644305 width=244 style='height:86.25pt;width:183pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Arial;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:.5pt solid windowtext;
+  background:#B8CCE4;mso-pattern:#B8CCE4 none'>Tiny FS Configuration</td>
+  <td class=xl644305 width=274 style='width:206pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>fatfs003_tiny_fs</td>
+  <td class=xl634305 align=left width=455 style='width:341pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Arial;border-top:none;border-right:.5pt solid windowtext;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>When it is set to 1, FatFs uses the sector buffer
+  in the file system object instead of the sector buffer in the individual file
+  object for file data transfer. This reduces memory consumption 512 bytes each
+  file object.<br>
+    Unit : NA<br>
+    Range: NA</td>
+ </tr>
+ <tr height=96 style='height:72.0pt'>
+  <td height=96 class=xl644305 width=244 style='height:72.0pt;width:183pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Arial;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:.5pt solid windowtext;
+  background:#DBE5F1;mso-pattern:#DBE5F1 none'>FS ReadOnly Configuration</td>
+  <td class=xl644305 width=274 style='width:206pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>fatfs003_fs_readonly</td>
+  <td class=xl634305 align=left width=455 style='width:341pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Arial;border-top:none;border-right:.5pt solid windowtext;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>Setting to 1 defines read only configuration. This
+  removes writing functions, f_write, f_sync, f_unlink, f_mkdir, f_chmod,
+  f_rename, f_truncate and useless f_getfree.<br>
+    Unit : NA<br>
+    Range: NA</td>
+ </tr>
+ <tr height=153 style='height:114.75pt'>
+  <td height=153 class=xl644305 width=244 style='height:114.75pt;width:183pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Arial;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:.5pt solid windowtext;
+  background:#B8CCE4;mso-pattern:#B8CCE4 none'>FS Minimize Configuration</td>
+  <td class=xl644305 width=274 style='width:206pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>fatfs003_fs_minimize</td>
+  <td class=xl634305 align=left width=455 style='width:341pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Arial;border-top:none;border-right:.5pt solid windowtext;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>This option defines minimization level to remove
+  some functions.<br>
+    <span style='mso-spacerun:yes'> </span>0: Full function.<br>
+    1: f_stat, f_getfree, f_unlink, f_mkdir, f_chmod, f_truncate and f_rename
+  are removed.<br>
+    2: f_opendir and f_readdir are removed in addition to 1.<br>
+    3: f_lseek is removed in addition to 2.<br>
+    Unit : NA<br>
+    Range: NA</td>
+ </tr>
+ <tr height=58 style='height:43.5pt'>
+  <td height=58 class=xl644305 width=244 style='height:43.5pt;width:183pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Arial;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:.5pt solid windowtext;
+  background:#DBE5F1;mso-pattern:#DBE5F1 none'>String Func Configuration</td>
+  <td class=xl644305 width=274 style='width:206pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>fatfs003_use_strfunc</td>
+  <td class=xl634305 align=left width=455 style='width:341pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Arial;border-top:none;border-right:.5pt solid windowtext;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>To enable string functions, set it to 1 or 2.<br>
+    Unit : NA<br>
+    Range: NA</td>
+ </tr>
+ <tr height=77 style='height:57.75pt'>
+  <td height=77 class=xl644305 width=244 style='height:57.75pt;width:183pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Arial;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:.5pt solid windowtext;
+  background:#B8CCE4;mso-pattern:#B8CCE4 none'>Use MKFS Configuration</td>
+  <td class=xl644305 width=274 style='width:206pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>fatfs003_use_mkfs</td>
+  <td class=xl634305 align=left width=455 style='width:341pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Arial;border-top:none;border-right:.5pt solid windowtext;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>To enable f_mkfs function, set this option to 1 and
+  set Enable read only option to 0<br>
+    Unit : NA<br>
+    Range: NA</td>
+ </tr>
+ <tr height=77 style='height:57.75pt'>
+  <td height=77 class=xl644305 width=244 style='height:57.75pt;width:183pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Arial;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:.5pt solid windowtext;
+  background:#DBE5F1;mso-pattern:#DBE5F1 none'>Use Forward Configuration</td>
+  <td class=xl644305 width=274 style='width:206pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>fatfs003_use_forward</td>
+  <td class=xl634305 align=left width=455 style='width:341pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Arial;border-top:none;border-right:.5pt solid windowtext;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>To enable f_forward function, set this option to 1
+  and set Enable Tiny FS to 1.<br>
+    Unit : NA<br>
+    Range: NA</td>
+ </tr>
+ <tr height=58 style='height:43.5pt'>
+  <td height=58 class=xl644305 width=244 style='height:43.5pt;width:183pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Arial;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid windowtext;border-left:.5pt solid windowtext;
+  background:#B8CCE4;mso-pattern:#B8CCE4 none'>Fast Seek Configuration</td>
+  <td class=xl644305 width=274 style='width:206pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid windowtext;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>fatfs003_fast_seek</td>
+  <td class=xl634305 align=left width=455 style='width:341pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Arial;border-top:none;border-right:.5pt solid windowtext;
+  border-bottom:.5pt solid windowtext;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>To enable/disable fast seek feature.<br>
+    Unit : NA<br>
+    Range: NA</td>
+ </tr>
+</table>
+
+
+</table>
+<BR><BR>
+<table>
+<tr  height=33 width=100>
+<td>
+<img src="..\GUI_Config2.PNG" title="Locale and Namespace Configurations" alt="The diagram shows the UI for the App."  align = "left" border="3" />
+</td>
+</tr>
+<tr>
+<td>
+<table border=0 cellpadding=0 cellspacing=0 width=772 class=xl6716457
+ style='border-collapse:collapse;table-layout:fixed;width:580pt'>
+ <tr height=21 style='height:15.75pt'>
+  <td height=21 class=xl6516457 align=left width=190 style='height:15.75pt;
+  width:143pt;font-size:11.0pt;color:white;font-weight:700;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border-top:.5pt solid windowtext;border-right:.5pt solid white;border-bottom:
+  1.5pt solid white;border-left:.5pt solid windowtext;background:#4F81BD;
+  mso-pattern:#4F81BD none'>GUI Configuration</td>
+  <td class=xl6616457 align=left width=181 style='width:136pt;font-size:11.0pt;
+  color:white;font-weight:700;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:.5pt solid windowtext;
+  border-right:.5pt solid white;border-bottom:1.5pt solid white;border-left:
+  none;background:#4F81BD;mso-pattern:#4F81BD none'>URI</td>
+  <td class=xl6516457 align=left width=401 style='width:301pt;font-size:11.0pt;
+  color:white;font-weight:700;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:.5pt solid windowtext;
+  border-right:.5pt solid windowtext;border-bottom:1.5pt solid white;
+  border-left:none;background:#4F81BD;mso-pattern:#4F81BD none'>Description</td>
+ </tr>
+ <tr height=78 style='height:58.5pt'>
+  <td height=78 class=xl6816457 width=190 style='height:58.5pt;border-top:none;
+  width:143pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Arial;
+  border-top:1.5pt solid white;border-right:.5pt solid white;border-bottom:
+  .5pt solid white;border-left:.5pt solid windowtext;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>Code Page Configuration</td>
+  <td class=xl6816457 width=181 style='border-top:none;width:136pt;font-size:
+  11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Arial;border-top:1.5pt solid white;
+  border-right:.5pt solid white;border-bottom:.5pt solid white;border-left:
+  none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>fatfs003_code_page</td>
+  <td class=xl6316457 align=left width=401 style='border-top:none;width:301pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Arial;border-top:1.5pt solid white;
+  border-right:.5pt solid windowtext;border-bottom:.5pt solid white;border-left:
+  none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>To select the OEM code page
+  to be used on the Target system.<br>
+    Unit : NA<br>
+    Range: NA</td>
+ </tr>
+ <tr height=153 style='height:114.75pt'>
+  <td height=153 class=xl6916457 width=190 style='height:114.75pt;width:143pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Arial;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid windowtext;border-left:.5pt solid windowtext;
+  background:#DBE5F1;mso-pattern:#DBE5F1 none'>Relative Path Configuration</td>
+  <td class=xl6916457 width=181 style='width:136pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid windowtext;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>fatfs003_relative_path</td>
+  <td class=xl6416457 align=left width=401 style='width:301pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Arial;border-top:none;border-right:.5pt solid windowtext;
+  border-bottom:.5pt solid windowtext;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>This option configures relative path feature.<br>
+    0: Disable relative path feature and remove related functions.<br>
+    1: Enable relative path. f_chdrive() and f_chdir() are available.<br>
+    2: f_getcwd() is available in addition to 1.<br>
+    Unit : NA<br>
+    Range: NA</td>
+ </tr>
+</table>
+
+
+</table>
+<BR><BR>
+<table>
+<tr  height=33 width=100>
+<td>
+<img src="..\GUI_Config3.PNG" title="Physical Drive Configurations TAB" alt="The diagram shows the UI for the App."  align = "left" border="3" />
+</td>
+</tr>
+<tr>
+<td>
+<table border=0 cellpadding=0 cellspacing=0 width=821 style='border-collapse:
+ collapse;table-layout:fixed;width:616pt'>
+  <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl1525452 align=left width=207 style='height:15.0pt;
+  width:155pt;font-size:11.0pt;color:white;font-weight:700;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border-top:.5pt solid windowtext;border-right:.5pt solid white;border-bottom:
+  1.5pt solid white;border-left:.5pt solid windowtext;background:#4F81BD;
+  mso-pattern:#4F81BD none'>GUI Configuration</td>
+  <td class=xl1525452 align=left width=185 style='width:139pt;font-size:11.0pt;
+  color:white;font-weight:700;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:.5pt solid windowtext;
+  border-right:.5pt solid white;border-bottom:1.5pt solid white;border-left:
+  none;background:#4F81BD;mso-pattern:#4F81BD none'>URI</td>
+  <td class=xl1525452 align=left width=429 style='width:322pt;font-size:11.0pt;
+  color:white;font-weight:700;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Calibri;border-top:.5pt solid windowtext;
+  border-right:.5pt solid windowtext;border-bottom:1.5pt solid white;
+  border-left:none;background:#4F81BD;mso-pattern:#4F81BD none'>Description</td>
+ </tr>
+ <tr height=58 style='height:43.5pt'>
+  <td height=58 class=xl6425452 width=207 style='height:43.5pt;width:155pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Arial;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:.5pt solid windowtext;
+  background:#B8CCE4;mso-pattern:#B8CCE4 none'>Volumes Configuration</td>
+  <td class=xl6425452 width=185 style='width:139pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>fatfs003_volumes</td>
+  <td class=xl6325452 align=left width=429 style='width:322pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Arial;border-top:none;border-right:.5pt solid windowtext;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>This allows a user to set number of volumes(logical
+  drives).<br>
+    Unit : NA<br>
+    Range: 1-2</td>
+ </tr>
+ <tr height=96 style='height:72.0pt'>
+  <td height=96 class=xl6425452 width=207 style='height:72.0pt;width:155pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Arial;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:.5pt solid windowtext;
+  background:#DBE5F1;mso-pattern:#DBE5F1 none'>Maximum Sector Size</td>
+  <td class=xl6425452 width=185 style='width:139pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>fatfs003_max_ss</td>
+  <td class=xl6325452 align=left width=429 style='width:322pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Arial;border-top:none;border-right:.5pt solid windowtext;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>Maximum sector size to be handled. Always set 512
+  for memory card and hard disk but a larger value may be required for floppy
+  disk (512/1024) and optical disk (512/2048).<br>
+    Unit : NA<br>
+    Range: NA</td>
+ </tr>
+ <tr height=58 style='height:43.5pt'>
+  <td height=58 class=xl6425452 width=207 style='height:43.5pt;width:155pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Arial;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:.5pt solid windowtext;
+  background:#B8CCE4;mso-pattern:#B8CCE4 none'>Multi Partition Configuration</td>
+  <td class=xl6425452 width=185 style='width:139pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>fatfs003_multi_partition</td>
+  <td class=xl6325452 align=left width=429 style='width:322pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Arial;border-top:none;border-right:.5pt solid windowtext;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>To enable/disable Multi Partition.<br>
+    Unit : NA<br>
+    Range: NA</td>
+ </tr>
+ <tr height=58 style='height:43.5pt'>
+  <td height=58 class=xl6425452 width=207 style='height:43.5pt;width:155pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Arial;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid windowtext;border-left:.5pt solid windowtext;
+  background:#DBE5F1;mso-pattern:#DBE5F1 none'>Erase Configuration</td>
+  <td class=xl6425452 width=185 style='width:139pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid windowtext;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>fatfs003_erase</td>
+  <td class=xl6325452 align=left width=429 style='width:322pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Arial;border-top:none;border-right:.5pt solid windowtext;
+  border-bottom:.5pt solid windowtext;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>To enable/disable erase feature.<br>
+    Unit : NA<br>
+    Range: NA</td>
+ </tr>
+</table>
+
+
+</table>
+<BR><BR>
+<table>
+<tr  height=33 width=100>
+<td>
+<img src="..\GUI_Config4.PNG" title="System Configurations Tab" alt="The diagram shows the UI for the App."  align = "left" border="3" />
+</td>
+</tr>
+<tr>
+<td>
+<table border=0 cellpadding=0 cellspacing=0 width=693 style='border-collapse:
+ collapse;table-layout:fixed;width:520pt'>
+  <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl157662 width=195 style='height:15.0pt;width:146pt;
+  font-size:11.0pt;color:white;font-weight:700;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border-top:.5pt solid windowtext;
+  border-right:.5pt solid white;border-bottom:1.5pt solid white;border-left:
+  .5pt solid windowtext;background:#4F81BD;mso-pattern:#4F81BD none'>GUI
+  Configuration</td>
+  <td class=xl157662 width=174 style='width:131pt;font-size:11.0pt;color:white;
+  font-weight:700;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:.5pt solid windowtext;border-right:.5pt solid white;
+  border-bottom:1.5pt solid white;border-left:none;background:#4F81BD;
+  mso-pattern:#4F81BD none'>URI</td>
+  <td class=xl157662 width=324 style='width:243pt;font-size:11.0pt;color:white;
+  font-weight:700;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Calibri;border-top:.5pt solid windowtext;border-right:.5pt solid windowtext;
+  border-bottom:1.5pt solid white;border-left:none;background:#4F81BD;
+  mso-pattern:#4F81BD none'>Description</td>
+ </tr>
+ <tr height=77 style='height:57.75pt'>
+  <td height=77 class=xl647662 width=195 style='height:57.75pt;width:146pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Arial;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:.5pt solid windowtext;
+  background:#B8CCE4;mso-pattern:#B8CCE4 none'>Word Access Configuration</td>
+  <td class=xl647662 width=174 style='width:131pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>fatfs003_word_access</td>
+  <td class=xl637662 width=324 style='width:243pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid windowtext;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>Defines which access method is used to the word
+  data on the FAT volume.<br>
+    Unit : NA<br>
+    Range: NA</td>
+ </tr>
+ <tr height=77 style='height:57.75pt'>
+  <td height=77 class=xl647662 width=195 style='height:57.75pt;width:146pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Arial;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:.5pt solid windowtext;
+  background:#DBE5F1;mso-pattern:#DBE5F1 none'>File Sharing Configuration</td>
+  <td class=xl647662 width=174 style='width:131pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>fatfs003_fs_share</td>
+  <td class=xl637662 width=324 style='width:243pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid windowtext;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>The value defines how many files can be opened
+  simultaneously.<br>
+    Unit : NA<br>
+    Range: 20</td>
+ </tr>
+ <tr height=96 style='height:72.0pt'>
+  <td height=96 class=xl657662 width=195 style='height:72.0pt;width:146pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Arial;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid windowtext;border-left:.5pt solid windowtext;
+  background:#B8CCE4;mso-pattern:#B8CCE4 none'>Timeout Configuration</td>
+  <td class=xl657662 width=174 style='width:131pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid windowtext;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>fatfs003_timeout</td>
+  <td class=xl667662 width=324 style='width:243pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid windowtext;
+  border-bottom:.5pt solid windowtext;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>This allows a user to set Timeout period in unit of
+  time ticks. Value should not exceed more than 10000.<br>
+    Unit : ms<br>
+    Range: 0-10000</td>
+ </tr>
+</table>
+
+
+</table>
+
+@}
+*/
+
+/**
+@ingroup FATFS003_publishedparams Published Parameters
+@{
+\page Note NOTE: URIs given in tables below are for App developer use. App developer can make use of these URIs to create top level apps by consuming this app. 
+
+\section FATFS003_Virtual_Signal Virtual Signals 
+NA
+
+\section FATFS003_Consumed_Parameters Consumed Parameters
+<table border=0 cellpadding=0 cellspacing=0 width=798 class=xl639414
+ style='border-collapse:collapse;table-layout:fixed;width:599pt'>
+ <tr height=40 style='height:30.0pt'>
+  <td height=40 class=xl649414 align=left width=197 style='height:30.0pt;
+  width:148pt;font-size:11.0pt;color:white;font-weight:700;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Arial;
+  border-top:.5pt solid windowtext;border-right:.5pt solid white;border-bottom:
+  1.5pt solid white;border-left:.5pt solid windowtext;background:#4F81BD;
+  mso-pattern:#4F81BD none'>Name</td>
+  <td class=xl649414 align=left width=135 style='width:101pt;font-size:11.0pt;
+  color:white;font-weight:700;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Arial;border-top:.5pt solid windowtext;
+  border-right:.5pt solid white;border-bottom:1.5pt solid white;border-left:
+  none;background:#4F81BD;mso-pattern:#4F81BD none'>URI</td>
+  <td class=xl649414 align=left width=349 style='width:262pt;font-size:11.0pt;
+  color:white;font-weight:700;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Arial;border-top:.5pt solid windowtext;
+  border-right:.5pt solid white;border-bottom:1.5pt solid white;border-left:
+  none;background:#4F81BD;mso-pattern:#4F81BD none'>Descirption</td>
+  <td class=xl649414 align=left width=117 style='width:88pt;font-size:11.0pt;
+  color:white;font-weight:700;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Arial;border-top:.5pt solid windowtext;
+  border-right:.5pt solid windowtext;border-bottom:1.5pt solid white;
+  border-left:none;background:#4F81BD;mso-pattern:#4F81BD none'>Conditional
+  Consumption</td>
+ </tr>
+ <tr height=39 style='height:29.25pt'>
+  <td height=39 class=xl659414 align=left width=197 style='height:29.25pt;
+  width:148pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Arial;
+  border-top:none;border-right:.5pt solid white;border-bottom:.5pt solid windowtext;
+  border-left:.5pt solid windowtext;background:#B8CCE4;mso-pattern:#B8CCE4 none'>Device
+  Abstraction Layer<span style='mso-spacerun:yes'>  </span>App</td>
+  <td class=xl669414 align=left style='font-size:11.0pt;color:black;font-weight:
+  400;text-decoration:none;text-underline-style:none;text-line-through:none;
+  font-family:Arial;border-top:none;border-right:.5pt solid white;border-bottom:
+  .5pt solid windowtext;border-left:none;background:#B8CCE4;mso-pattern:#B8CCE4 none'>app/fatfs005/*</td>
+  <td class=xl659414 align=left width=349 style='width:262pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid windowtext;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>This is to consume the Device Abstraction layer App</td>
+  <td class=xl659414 align=left width=117 style='width:88pt;font-size:11.0pt;
+  color:black;font-weight:400;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Arial;border-top:none;border-right:.5pt solid windowtext;
+  border-bottom:.5pt solid windowtext;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>Always</td>
+ </tr>
+</table>
+
+\section FATFS003_Provided_Parameters Provided Parameters
+<table border=0 cellpadding=0 cellspacing=0 width=1035 style='border-collapse:
+ collapse;table-layout:fixed;width:776pt'>
+  <tr height=40 style='height:30.0pt'>
+  <td height=40 class=xl6319723 align=left width=240 style='height:30.0pt;
+  width:180pt;font-size:11.0pt;color:white;font-weight:700;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Arial;
+  border:.5pt solid windowtext;background:#4F81BD;mso-pattern:#4F81BD none'>Name</td>
+  <td class=xl6419723 align=left width=181 style='border-left:none;width:136pt;
+  font-size:11.0pt;color:white;font-weight:700;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Arial;border:.5pt solid windowtext;
+  background:#4F81BD;mso-pattern:#4F81BD none'>URI</td>
+  <td class=xl6519723 align=left width=515 style='border-left:none;width:386pt;
+  font-size:11.0pt;color:white;font-weight:700;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Arial;border-top:.5pt solid windowtext;
+  border-right:none;border-bottom:.5pt solid windowtext;border-left:.5pt solid windowtext;
+  background:#4F81BD;mso-pattern:#4F81BD none'>Descirption</td>
+  <td class=xl6519723 align=left width=99 style='width:74pt;font-size:11.0pt;
+  color:white;font-weight:700;text-decoration:none;text-underline-style:none;
+  text-line-through:none;font-family:Arial;border:.5pt solid windowtext;
+  background:#4F81BD;mso-pattern:#4F81BD none'>Access Mode</td>
+ </tr>
+ <tr height=66 style='mso-height-source:userset;height:49.5pt'>
+  <td height=66 class=xl6619723 width=240 style='height:49.5pt;width:180pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Arial;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:.5pt solid windowtext;
+  background:#B8CCE4;mso-pattern:#B8CCE4 none'>Tiny FS Configuration</td>
+  <td class=xl6619723 width=181 style='width:136pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>fatfs003_tiny_fs</td>
+  <td class=xl6619723 width=515 style='width:386pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>When it is set to 1, FatFs uses the sector buffer
+  in the file system object instead of the sector buffer in the individual file
+  object for file data transfer. This reduces memory consumption 512 bytes each
+  file object.</td>
+  <td class=xl6619723 width=99 style='width:74pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid windowtext;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>R/W</td>
+ </tr>
+ <tr height=57 style='height:42.75pt'>
+  <td height=57 class=xl6619723 width=240 style='height:42.75pt;width:180pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Arial;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:.5pt solid windowtext;
+  background:#DBE5F1;mso-pattern:#DBE5F1 none'>FS ReadOnly Configuration</td>
+  <td class=xl6619723 width=181 style='width:136pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>fatfs003_fs_readonly</td>
+  <td class=xl6619723 width=515 style='width:386pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>Setting to 1 defines read only configuration. This
+  removes writing functions, f_write, f_sync, f_unlink, f_mkdir, f_chmod,
+  f_rename, f_truncate and useless f_getfree.</td>
+  <td class=xl6619723 width=99 style='width:74pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid windowtext;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>R/W</td>
+ </tr>
+ <tr height=114 style='height:85.5pt'>
+  <td height=114 class=xl6619723 width=240 style='height:85.5pt;width:180pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Arial;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:.5pt solid windowtext;
+  background:#B8CCE4;mso-pattern:#B8CCE4 none'>FS Minimize Configuration</td>
+  <td class=xl6619723 width=181 style='width:136pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>fatfs003_fs_minimize</td>
+  <td class=xl6619723 width=515 style='width:386pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>This option defines minimization level to remove
+  some functions.<br>
+    0: Full function.<br>
+    1: f_stat, f_getfree, f_unlink, f_mkdir, f_chmod, f_truncate and f_rename
+  are removed.<br>
+    2: f_opendir and f_readdir are removed in addition to 1.<br>
+    3: f_lseek is removed in addition to 2.</td>
+  <td class=xl6619723 width=99 style='width:74pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid windowtext;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>R/W</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl6619723 width=240 style='height:15.0pt;width:180pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Arial;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:.5pt solid windowtext;
+  background:#DBE5F1;mso-pattern:#DBE5F1 none'>String Func Configuration</td>
+  <td class=xl6619723 width=181 style='width:136pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>fatfs003_use_strfunc</td>
+  <td class=xl6619723 width=515 style='width:386pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>To enable string functions, set it to 1 or 2.</td>
+  <td class=xl6619723 width=99 style='width:74pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid windowtext;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>R/W</td>
+ </tr>
+ <tr height=38 style='height:28.5pt'>
+  <td height=38 class=xl6619723 width=240 style='height:28.5pt;width:180pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Arial;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:.5pt solid windowtext;
+  background:#B8CCE4;mso-pattern:#B8CCE4 none'>Use MKFS Configuration</td>
+  <td class=xl6619723 width=181 style='width:136pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>fatfs003_use_mkfs</td>
+  <td class=xl6619723 width=515 style='width:386pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>To enable f_mkfs function, set this option to 1 and
+  set Enable read only option to 0</td>
+  <td class=xl6619723 width=99 style='width:74pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid windowtext;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>R/W</td>
+ </tr>
+ <tr height=38 style='height:28.5pt'>
+  <td height=38 class=xl6619723 width=240 style='height:28.5pt;width:180pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Arial;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:.5pt solid windowtext;
+  background:#DBE5F1;mso-pattern:#DBE5F1 none'>Use Forward Configuration</td>
+  <td class=xl6619723 width=181 style='width:136pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>fatfs003_use_forward</td>
+  <td class=xl6619723 width=515 style='width:386pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>To enable f_forward function, set this option to 1
+  and set Enable Tiny FS to 1.</td>
+  <td class=xl6619723 width=99 style='width:74pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid windowtext;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>R/W</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl6619723 width=240 style='height:15.0pt;width:180pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Arial;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:.5pt solid windowtext;
+  background:#B8CCE4;mso-pattern:#B8CCE4 none'>Fast Seek Configuration</td>
+  <td class=xl6619723 width=181 style='width:136pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>fatfs003_fast_seek</td>
+  <td class=xl6619723 width=515 style='width:386pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>To enable/disable fast seek feature</td>
+  <td class=xl6619723 width=99 style='width:74pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid windowtext;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>R/W</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl6619723 width=240 style='height:15.0pt;width:180pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Arial;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:.5pt solid windowtext;
+  background:#DBE5F1;mso-pattern:#DBE5F1 none'>Code Page Configuration</td>
+  <td class=xl6619723 width=181 style='width:136pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>fatfs003_code_page</td>
+  <td class=xl6619723 width=515 style='width:386pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>To select the OEM code page to be used on the
+  Target system</td>
+  <td class=xl6619723 width=99 style='width:74pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid windowtext;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>R/W</td>
+ </tr>
+ <tr height=76 style='height:57.0pt'>
+  <td height=76 class=xl6619723 width=240 style='height:57.0pt;width:180pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Arial;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:.5pt solid windowtext;
+  background:#B8CCE4;mso-pattern:#B8CCE4 none'>Relative Path Configuration</td>
+  <td class=xl6619723 width=181 style='width:136pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>fatfs003_relative_path</td>
+  <td class=xl6619723 width=515 style='width:386pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>This option configures relative path feature.<br>
+    0: Disable relative path feature and remove related functions.<br>
+    1: Enable relative path. f_chdrive() and f_chdir() are available.<br>
+    2: f_getcwd() is available in addition to 1.</td>
+  <td class=xl6619723 width=99 style='width:74pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid windowtext;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>R/W</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl6619723 width=240 style='height:15.0pt;width:180pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Arial;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:.5pt solid windowtext;
+  background:#DBE5F1;mso-pattern:#DBE5F1 none'>Volumes Configuration</td>
+  <td class=xl6619723 width=181 style='width:136pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>fatfs003_volumes</td>
+  <td class=xl6619723 width=515 style='width:386pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>This allows a user to set number of volumes(logical
+  drives).</td>
+  <td class=xl6619723 width=99 style='width:74pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid windowtext;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>R/W</td>
+ </tr>
+ <tr height=57 style='height:42.75pt'>
+  <td height=57 class=xl6619723 width=240 style='height:42.75pt;width:180pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Arial;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:.5pt solid windowtext;
+  background:#B8CCE4;mso-pattern:#B8CCE4 none'>Maximum Sector Size</td>
+  <td class=xl6619723 width=181 style='width:136pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>fatfs003_max_ss</td>
+  <td class=xl6619723 width=515 style='width:386pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>Maximum sector size to be handled. Always set 512
+  for memory card and hard disk but a larger value may be required for floppy
+  disk (512/1024) and optical disk (512/2048).</td>
+  <td class=xl6619723 width=99 style='width:74pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid windowtext;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>Read Only</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl6619723 width=240 style='height:15.0pt;width:180pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Arial;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:.5pt solid windowtext;
+  background:#DBE5F1;mso-pattern:#DBE5F1 none'>Multi Partition Configuration</td>
+  <td class=xl6619723 width=181 style='width:136pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>fatfs003_multi_partition</td>
+  <td class=xl6619723 width=515 style='width:386pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>To enable/disable Multi Partition.</td>
+  <td class=xl6619723 width=99 style='width:74pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid windowtext;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>Read Only</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl6619723 width=240 style='height:15.0pt;width:180pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Arial;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:.5pt solid windowtext;
+  background:#B8CCE4;mso-pattern:#B8CCE4 none'>Erase Configuration</td>
+  <td class=xl6619723 width=181 style='width:136pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>fatfs003_erase</td>
+  <td class=xl6619723 width=515 style='width:386pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>To enable/disable erase feature</td>
+  <td class=xl6619723 width=99 style='width:74pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid windowtext;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>R/W</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl6619723 width=240 style='height:15.0pt;width:180pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Arial;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:.5pt solid windowtext;
+  background:#DBE5F1;mso-pattern:#DBE5F1 none'>Word Access Configuration</td>
+  <td class=xl6619723 width=181 style='width:136pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>fatfs003_word_access</td>
+  <td class=xl6619723 width=515 style='width:386pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>Defines which access method is used to the word
+  data on the FAT volume.</td>
+  <td class=xl6619723 width=99 style='width:74pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid windowtext;
+  border-bottom:.5pt solid white;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>R/W</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl6619723 width=240 style='height:15.0pt;width:180pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Arial;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid white;border-left:.5pt solid windowtext;
+  background:#B8CCE4;mso-pattern:#B8CCE4 none'>File Sharing Configuration</td>
+  <td class=xl6619723 width=181 style='width:136pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>fatfs003_fs_share</td>
+  <td class=xl6619723 width=515 style='width:386pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>The value defines how many files can be opened
+  simultaneously.</td>
+  <td class=xl6619723 width=99 style='width:74pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid windowtext;
+  border-bottom:.5pt solid white;border-left:none;background:#B8CCE4;
+  mso-pattern:#B8CCE4 none'>R/W</td>
+ </tr>
+ <tr height=38 style='height:28.5pt'>
+  <td height=38 class=xl6619723 width=240 style='height:28.5pt;width:180pt;
+  font-size:11.0pt;color:black;font-weight:400;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Arial;border-top:none;border-right:
+  .5pt solid white;border-bottom:.5pt solid windowtext;border-left:.5pt solid windowtext;
+  background:#DBE5F1;mso-pattern:#DBE5F1 none'>Timeout Configuration</td>
+  <td class=xl6619723 width=181 style='width:136pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid windowtext;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>fatfs003_timeout</td>
+  <td class=xl6619723 width=515 style='width:386pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid white;
+  border-bottom:.5pt solid windowtext;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>This allows a user to set Timeout period in unit of
+  time ticks. Value should not exceed more than 10000</td>
+  <td class=xl6619723 width=99 style='width:74pt;font-size:11.0pt;color:black;
+  font-weight:400;text-decoration:none;text-underline-style:none;text-line-through:
+  none;font-family:Arial;border-top:none;border-right:.5pt solid windowtext;
+  border-bottom:.5pt solid windowtext;border-left:none;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>R/W</td>
+ </tr>
+ </table>
+
+
+
+
+
+
+
+
+@}
+*/

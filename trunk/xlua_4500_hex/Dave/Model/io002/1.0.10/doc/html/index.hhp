@@ -1,0 +1,56 @@
+[OPTIONS]
+Compiled file=IO002.chm
+Compatibility=1.1
+Full-text search=Yes
+Contents file=index.hhc
+Default Window=main
+Default topic=index.html
+Index file=index.hhk
+Language=0x409 English (United States)
+Title=
+
+[WINDOWS]
+main="","index.hhc","index.hhk","index.html","index.html",,,,,0x23520,,0x10387e,,,,,,,,0
+
+[FILES]
+_i_o002_8h_source.html
+_i_o002___conf_8h_source.html
+_i_o002_8c.html
+_i_o002_8h.html
+_i_o002___conf_8c.html
+_i_o002___conf_8h.html
+group___i_o___digital___i_o002_app.html
+group___i_o002___legal.html
+group___i_o002__intro.html
+group___i_o002__overview.html
+group___i_o002__filestructure.html
+group___i_o002__appconfigdoc.html
+group___i_o002__publicparam.html
+group___i_o002__apidoc.html
+group___i_o002__publishedparams.html
+group___i_o002__releasehistory.html
+struct_i_o002___handle_type.html
+struct_p_o_r_t_s___type_def.html
+index.html
+modules.html
+annotated.html
+classes.html
+functions.html
+functions_vars.html
+files.html
+globals.html
+globals_func.html
+globals_type.html
+globals_enum.html
+globals_eval.html
+globals_defs.html
+tab_a.png
+tab_b.png
+tab_h.png
+tab_s.png
+nav_h.png
+nav_f.png
+bc_s.png
+doxygen.png
+closed.png
+open.png

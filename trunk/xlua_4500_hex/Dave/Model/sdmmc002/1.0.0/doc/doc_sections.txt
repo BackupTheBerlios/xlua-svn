@@ -1,0 +1,35 @@
+/**
+    @defgroup SDMMC002App SDMMC_BlockLayer_RTOS_SDMMC002 App
+    @{
+        @defgroup SDMMC002_Legal Copyright and Licensing Information
+        @{
+        @}
+        @defgroup SDMMC002_intro Introduction
+        @{
+        @}
+        @defgroup SDMMC002_overview Overview
+        @{
+        @}
+        @defgroup SDMMC002_filestructure File Structure
+        @{
+        @}
+        @defgroup SDMMC002_appconfigdoc App Configuration Documentation
+        @{
+        @}
+        @defgroup SDMMC002_publicparam App Public Data Structures
+        @{
+        @}       
+        @defgroup SDMMC002_apidoc API Documentation
+        @{
+        @}
+        @defgroup SDMMC002_publishedparams App Published Parameters
+        @{
+        @}
+        @defgroup SDMMC002_revisionhistory Release History
+        @{
+          Click <a href="../SDMMC002.htm"> here </a> for Release History
+        @}
+    
+    @}
+
+*/

@@ -1,0 +1,218 @@
+/**
+@ingroup RESET001_Legal
+@{
+\page RESET001_legalpage Copyright and Licensing Information
+Copyright (c) 2012, Infineon Technologies AG
+All rights reserved. 
+
+Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met: 
+Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer. 
+Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution. 
+Neither the name of the copyright holders nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+To improve the quality of the software, users are encouraged to share modifications, enhancements or bug fixes with Infineon Technologies AG (dave@infineon.com).
+
+@}
+@ingroup RESET001_intro
+@{
+\page RESET001_intropage Introduction 
+
+SCU_Reset_RESET001App provides the user or high level program to Reset an
+individual peripheral , check the reset status of the peripheral  and identifying 
+the reset type.
+
+
+
+\section RESET001_scopesec Scope
+The RESET001 App provides APIs to reset a peripheral block, check the reset status
+and also API to identify the reset type.
+
+\section RESET001_abbreviation
+<OL>
+<LI>API: Application Program Interface</LI>
+<LI>App: DAVE3 Application</LI>
+<LI>GUI: Graphical User Interface</LI>
+<LI>SW: Software</LI>
+</OL>
+
+\section RESET_reference
+Device Reference Manual.
+
+\section RESET001_limitation
+NA
+
+@}
+*/
+
+/**
+@ingroup RESET001_overview
+@{
+\page RESET001_overviewpage Overview
+SCU_Reset_RESET001App provides the user or high level program 
+to Reset an individual peripheral , check the reset status of the
+peripheral and identifying the reset type.
+
+
+
+
+@}
+
+@ingroup RESET001_filestructure File Structure
+@{
+\page RESET001_filestructurepage File Structure
+Following files are generated : 
+<OL>
+<LI>RESET001.c:     This file implements the Reset App interfaces. </LI>
+<LI>RESET001.h:     This file exposes the interfaces to use this App. </LI>
+</OL>
+@}
+
+@ingroup RESET001_appconfigdoc App Configuration Documentation
+@{
+
+\page RESET001_appconfigdocpage App Documentation
+
+<table border=0 cellpadding=0 cellspacing=0 width=913>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl6321567 width=239 style='height:15.0pt;width:179pt;
+  font-size:11.0pt;color:white;font-weight:700;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border:.5pt solid black;
+  background:#4F81BD;mso-pattern:#4F81BD none'>Name</td>
+  <td class=xl6321567 width=251 style='border-left:none;width:188pt;font-size:
+  11.0pt;color:white;font-weight:700;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border:.5pt solid black;
+  background:#4F81BD;mso-pattern:#4F81BD none'>URI</td>
+  <td class=xl6321567 width=327 style='border-left:none;width:245pt;font-size:
+  11.0pt;color:white;font-weight:700;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border:.5pt solid black;
+  background:#4F81BD;mso-pattern:#4F81BD none'>Description</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl6421567 width=239 style='height:15.0pt;border-top:none;
+  width:179pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border:.5pt solid black;background:#B8CCE4;mso-pattern:#B8CCE4 none'>
+  RESET001_AssertReset</td>
+  <td class=xl6421567 width=251 style='border-top:none;border-left:none;
+  width:188pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border:.5pt solid black;background:#B8CCE4;mso-pattern:#B8CCE4 none'>
+  RESET001_AssertReset</td>
+  <td class=xl6421567 width=327 style='border-top:none;border-left:none;
+  width:245pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border:.5pt solid black;background:#B8CCE4;mso-pattern:#B8CCE4 none'>Function 
+  to enable reset of peripheral by software</td>
+ </tr>
+ <tr height=22 style='mso-height-source:userset;height:16.5pt'>
+  <td height=22 class=xl6421567 width=239 style='height:16.5pt;border-top:none;
+  width:179pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border:.5pt solid black;background:#DBE5F1;mso-pattern:#DBE5F1 none'>
+  RESET001_DeassertReset</td>
+  <td class=xl6421567 width=251 style='border-top:none;border-left:none;
+  width:188pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border:.5pt solid black;background:#DBE5F1;mso-pattern:#DBE5F1 none'>
+  RESET001_DeassertReset</td>
+  <td class=xl6421567 width=327 style='border-top:none;border-left:none;
+  width:245pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border:.5pt solid black;background:#DBE5F1;mso-pattern:#DBE5F1 none'>
+  function  to clear the Reset of the desired peripheral</td>
+ </tr>
+ <tr height=24 style='mso-height-source:userset;height:18.0pt'>
+  <td height=24 class=xl6421567 width=239 style='height:18.0pt;border-top:none;
+  width:179pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border:.5pt solid black;background:#B8CCE4;mso-pattern:#B8CCE4 none'>
+  RESET001_GetResetInfo</td>
+  <td class=xl6421567 width=251 style='border-top:none;border-left:none;
+  width:188pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border:.5pt solid black;background:#B8CCE4;mso-pattern:#B8CCE4 none'>
+  RESET001_GetResetInfo</td>
+  <td class=xl6421567 width=327 style='border-top:none;border-left:none;
+  width:245pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border:.5pt solid black;background:#B8CCE4;mso-pattern:#B8CCE4 none'>
+  Function to get the  reason of last reset</td>
+ </tr>
+ <tr height=22 style='mso-height-source:userset;height:16.5pt'>
+  <td height=22 class=xl6421567 width=239 style='height:16.5pt;border-top:none;
+  width:179pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border:.5pt solid black;background:#DBE5F1;mso-pattern:#DBE5F1 none'>
+  RESET001_GetStatus</td>
+  <td class=xl6421567 width=251 style='border-top:none;border-left:none;
+  width:188pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border:.5pt solid black;background:#DBE5F1;mso-pattern:#DBE5F1 none'>
+  RESET001_GetStatus</td>
+  <td class=xl6421567 width=327 style='border-top:none;border-left:none;
+  width:245pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border:.5pt solid black;background:#DBE5F1;mso-pattern:#DBE5F1 none'>
+  Function to get the reset status of the peripheral</td>
+ </tr>
+</table>
+@}
+*/
+
+/**
+@ingroup RESET001_publishedparams
+@{
+\page RESET001_Provided_Parameters Provided Parameters
+<br>
+
+None
+
+
+
+
+\section RESET001_Consumed_Parameters Consumed Parameters
+<br>
+<table border=0 cellpadding=0 cellspacing=0 width=766>
+ <tr height=40 style='height:30.0pt'>
+  <td height=40 class=xl6529928 width=109 style='height:30.0pt;width:82pt;
+  font-size:11.0pt;color:white;font-weight:700;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border:.5pt solid black;
+  background:#4F81BD;mso-pattern:#4F81BD none'>Name</td>
+  <td class=xl6529928 width=438 style='border-left:none;width:329pt;font-size:
+  11.0pt;color:white;font-weight:700;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border:.5pt solid black;
+  background:#4F81BD;mso-pattern:#4F81BD none'>URI</td>
+  <td class=xl6529928 width=114 style='border-left:none;width:86pt;font-size:
+  11.0pt;color:white;font-weight:700;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border:.5pt solid black;
+  background:#4F81BD;mso-pattern:#4F81BD none'>Description</td>
+  <td class=xl6529928 width=105 style='border-left:none;width:79pt;font-size:
+  11.0pt;color:white;font-weight:700;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border:.5pt solid black;
+  background:#4F81BD;mso-pattern:#4F81BD none'>Conditional Consumption</td>
+ </tr>
+ <tr height=40 style='height:30.0pt'>
+  <td height=40 class=xl6629928 width=109 style='height:30.0pt;border-top:none;
+  width:82pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:none;
+  text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border:.5pt solid black;background:#B8CCE4;mso-pattern:#B8CCE4 none'>rstctrl</td>
+  <td class=xl6729928 width=438 style='border-top:none;border-left:none;
+  width:329pt;font-size:11.0pt;color:blue;font-weight:400;text-decoration:underline;
+  text-underline-style:single;text-line-through:none;font-family:Calibri;
+  border:.5pt solid black;background:#B8CCE4;mso-pattern:#B8CCE4 none'>peripheral/scu/0/rstctrl/0/</td>
+  <td class=xl6629928 width=114 style='border-top:none;border-left:none;
+  width:86pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:none;
+  text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border:.5pt solid black;background:#B8CCE4;mso-pattern:#B8CCE4 none'>Reset App</td>
+  <td class=xl6629928 width=105 style='border-top:none;border-left:none;
+  width:79pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:none;
+  text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border:.5pt solid black;background:#B8CCE4;mso-pattern:#B8CCE4 none'>Always
+  Consumed</td>
+ </tr>
+</table>
+
+@}
+*/	

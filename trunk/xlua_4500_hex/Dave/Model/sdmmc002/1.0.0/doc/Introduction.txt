@@ -1,0 +1,157 @@
+/**
+@ingroup SDMMC002_Legal
+@{
+\page SDMMC002_legalpage Copyright and Licensing Information
+Copyright (c) 2011, Infineon Technologies AG
+All rights reserved. 
+
+Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met: 
+Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer. 
+Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution. 
+Neither the name of the copyright holders nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+To improve the quality of the software, users are encouraged to share modifications, enhancements or bug fixes with Infineon Technologies AG (dave@infineon.com).
+
+@}
+@ingroup SDMMC002_intro
+@{
+\page SDMMC002_intropage Introduction
+SDMMC_BlockLayer_RTOS_SDMMC002 App is specific to SD & MMC card block device in RTOS environment.It features all the SD & MMC card functionalities. This layer directly interfaces with SDMMC low level api's. 
+FAT Filesystem doesn't support security features for SD/MMC device, so SDMMC card specific seurity features like Lock, Unlock, Setting Password,Clearing Password etc. needs to be directly 
+called from this layer though ioctl's . The main idea behind this App is to to provide feasibility to Device Abstarction Layer to easily abstarct the block devices underlying it.
+Device specific features which are not supported by upper layers can be directly introduced in this layer. 
+
+
+
+\section SDMMC002_scopesec Scope
+SDMMC_BlockLayer_RTOS_SDMMC002 App interfaces with SDMMC Low level driver in RTOS environment.\n
+Device Abstarction Layer then abstracts SDMMC_BlockLayer_RTOS_SDMMC002 app and other devices like USB as shown below:
+<img src="..\SDMMC002.png" title="Overview of SDMMC Block Layer App" alt="The diagram shows the Overview of SDMMC Block Layer App." align="center" border="3" hspace="0" vspace="0" />
+
+\section SDMMC002_abbreviation
+<OL>
+<LI>SDMMC: Secure Digital/ Multimedia Card </LI>
+<LI>API: Application Program Interface</LI>
+<LI>GUI: Graphical User Interface</LI>
+<LI>IOCTL  : Input/Output Control</LI>
+<LI>DMA: Direct Memory Access </LI>
+<LI>RTOS: Real Time Operating System </LI>
+<LI>LLD: Low Level Driver </LI>
+<LI>CSD: Card Specific Data </LI>
+<LI>CID: Card identification number</LI>
+<LI>OCR: Operation conditions register </LI>
+<LI>SCR: SD Configuration Register </LI>
+<LI>CSR: Card Status Register </LI>
+<LI>RCA: Relative card address</LI>
+</OL>
+
+\section SDMMC002_reference
+<OL>
+<LI>https://www.sdcard.org/downloads/pls/simplified_specs/Part_A2_SD_Host_Controller_Simplified_Specification_Ver3.00_Final_110225.pdf</LI>
+<LI>https://www.sdcard.org/downloads/pls/simplified_specs/Part_1_Physical_Layer_Simplified_Specification_Ver_3.01_Final_100518.pdf"</LI>
+</OL>
+
+\section SDMMC002_limitation
+None
+
+@}
+*/
+
+/**
+@ingroup SDMMC002_overview
+@{
+\page SDMMC002_overviewpage Overview
+SDMMC supports the following features:<BR>
+<OL>
+ <LI> Initialize the SD & MMC card.</LI> 
+ <LI> Read and Write from or on the SD & MMC card.</LI>
+ <LI> Get card status,card type</LI>
+ <LI> Get CSD, CID, RCA, SD bus status, Sector Size,Sector Count,Block Size</LI>
+ <LI> Erase Feature.</LI>
+ <LI> Current Lock Status of the Card </LI>
+ <LI> Securtiy Features like Lock, Unlock, Set/Reset Password and Forcefully erases password. </LI>
+</OL>
+@}
+
+@ingroup SDMMC002_filestructure File Structure
+@{
+\page SDMMC002_filestructurepage File Structure
+Following files are generated : 
+<OL>
+<LI>SDMMC002.c:  This file contains  all public and private type definitions and functions
+ of SDMMC002 App. </LI>
+<LI>SDMMC002.h: This file contains all public data structures,enums and function
+prototypes for SDMMC002 App. </LI>
+<LI>SDMMC002_Conf.c: This file is empty </LI>
+</OL>
+@}
+
+@ingroup SDMMC002_appconfigdoc App Configuration Documentation
+@{
+\page SDMMC002_appconfigdocpage App Configuration  
+None
+@}
+*/
+
+/**
+@ingroup SDMMC002_publishedparams 
+@{
+\page Note NOTE: URIs given in tables below are for App developer use. App developer can make use of these URIs to create top level apps by consuming this app. 
+
+\section SDMMC002_Virtual_Signal Virtual Signals 
+NA
+
+\section SDMMC002_Consumed_Parameters Consumed Parameters
+<table border=0 cellpadding=0 cellspacing=0 width=984 class=xl6516769
+ style='border-collapse:collapse;table-layout:fixed;width:738pt'>
+ <tr height=56 style='mso-height-source:userset;height:42.0pt'>
+  <td height=56 class=xl6516769 align=center width=98 style='height:42.0pt;
+  width:74pt;font-size:11.0pt;color:white;font-weight:700;text-decoration:none;
+  text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border:.5pt solid windowtext;background:#4F81BD;mso-pattern:#4F81BD none'>Name</td>
+  <td class=xl6516769 align=center width=363 style='border-left:none;width:272pt;
+  font-size:11.0pt;color:white;font-weight:700;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border:.5pt solid windowtext;
+  background:#4F81BD;mso-pattern:#4F81BD none'>URI</td>
+  <td class=xl6516769 align=center width=279 style='border-left:none;width:209pt;
+  font-size:11.0pt;color:white;font-weight:700;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border:.5pt solid windowtext;
+  background:#4F81BD;mso-pattern:#4F81BD none'>Description</td>
+  <td class=xl6516769 align=center width=180 style='border-left:none;width:135pt;
+  font-size:11.0pt;color:white;font-weight:700;text-decoration:none;text-underline-style:
+  none;text-line-through:none;font-family:Calibri;border:.5pt solid windowtext;
+  background:#4F81BD;mso-pattern:#4F81BD none'>Conditional Consumption</td>
+  <td class=xl6516769 width=64 style='border-left:none;width:48pt'>&nbsp;</td>
+ </tr>
+ <tr height=60 style='height:45.0pt'>
+  <td height=60 class=xl6516769 align=center width=98 style='height:45.0pt;
+  border-top:none;width:74pt;font-size:11.0pt;color:black;font-weight:400;
+  text-decoration:none;text-underline-style:none;text-line-through:none;
+  font-family:Calibri;border:.5pt solid windowtext;background:#DBE5F1;
+  mso-pattern:#DBE5F1 none'>SDMMC004</td>
+  <td class=xl6616769 align=center width=363 style='border-top:none;border-left:
+  none;width:272pt;font-size:11.0pt;font-weight:400;text-line-through:none;font-family:
+  Calibri;border:.5pt solid windowtext;background:#DBE5F1;mso-pattern:#DBE5F1 none'>app/sdmmc004/*</td>
+  <td class=xl6516769 align=center width=279 style='border-top:none;border-left:
+  none;width:209pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border:.5pt solid windowtext;background:#DBE5F1;mso-pattern:#DBE5F1 none'>This
+  is to consume SDMMC LLD RTOS App.</td>
+  <td class=xl6516769 align=center width=180 style='border-top:none;border-left:
+  none;width:135pt;font-size:11.0pt;color:black;font-weight:400;text-decoration:
+  none;text-underline-style:none;text-line-through:none;font-family:Calibri;
+  border:.5pt solid windowtext;background:#DBE5F1;mso-pattern:#DBE5F1 none'>
+  Always Consumed.
+  </td>
+ </tr>
+</table>
+
+\section SDMMC002_Provided_Parameters Provided Parameters
+NA
+
+
+
+@}
+*/

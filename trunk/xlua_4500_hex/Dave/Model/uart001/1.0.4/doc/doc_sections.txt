@@ -1,0 +1,35 @@
+/**
+    @defgroup USIC_UART_UART001App USIC_UART_UART001App
+    @{
+        @defgroup UART001_Legal Copyright and Licensing Information
+        @{
+        @}
+        @defgroup UART001_intro Introduction
+        @{
+        @}
+        @defgroup UART001_overview Overview
+        @{
+        @}
+        @defgroup UART001_filestructure File Structure
+        @{
+        @}
+        @defgroup UART001_appconfigdoc App Configuration Documentation
+        @{
+        @}
+        @defgroup UART001_publicparam App Public Structures
+        @{
+        @}       
+        @defgroup UART001_apidoc API Documentation
+        @{
+        @}
+        @defgroup UART001_publishedparams App Published Parameters
+        @{
+        @} 
+        @defgroup UART001_revisionhistory Release History
+        @{
+          Click <a href="../UART001_Version.htm"> here </a> for Release History
+        @}
+    
+    @}
+
+*/
